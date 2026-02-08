@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Static Blog | Home</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <a href="index.html" class="logo">StaticBlog</a>
+            <ul class="nav-links">
+                <li><a href="index.html" class="active">Home</a></li>
+                <li><a href="blog/post1.html">Blog</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+            <button class="mobile-menu-btn">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero">
+        <div class="container">
+            <h1>Welcome to StaticBlog</h1>
+            <p>A fast, lightweight static blogging platform powered by GitHub Pages</p>
+            <a href="#featured-posts" class="btn">Read Latest Posts</a>
+        </div>
+    </header>
+
+    <!-- Featured Posts -->
+    <main class="container">
+        <section id="featured-posts" class="featured-posts">
+            <h2 class="section-title">Latest Articles</h2>
+            <div class="posts-grid">
+                
+                <!-- Post 1 -->
+                <article class="post-card">
+                    <div class="post-image">
+                        <img src="images/blog1.jpg" alt="Getting Started with Static Sites" loading="lazy">
+                        <span class="post-category">Web Development</span>
+                    </div>
+                    <div class="post-content">
+                        <h3><a href="blog/post1.html">Getting Started with Static Site Generators</a></h3>
+                        <p class="post-excerpt">Learn how to build fast, secure websites using static site generators like Jekyll, Hugo, and 11ty.</p>
+                        <div class="post-meta">
+                            <span class="post-date"><i class="far fa-calendar"></i> March 15, 2024</span>
+                            <span class="read-time"><i class="far fa-clock"></i> 5 min read</span>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Post 2 -->
+                <article class="post-card">
+                    <div class="post-image">
+                        <img src="images/blog2.jpg" alt="GitHub Pages Guide" loading="lazy">
+                        <span class="post-category">Tutorial</span>
+                    </div>
+                    <div class="post-content">
+                        <h3><a href="blog/post2.html">Deploy Your First Site on GitHub Pages</a></h3>
+                        <p class="post-excerpt">A step-by-step guide to hosting your static website for free using GitHub Pages.</p>
+                        <div class="post-meta">
+                            <span class="post-date"><i class="far fa-calendar"></i> March 10, 2024</span>
+                            <span class="read-time"><i class="far fa-clock"></i> 8 min read</span>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Post 3 -->
+                <article class="post-card">
+                    <div class="post-image">
+                        <img src="images/blog3.jpg" alt="Web Performance" loading="lazy">
+                        <span class="post-category">Performance</span>
+                    </div>
+                    <div class="post-content">
+                        <h3><a href="blog/post3.html">Optimizing Static Sites for Speed</a></h3>
+                        <p class="post-excerpt">Advanced techniques to make your static website load instantly and rank higher in search results.</p>
+                        <div class="post-meta">
+                            <span class="post-date"><i class="far fa-calendar"></i> March 5, 2024</span>
+                            <span class="read-time"><i class="far fa-clock"></i> 6 min read</span>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Post 4 -->
+                <article class="post-card">
+                    <div class="post-image">
+                        <div class="placeholder-image">CSS</div>
+                        <span class="post-category">Design</span>
+                    </div>
+                    <div class="post-content">
+                        <h3><a href="blog/post4.html">Modern CSS Techniques for Blogs</a></h3>
+                        <p class="post-excerpt">Explore CSS Grid, Flexbox, and custom properties to create beautiful blog layouts.</p>
+                        <div class="post-meta">
+                            <span class="post-date"><i class="far fa-calendar"></i> February 28, 2024</span>
+                            <span class="read-time"><i class="far fa-clock"></i> 7 min read</span>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Post 5 -->
+                <article class="post-card">
+                    <div class="post-image">
+                        <div class="placeholder-image">JS</div>
+                        <span class="post-category">JavaScript</span>
+                    </div>
+                    <div class="post-content">
+                        <h3><a href="blog/post5.html">Adding Interactivity to Static Sites</a></h3>
+                        <p class="post-excerpt">How to enhance static websites with JavaScript without compromising performance.</p>
+                        <div class="post-meta">
+                            <span class="post-date"><i class="far fa-calendar"></i> February 20, 2024</span>
+                            <span class="read-time"><i class="far fa-clock"></i> 10 min read</span>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Post 6 -->
+                <article class="post-card">
+                    <div class="post-image">
+                        <div class="placeholder-image">SEO</div>
+                        <span class="post-category">Marketing</span>
+                    </div>
+                    <div class="post-content">
+                        <h3><a href="blog/post6.html">SEO for Static Websites</a></h3>
+                        <p class="post-excerpt">Best practices to optimize your static site for search engines and increase organic traffic.</p>
+                        <div class="post-meta">
+                            <span class="post-date"><i class="far fa-calendar"></i> February 15, 2024</span>
+                            <span class="read-time"><i class="far fa-clock"></i> 9 min read</span>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <!-- Newsletter Section -->
+        <section class="newsletter">
+            <div class="newsletter-content">
+                <h3>Subscribe to Our Newsletter</h3>
+                <p>Get the latest articles and tutorials delivered directly to your inbox.</p>
+                <form id="newsletter-form" class="newsletter-form">
+                    <input type="email" placeholder="Enter your email" required>
+                    <button type="submit" class="btn">Subscribe</button>
+                </form>
+                <p class="form-note">No spam. Unsubscribe anytime.</p>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>StaticBlog</h4>
+                    <p>A lightweight, fast static blog platform hosted on GitHub Pages. Perfect for developers and writers.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-github"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="blog/post1.html">All Posts</a></li>
+                        <li><a href="about.html">About</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Categories</h4>
+                    <ul>
+                        <li><a href="#">Web Development</a></li>
+                        <li><a href="#">Tutorials</a></li>
+                        <li><a href="#">Performance</a></li>
+                        <li><a href="#">Design</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 StaticBlog. All rights reserved. | Hosted on <a href="https://pages.github.com/">GitHub Pages</a></p>
+                <p>Made with <i class="fas fa-heart"></i> for the static web community</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back to Top Button -->
+    <button id="backToTop" class="back-to-top">
+        <i class="fas fa-chevron-up"></i>
+    </button>
+
+    <script src="js/script.js"></script>
+</body>
+</html>
