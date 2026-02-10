@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AWS for Beginners - GitHub Integration Guide</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        :root {
+            --primary: #FF9900;
+            --secondary: #232F3E;
+            --accent: #00A1E0;
+            --light: #F2F2F2;
+            --dark: #161E2D;
+            --success: #00A651;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--dark) 100%);
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo i {
+            font-size: 2.2rem;
+            color: var(--primary);
+        }
+        
+        .logo-text h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+        
+        .logo-text p {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 25px;
+        }
+        
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+        
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(22, 30, 45, 0.9), rgba(22, 30, 45, 0.9)), url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 80px 0;
+            text-align: center;
+        }
+        
+        .hero h2 {
+            font-size: 2.8rem;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto 30px;
+            opacity: 0.9;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background-color: var(--primary);
+            color: var(--dark);
+            padding: 14px 32px;
+            border-radius: 5px;
+            font-weight: 700;
+            text-decoration: none;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .cta-button:hover {
+            background-color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* Main Content */
+        .main-content {
+            display: flex;
+            gap: 30px;
+            padding: 50px 0;
+        }
+        
+        .blog-content {
+            flex: 2;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            padding: 40px;
+        }
+        
+        .sidebar {
+            flex: 1;
+        }
+        
+        /* Article Styles */
+        article {
+            margin-bottom: 50px;
+        }
+        
+        article h2 {
+            color: var(--secondary);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid var(--primary);
+            font-size: 1.8rem;
+        }
+        
+        article h3 {
+            color: var(--secondary);
+            margin: 25px 0 15px;
+            font-size: 1.4rem;
+        }
+        
+        article p {
+            margin-bottom: 20px;
+        }
+        
+        article ul, article ol {
+            margin-bottom: 20px;
+            padding-left: 20px;
+        }
+        
+        article li {
+            margin-bottom: 10px;
+        }
+        
+        .code-block {
+            background-color: var(--dark);
+            color: var(--light);
+            padding: 20px;
+            border-radius: 5px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+        }
+        
+        .code-block code {
+            display: block;
+            line-height: 1.5;
+        }
+        
+        .highlight {
+            background-color: rgba(255, 153, 0, 0.1);
+            border-left: 4px solid var(--primary);
+            padding: 15px;
+            margin: 20px 0;
+        }
+        
+        /* Sidebar Styles */
+        .sidebar-widget {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .sidebar-widget h3 {
+            color: var(--secondary);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--primary);
+            font-size: 1.4rem;
+        }
+        
+        .resources-list {
+            list-style-type: none;
+        }
+        
+        .resources-list li {
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .resources-list li:last-child {
+            border-bottom: none;
+        }
+        
+        .resources-list a {
+            color: var(--secondary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: color 0.3s;
+        }
+        
+        .resources-list a:hover {
+            color: var(--primary);
+        }
+        
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .tag {
+            background-color: #f1f1f1;
+            padding: 8px 15px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            color: var(--secondary);
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        .tag:hover {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 50px 0 20px;
+        }
+        
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        
+        .footer-section {
+            flex: 1;
+            min-width: 250px;
+        }
+        
+        .footer-section h3 {
+            color: var(--primary);
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+        }
+        
+        .footer-links {
+            list-style-type: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+        
+        .footer-links a {
+            color: #ddd;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: var(--primary);
+        }
+        
+        .social-icons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .social-icons a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        .social-icons a:hover {
+            background-color: var(--primary);
+            transform: translateY(-3px);
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.9rem;
+            color: #aaa;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .main-content {
+                flex-direction: column;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .hero h2 {
+                font-size: 2.2rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .hero {
+                padding: 60px 0;
+            }
+            
+            .hero h2 {
+                font-size: 1.8rem;
+            }
+            
+            .blog-content, .sidebar-widget {
+                padding: 25px;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .hero h2 {
+                font-size: 1.6rem;
+            }
+            
+            .hero p {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <i class="fab fa-aws"></i>
+                <div class="logo-text">
+                    <h1>AWS for Beginners</h1>
+                    <p>Your guide to cloud computing with GitHub integration</p>
+                </div>
+            </div>
+            <nav class="nav-links">
+                <a href="#"><i class="fas fa-home"></i> Home</a>
+                <a href="#"><i class="fas fa-book"></i> Tutorials</a>
+                <a href="#"><i class="fas fa-code-branch"></i> GitHub</a>
+                <a href="#"><i class="fas fa-cloud"></i> AWS Services</a>
+                <a href="#"><i class="fas fa-envelope"></i> Contact</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h2>Master AWS with GitHub Integration</h2>
+            <p>A comprehensive guide for beginners to start their cloud journey with Amazon Web Services and learn how to integrate with GitHub for version control and CI/CD pipelines.</p>
+            <a href="#getting-started" class="cta-button">Start Learning Now <i class="fas fa-arrow-right"></i></a>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="container main-content">
+        <!-- Blog Content -->
+        <div class="blog-content">
+            <article id="getting-started">
+                <h2>Getting Started with AWS and GitHub</h2>
+                <p>Amazon Web Services (AWS) is the world's most comprehensive and broadly adopted cloud platform. When combined with GitHub for version control, it becomes a powerful combination for developers. In this guide, we'll walk through the basics of setting up AWS, creating a GitHub repository, and connecting the two for seamless deployment.</p>
+                
+                <h3>Why AWS for Beginners?</h3>
+                <p>AWS offers a free tier for 12 months, making it an excellent choice for beginners who want to explore cloud computing without initial costs. With AWS, you can deploy applications, store data, and leverage powerful computing resources without investing in physical hardware.</p>
+                
+                <h3>Step 1: Create an AWS Account</h3>
+                <p>First, you need to create an AWS account. Visit the <a href="https://aws.amazon.com/" target="_blank">AWS website</a> and click "Create an AWS Account". You'll need to provide:</p>
+                <ul>
+                    <li>Your email address</li>
+                    <li>A password for your account</li>
+                    <li>Contact information</li>
+                    <li>Payment information (for verification, free tier won't charge you)</li>
+                </ul>
+                
+                <div class="highlight">
+                    <strong>Pro Tip:</strong> Always set up billing alerts to avoid unexpected charges. AWS Free Tier has limits, and you might incur costs if you exceed them.
+                </div>
+                
+                <h3>Step 2: Set Up GitHub Repository</h3>
+                <p>If you don't have a GitHub account, create one at <a href="https://github.com/" target="_blank">github.com</a>. Then, create a new repository:</p>
+                
+                <div class="code-block">
+                    <code>
+                        # Create a new directory for your project<br>
+                        mkdir my-aws-project<br>
+                        cd my-aws-project<br>
+                        <br>
+                        # Initialize git repository<br>
+                        git init<br>
+                        <br>
+                        # Create a simple HTML file<br>
+                        echo "&lt;!DOCTYPE html&gt;" > index.html<br>
+                        echo "&lt;html&gt;&lt;body&gt;&lt;h1&gt;My AWS Project&lt;/h1&gt;&lt;/body&gt;&lt;/html&gt;" >> index.html<br>
+                        <br>
+                        # Add files and commit<br>
+                        git add .<br>
+                        git commit -m "Initial commit"<br>
+                        <br>
+                        # Link to GitHub repository<br>
+                        git remote add origin https://github.com/username/repository-name.git<br>
+                        git branch -M main<br>
+                        git push -u origin main
+                    </code>
+                </div>
+                
+                <h3>Step 3: Deploy to AWS with Amplify</h3>
+                <p>AWS Amplify is the easiest way to deploy web applications from GitHub to AWS. Follow these steps:</p>
+                <ol>
+                    <li>Log in to your AWS Console</li>
+                    <li>Navigate to AWS Amplify</li>
+                    <li>Click "Connect app" and select GitHub</li>
+                    <li>Authorize AWS to access your GitHub repositories</li>
+                    <li>Select your repository and branch</li>
+                    <li>Configure build settings (Amplify auto-detects most settings)</li>
+                    <li>Click "Save and deploy"</li>
+                </ol>
+                
+                <p>Amplify will automatically deploy your application and provide you with a live URL. Every time you push changes to your GitHub repository, Amplify will automatically rebuild and redeploy your application.</p>
+            </article>
+            
+            <article>
+                <h2>Essential AWS Services for Beginners</h2>
+                <p>As you start your AWS journey, here are the core services you should become familiar with:</p>
+                
+                <h3>1. Amazon S3 (Simple Storage Service)</h3>
+                <p>S3 is object storage built to store and retrieve any amount of data from anywhere. It's perfect for hosting static websites, storing application data, or backups.</p>
+                
+                <h3>2. AWS EC2 (Elastic Compute Cloud)</h3>
+                <p>EC2 provides scalable computing capacity in the cloud. You can launch virtual servers, configure security and networking, and manage storage.</p>
+                
+                <h3>3. AWS Lambda</h3>
+                <p>Lambda lets you run code without provisioning or managing servers. You pay only for the compute time you consume - perfect for event-driven applications.</p>
+                
+                <h3>4. Amazon RDS (Relational Database Service)</h3>
+                <p>RDS makes it easy to set up, operate, and scale a relational database in the cloud. It supports multiple database engines including MySQL, PostgreSQL, and MariaDB.</p>
+                
+                <h3>5. AWS IAM (Identity and Access Management)</h3>
+                <p>IAM enables you to manage access to AWS services and resources securely. Always follow the principle of least privilege when setting up IAM users and roles.</p>
+            </article>
+            
+            <article>
+                <h2>GitHub Actions for AWS Deployment</h2>
+                <p>GitHub Actions allows you to automate your deployment pipeline. Here's a simple workflow to deploy to AWS S3:</p>
+                
+                <div class="code-block">
+                    <code>
+                        name: Deploy to AWS S3<br>
+                        <br>
+                        on:<br>
+                          push:<br>
+                            branches: [ main ]<br>
+                        <br>
+                        jobs:<br>
+                          deploy:<br>
+                            runs-on: ubuntu-latest<br>
+                            steps:<br>
+                              - name: Checkout code<br>
+                                uses: actions/checkout@v2<br>
+                                <br>
+                              - name: Configure AWS credentials<br>
+                                uses: aws-actions/configure-aws-credentials@v1<br>
+                                with:<br>
+                                  aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}<br>
+                                  aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}<br>
+                                  aws-region: us-east-1<br>
+                                <br>
+                              - name: Deploy to S3<br>
+                                run: aws s3 sync ./ s3://your-bucket-name --delete
+                    </code>
+                </div>
+                
+                <p>Remember to store your AWS credentials as secrets in your GitHub repository settings. Never hardcode credentials in your repository.</p>
+            </article>
+        </div>
+        
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-widget">
+                <h3>Useful Resources</h3>
+                <ul class="resources-list">
+                    <li><a href="#"><i class="fab fa-aws"></i> AWS Free Tier Details</a></li>
+                    <li><a href="#"><i class="fab fa-github"></i> GitHub Student Pack</a></li>
+                    <li><a href="#"><i class="fas fa-graduation-cap"></i> AWS Training & Certification</a></li>
+                    <li><a href="#"><i class="fas fa-book"></i> AWS Documentation</a></li>
+                    <li><a href="#"><i class="fas fa-video"></i> AWS YouTube Channel</a></li>
+                    <li><a href="#"><i class="fas fa-hands-helping"></i> AWS Community Builders</a></li>
+                </ul>
+            </div>
+            
+            <div class="sidebar-widget">
+                <h3>Popular Tags</h3>
+                <div class="tags">
+                    <a href="#" class="tag">AWS</a>
+                    <a href="#" class="tag">GitHub</a>
+                    <a href="#" class="tag">Cloud Computing</a>
+                    <a href="#" class="tag">Beginner</a>
+                    <a href="#" class="tag">S3</a>
+                    <a href="#" class="tag">EC2</a>
+                    <a href="#" class="tag">Lambda</a>
+                    <a href="#" class="tag">Deployment</a>
+                    <a href="#" class="tag">CI/CD</a>
+                    <a href="#" class="tag">Free Tier</a>
+                </div>
+            </div>
+            
+            <div class="sidebar-widget">
+                <h3>Next Steps</h3>
+                <p>Once you've mastered the basics, consider exploring:</p>
+                <ul class="resources-list">
+                    <li><a href="#"><i class="fas fa-server"></i> Serverless Architecture</a></li>
+                    <li><a href="#"><i class="fas fa-shield-alt"></i> AWS Security Best Practices</a></li>
+                    <li><a href="#"><i class="fas fa-chart-line"></i> Cost Optimization</a></li>
+                    <li><a href="#"><i class="fas fa-project-diagram"></i> Microservices on AWS</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>AWS for Beginners</h3>
+                    <p>Your comprehensive guide to starting with Amazon Web Services and GitHub integration. Learn cloud computing concepts, deployment strategies, and best practices.</p>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-github"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#">AWS Basics</a></li>
+                        <li><a href="#">GitHub Integration</a></li>
+                        <li><a href="#">Tutorials</a></li>
+                        <li><a href="#">Projects</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>AWS Services</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">S3 Bucket Setup</a></li>
+                        <li><a href="#">EC2 Instance Guide</a></li>
+                        <li><a href="#">Lambda Functions</a></li>
+                        <li><a href="#">RDS Database</a></li>
+                        <li><a href="#">IAM Configuration</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Contact</h3>
+                    <ul class="footer-links">
+                        <li><a href="#"><i class="fas fa-envelope"></i> Email Us</a></li>
+                        <li><a href="#"><i class="fas fa-comment"></i> Live Chat</a></li>
+                        <li><a href="#"><i class="fas fa-question-circle"></i> FAQ</a></li>
+                        <li><a href="#"><i class="fas fa-bug"></i> Report Issue</a></li>
+                        <li><a href="#"><i class="fas fa-lightbulb"></i> Suggest Content</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2023 AWS for Beginners Blog. This site is for educational purposes and is not affiliated with Amazon Web Services or GitHub.</p>
+                <p>All trademarks are the property of their respective owners.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Simple JavaScript for smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if(targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if(targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+        
+        // Add active state to navigation links
+        window.addEventListener('scroll', function() {
+            const sections = document.querySelectorAll('article');
+            const navLinks = document.querySelectorAll('.nav-links a');
+            
+            let currentSection = '';
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop - 100;
+                const sectionHeight = section.clientHeight;
+                if(scrollY >= sectionTop && scrollY < sectionTop + sectionHeight) {
+                    currentSection = section.getAttribute('id');
+                }
+            });
+            
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if(link.getAttribute('href') === `#${currentSection}`) {
+                    link.classList.add('active');
+                }
+            });
+        });
+        
+        // Simple tag filter simulation
+        document.querySelectorAll('.tag').forEach(tag => {
+            tag.addEventListener('click', function(e) {
+                e.preventDefault();
+                const tagName = this.textContent;
+                alert(`Filtering articles by tag: ${tagName}`);
+            });
+        });
+    </script>
+</body>
+</html>

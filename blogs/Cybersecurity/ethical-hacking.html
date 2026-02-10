@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ethical Hacking on GitHub: A Responsible Guide</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary-color: #0d1117;
+            --secondary-color: #161b22;
+            --accent-color: #238636;
+            --accent-hover: #2ea043;
+            --text-primary: #f0f6fc;
+            --text-secondary: #8b949e;
+            --border-color: #30363d;
+            --card-bg: #161b22;
+        }
+
+        body {
+            background-color: var(--primary-color);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        header {
+            background-color: var(--secondary-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1.5rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .logo i {
+            color: var(--accent-color);
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        nav a {
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: var(--accent-color);
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 4rem 0;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 3.2rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+
+        .hero-badges {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-top: 2rem;
+        }
+
+        .badge {
+            background-color: var(--card-bg);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            border: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .badge i {
+            color: var(--accent-color);
+        }
+
+        /* Main Content */
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 3rem;
+            padding: 3rem 0;
+        }
+
+        .article-content {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            padding: 2.5rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .article-meta {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .article-meta span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .article-content h2 {
+            color: var(--accent-color);
+            margin: 2rem 0 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .article-content h3 {
+            margin: 1.5rem 0 1rem;
+            color: var(--text-primary);
+        }
+
+        .article-content p {
+            margin-bottom: 1.2rem;
+        }
+
+        .article-content ul, .article-content ol {
+            margin-bottom: 1.5rem;
+            padding-left: 1.5rem;
+        }
+
+        .article-content li {
+            margin-bottom: 0.5rem;
+        }
+
+        .warning-box, .tip-box {
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+            border-left: 4px solid;
+        }
+
+        .warning-box {
+            background-color: rgba(218, 54, 51, 0.1);
+            border-left-color: #da3633;
+        }
+
+        .tip-box {
+            background-color: rgba(35, 134, 54, 0.1);
+            border-left-color: var(--accent-color);
+        }
+
+        .warning-box h4, .tip-box h4 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 0.5rem;
+        }
+
+        .code-block {
+            background-color: var(--primary-color);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+        }
+
+        .resource-card {
+            background-color: var(--primary-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .resource-card h4 {
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: sticky;
+            top: 100px;
+            height: fit-content;
+        }
+
+        .sidebar-widget {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .sidebar-widget h3 {
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .sidebar-links {
+            list-style: none;
+        }
+
+        .sidebar-links li {
+            margin-bottom: 0.8rem;
+        }
+
+        .sidebar-links a {
+            color: var(--text-primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: color 0.3s;
+        }
+
+        .sidebar-links a:hover {
+            color: var(--accent-color);
+        }
+
+        .tag {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: var(--text-secondary);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+            border: 1px solid var(--border-color);
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--secondary-color);
+            border-top: 1px solid var(--border-color);
+            padding: 3rem 0;
+            margin-top: 3rem;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+
+        .footer-column h4 {
+            color: var(--accent-color);
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: var(--accent-color);
+        }
+
+        .copyright {
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: var(--accent-color);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background-color 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background-color: var(--accent-hover);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                position: static;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            nav ul {
+                display: none;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .header-content {
+                position: relative;
+            }
+            
+            .mobile-menu {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background-color: var(--secondary-color);
+                padding: 1rem;
+                border-top: 1px solid var(--border-color);
+            }
+            
+            .mobile-menu.active {
+                display: block;
+            }
+            
+            .mobile-menu ul {
+                list-style: none;
+            }
+            
+            .mobile-menu li {
+                margin-bottom: 1rem;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .footer-content {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <i class="fab fa-github"></i>
+                <span>SecBlog</span>
+            </div>
+            
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <nav>
+                <ul>
+                    <li><a href="#"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="#"><i class="fas fa-bug"></i> Ethical Hacking</a></li>
+                    <li><a href="#"><i class="fas fa-shield-alt"></i> Security</a></li>
+                    <li><a href="#"><i class="fas fa-tools"></i> Tools</a></li>
+                    <li><a href="#"><i class="fas fa-book"></i> Resources</a></li>
+                </ul>
+            </nav>
+            
+            <div class="mobile-menu" id="mobileMenu">
+                <ul>
+                    <li><a href="#"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="#"><i class="fas fa-bug"></i> Ethical Hacking</a></li>
+                    <li><a href="#"><i class="fas fa-shield-alt"></i> Security</a></li>
+                    <li><a href="#"><i class="fas fa-tools"></i> Tools</a></li>
+                    <li><a href="#"><i class="fas fa-book"></i> Resources</a></li>
+                </ul>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container hero-content">
+            <h1>Ethical Hacking on GitHub: A Guide to Responsible Security Research</h1>
+            <p>Learn how to leverage GitHub for security research while staying within legal and ethical boundaries. Discover tools, resources, and best practices for ethical hackers.</p>
+            <div class="hero-badges">
+                <div class="badge"><i class="fas fa-shield-alt"></i> Responsible Disclosure</div>
+                <div class="badge"><i class="fas fa-balance-scale"></i> Legal Compliance</div>
+                <div class="badge"><i class="fas fa-tools"></i> Security Tools</div>
+                <div class="badge"><i class="fas fa-code"></i> Open Source</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="container main-content">
+        <!-- Article Content -->
+        <article class="article-content">
+            <div class="article-meta">
+                <span><i class="far fa-calendar"></i> June 15, 2023</span>
+                <span><i class="far fa-clock"></i> 8 min read</span>
+                <span><i class="fas fa-user"></i> Alex Security</span>
+            </div>
+            
+            <p>GitHub has become an indispensable platform for security researchers and ethical hackers. With millions of repositories containing code, configurations, and security tools, it offers a treasure trove of resources for those interested in cybersecurity. However, navigating this space requires understanding both the opportunities and the ethical responsibilities that come with them.</p>
+            
+            <h2>What is Ethical Hacking?</h2>
+            <p>Ethical hacking, also known as penetration testing or white-hat hacking, involves legally breaking into computers and devices to test an organization's defenses. Unlike malicious hackers, ethical hackers have permission to probe systems for vulnerabilities and report their findings to help improve security.</p>
+            
+            <div class="warning-box">
+                <h4><i class="fas fa-exclamation-triangle"></i> Important Legal Disclaimer</h4>
+                <p>Always ensure you have explicit permission before testing any system or network. Unauthorized access to computer systems is illegal in most jurisdictions, regardless of intent. This article is for educational purposes only.</p>
+            </div>
+            
+            <h2>GitHub's Role in Security Research</h2>
+            <p>GitHub serves multiple purposes for security professionals:</p>
+            <ul>
+                <li><strong>Tool Repository:</strong> Thousands of security tools are openly available</li>
+                <li><strong>Vulnerability Discovery:</strong> Researchers can analyze public code for security flaws</li>
+                <li><strong>Proof of Concepts (PoCs):</strong> Ethical hackers share exploit code to demonstrate vulnerabilities</li>
+                <li><strong>Knowledge Sharing:</strong> Security guides, cheatsheets, and research papers</li>
+                <li><strong>Collaboration:</strong> Working together on security tools and frameworks</li>
+            </ul>
+            
+            <h2>Finding Security Tools on GitHub</h2>
+            <p>GitHub hosts an extensive collection of security tools for various purposes:</p>
+            
+            <div class="resource-card">
+                <h4><i class="fas fa-search"></i> Reconnaissance Tools</h4>
+                <p>Tools like <strong>Amass</strong>, <strong>Sublist3r</strong>, and <strong>theHarvester</strong> help in gathering information about targets during the reconnaissance phase.</p>
+                <div class="tags">
+                    <span class="tag">OSINT</span>
+                    <span class="tag">Recon</span>
+                    <span class="tag">Information Gathering</span>
+                </div>
+            </div>
+            
+            <div class="resource-card">
+                <h4><i class="fas fa-bug"></i> Vulnerability Scanners</h4>
+                <p><strong>Nuclei</strong>, <strong>Nikto</strong>, and <strong>OpenVAS</strong> are popular open-source vulnerability scanners available on GitHub.</p>
+                <div class="tags">
+                    <span class="tag">Scanning</span>
+                    <span class="tag">Vulnerability Assessment</span>
+                    <span class="tag">Automation</span>
+                </div>
+            </div>
+            
+            <div class="resource-card">
+                <h4><i class="fas fa-lock"></i> Exploitation Frameworks</h4>
+                <p>While tools like <strong>Metasploit</strong> are well-known, many specialized frameworks exist for specific vulnerability types.</p>
+                <div class="tags">
+                    <span class="tag">Exploitation</span>
+                    <span class="tag">Penetration Testing</span>
+                    <span class="tag">Frameworks</span>
+                </div>
+            </div>
+            
+            <h2>Ethical Guidelines for Security Research on GitHub</h2>
+            <p>When using GitHub for security research, follow these ethical guidelines:</p>
+            <ol>
+                <li><strong>Respect Licensing:</strong> Always comply with the licenses of projects you use or modify</li>
+                <li><strong>Responsible Disclosure:</strong> If you find vulnerabilities in projects, disclose them responsibly to maintainers</li>
+                <li><strong>Avoid Malicious Use:</strong> Do not use tools or knowledge gained for unauthorized activities</li>
+                <li><strong>Contribute Back:</strong> Share your improvements and findings with the community</li>
+                <li><strong>Verify Sources:</strong> Always review code from untrusted sources before execution</li>
+            </ol>
+            
+            <div class="tip-box">
+                <h4><i class="fas fa-lightbulb"></i> Pro Tip: GitHub's Security Advisories</h4>
+                <p>Use GitHub's built-in security advisory feature to report vulnerabilities in repositories. Maintainers can then create security advisories to privately discuss and fix the vulnerability before publishing it.</p>
+            </div>
+            
+            <h2>Setting Up a Secure Research Environment</h2>
+            <p>Before diving into security research, set up a proper lab environment:</p>
+            
+            <div class="code-block">
+                <pre>
+# Example: Setting up a basic Kali Linux VM for security research
+# 1. Download Kali Linux from official website
+# 2. Install VirtualBox or VMware
+# 3. Create a new virtual machine with at least 4GB RAM and 40GB storage
+# 4. Install Kali Linux on the VM
+# 5. Update the system:
+sudo apt update && sudo apt upgrade -y
+
+# 6. Install essential security tools:
+sudo apt install nmap wireshark burpsuite metasploit-framework -y
+
+# 7. Clone useful GitHub repositories:
+git clone https://github.com/danielmiessler/SecLists.git
+git clone https://github.com/ffuf/ffuf.git
+git clone https://github.com/projectdiscovery/nuclei-templates.git</pre>
+            </div>
+            
+            <h2>Legal Considerations</h2>
+            <p>Understanding the legal landscape is crucial for ethical hackers:</p>
+            <ul>
+                <li><strong>Computer Fraud and Abuse Act (CFAA):</strong> U.S. law that prohibits unauthorized access to computers</li>
+                <li><strong>GDPR and Data Protection:</strong> Regulations affecting how you handle personal data during testing</li>
+                <li><strong>Bug Bounty Programs:</strong> Legitimate ways to test and report vulnerabilities for rewards</li>
+                <li><strong>Penetration Testing Agreements:</strong> Always have a written agreement before testing</li>
+            </ul>
+            
+            <h2>Getting Started with Ethical Hacking on GitHub</h2>
+            <p>If you're new to ethical hacking, here's a roadmap:</p>
+            <ol>
+                <li>Learn networking basics and Linux command line</li>
+                <li>Understand common vulnerabilities (OWASP Top 10)</li>
+                <li>Set up a lab environment with virtual machines</li>
+                <li>Explore GitHub for learning resources and tools</li>
+                <li>Practice on intentionally vulnerable applications (DVWA, WebGoat)</li>
+                <li>Consider certifications like CEH, OSCP, or eJPT</li>
+                <li>Contribute to open-source security projects</li>
+            </ol>
+            
+            <div class="warning-box">
+                <h4><i class="fas fa-exclamation-triangle"></i> Remember</h4>
+                <p>Ethical hacking is about improving security, not breaking systems. Always operate within legal boundaries and with proper authorization. Your skills should be used to protect systems, not compromise them.</p>
+            </div>
+            
+            <p>GitHub remains an invaluable resource for security professionals, offering tools, knowledge, and community. By approaching it with ethical principles and responsible practices, you can contribute to making the digital world more secure for everyone.</p>
+            
+            <div style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--border-color);">
+                <h3>Share this Article</h3>
+                <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                    <a href="#" class="btn" style="background-color: #1da1f2;"><i class="fab fa-twitter"></i> Twitter</a>
+                    <a href="#" class="btn" style="background-color: #1877f2;"><i class="fab fa-linkedin"></i> LinkedIn</a>
+                    <a href="#" class="btn" style="background-color: #333;"><i class="fab fa-github"></i> GitHub</a>
+                </div>
+            </div>
+        </article>
+        
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-widget">
+                <h3><i class="fas fa-link"></i> Quick Links</h3>
+                <ul class="sidebar-links">
+                    <li><a href="#"><i class="fas fa-arrow-right"></i> OWASP Top 10</a></li>
+                    <li><a href="#"><i class="fas fa-arrow-right"></i> GitHub Security Lab</a></li>
+                    <li><a href="#"><i class="fas fa-arrow-right"></i> Responsible Disclosure Policy</a></li>
+                    <li><a href="#"><i class="fas fa-arrow-right"></i> Bug Bounty Platforms</a></li>
+                    <li><a href="#"><i class="fas fa-arrow-right"></i> Security Certifications Guide</a></li>
+                </ul>
+            </div>
+            
+            <div class="sidebar-widget">
+                <h3><i class="fas fa-tags"></i> Popular Tags</h3>
+                <div class="tags">
+                    <span class="tag">Penetration Testing</span>
+                    <span class="tag">Vulnerability</span>
+                    <span class="tag">GitHub Security</span>
+                    <span class="tag">Web Security</span>
+                    <span class="tag">Network Security</span>
+                    <span class="tag">Cryptography</span>
+                    <span class="tag">Malware Analysis</span>
+                    <span class="tag">Incident Response</span>
+                    <span class="tag">Secure Coding</span>
+                </div>
+            </div>
+            
+            <div class="sidebar-widget">
+                <h3><i class="fas fa-bookmark"></i> Related Articles</h3>
+                <ul class="sidebar-links">
+                    <li><a href="#"><i class="far fa-file-alt"></i> Setting Up Your First Security Lab</a></li>
+                    <li><a href="#"><i class="far fa-file-alt"></i> Top 10 GitHub Repositories for Security</a></li>
+                    <li><a href="#"><i class="far fa-file-alt"></i> Bug Bounty Hunting for Beginners</a></li>
+                    <li><a href="#"><i class="far fa-file-alt"></i> Understanding Common Web Vulnerabilities</a></li>
+                </ul>
+            </div>
+            
+            <div class="sidebar-widget">
+                <h3><i class="fas fa-newspaper"></i> Newsletter</h3>
+                <p style="margin-bottom: 1rem; color: var(--text-secondary);">Get the latest security research updates</p>
+                <input type="email" placeholder="Your email address" style="width: 100%; padding: 0.8rem; background-color: var(--primary-color); border: 1px solid var(--border-color); border-radius: 6px; color: var(--text-primary); margin-bottom: 1rem;">
+                <button class="btn" style="width: 100%;">Subscribe</button>
+            </div>
+        </aside>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h4>SecBlog</h4>
+                    <p>A resource for ethical hackers and security professionals. Promoting responsible security research and knowledge sharing.</p>
+                </div>
+                
+                <div class="footer-column">
+                    <h4>Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Security Tools</a></li>
+                        <li><a href="#">Tutorials</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h4>Legal</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#">Ethical Guidelines</a></li>
+                        <li><a href="#">Responsible Disclosure</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h4>Connect</h4>
+                    <ul class="footer-links">
+                        <li><a href="#"><i class="fab fa-github"></i> GitHub</a></li>
+                        <li><a href="#"><i class="fab fa-twitter"></i> Twitter</a></li>
+                        <li><a href="#"><i class="fab fa-linkedin"></i> LinkedIn</a></li>
+                        <li><a href="#"><i class="fab fa-discord"></i> Discord</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2023 SecBlog. All rights reserved. This content is for educational purposes only.</p>
+                <p style="margin-top: 0.5rem;">Always practice ethical hacking with proper authorization.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        document.getElementById('mobileMenuBtn').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            mobileMenu.classList.toggle('active');
+            
+            // Change icon
+            const icon = this.querySelector('i');
+            if (mobileMenu.classList.contains('active')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
+            } else {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            }
+        });
+        
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                    
+                    // Close mobile menu if open
+                    const mobileMenu = document.getElementById('mobileMenu');
+                    if (mobileMenu.classList.contains('active')) {
+                        mobileMenu.classList.remove('active');
+                        const icon = document.querySelector('#mobileMenuBtn i');
+                        icon.classList.remove('fa-times');
+                        icon.classList.add('fa-bars');
+                    }
+                }
+            });
+        });
+        
+        // Newsletter subscription
+        document.querySelector('.sidebar-widget .btn').addEventListener('click', function() {
+            const emailInput = document.querySelector('.sidebar-widget input[type="email"]');
+            const email = emailInput.value;
+            
+            if (email && email.includes('@')) {
+                alert('Thank you for subscribing to our newsletter!');
+                emailInput.value = '';
+            } else {
+                alert('Please enter a valid email address.');
+            }
+        });
+    </script>
+</body>
+</html>
