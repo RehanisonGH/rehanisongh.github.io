@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Complete Next.js 14 tutorial for building modern blogs with App Router, Server Components, and optimal performance">
+    <title>Next.js 14 Tutorial - Web Development - Rehan's Tech Blog</title>
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/theme.css">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1911859184415905" crossorigin="anonymous"></script>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo">
+                    <h1><a href="../../index.html">Rehan's Tech Blog</a></h1>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="../../index.html">Home</a></li>
+                    <li class="dropdown">
+                        <a href="#">Categories</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="index.html">Web Development</a></li>
+                            <li><a href="../ai-machine-learning/index.html">AI & Machine Learning</a></li>
+                            <li><a href="../cybersecurity/index.html">Cybersecurity</a></li>
+                            <li><a href="../mobile-development/index.html">Mobile Development</a></li>
+                            <li><a href="../cloud-computing/index.html">Cloud Computing</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="../../about.html">About</a></li>
+                    <li><a href="../../contact.html">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <article class="blog-post">
+            <header class="post-header">
+                <nav class="breadcrumb">
+                    <a href="../../index.html">Home</a> &gt;
+                    <a href="index.html">Web Development</a> &gt;
+                    <span>Next.js 14 Tutorial</span>
+                </nav>
+                <h1>Next.js 14 Web Development Tutorial: Building a Modern Blog</h1>
+                <div class="post-meta">
+                    <span>By Rehan</span>
+                    <span>January 17, 2024</span>
+                    <span>15 min read</span>
+                </div>
+            </header>
+            
+            <div class="post-content">
+                <h2>Introduction to Next.js 14</h2>
+                <p>Next.js 14 is the latest version of the popular React framework that brings powerful new features for building fast, SEO-friendly web applications. In this tutorial, we'll build a fully-functional blog with the latest Next.js features including:</p>
+                <ul>
+                    <li><strong>App Router</strong> - The new file-system based routing</li>
+                    <li><strong>Server Components</strong> - For improved performance and SEO</li>
+                    <li><strong>Server Actions</strong> - For data mutations without API routes</li>
+                    <li><strong>Metadata API</strong> - For SEO optimization</li>
+                    <li><strong>Static and Dynamic Rendering</strong></li>
+                </ul>
+
+                <div class="ad-container">
+                    <ins class="adsbygoogle"
+                         style="display:block; text-align:center;"
+                         data-ad-layout="in-article"
+                         data-ad-format="fluid"
+                         data-ad-client="ca-pub-1911859184415905"
+                         data-ad-slot="1234567890"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+
+                <h2>Step 1: Setting Up the Project</h2>
+                <p>First, create a new Next.js 14 project:</p>
+                <pre><code>npx create-next-app@latest nextjs-blog-tutorial</code></pre>
+                <p>When prompted, choose these options:</p>
+                <ul>
+                    <li>TypeScript: Yes</li>
+                    <li>ESLint: Yes</li>
+                    <li>Tailwind CSS: Yes</li>
+                    <li>App Router: Yes</li>
+                    <li>Customize import alias: No</li>
+                </ul>
+
+                <h2>Step 2: Project Structure</h2>
+                <pre><code>nextjs-blog-tutorial/
+├── app/
+│   ├── (blog)/
+│   │   ├── page.tsx
+│   │   ├── [slug]/
+│   │   │   └── page.tsx
+│   ├── about/
+│   │   └── page.tsx
+│   ├── api/ (optional)
+│   ├── layout.tsx
+│   └── page.tsx
+├── components/
+│   ├── Header.tsx
+│   ├── Footer.tsx
+│   ├── BlogCard.tsx
+│   └── ThemeToggle.tsx
+├── lib/
+│   └── utils.ts
+├── types/
+│   └── blog.ts
+└── public/
+    └── images/</code></pre>
+
+                <h2>Step 3: Define Types</h2>
+                <p>Create <code>types/blog.ts</code>:</p>
+                <pre><code>export interface BlogPost {
+  id: string;
+  title: string;
+  slug: string;
+  excerpt: string;
+  content: string;
+  author: string;
+  date: string;
+  tags: string[];
+  readTime: string;
+  image: string;
+  featured?: boolean;
+}
+
+export interface BlogMetadata {
+  title: string;
+  description: string;
+  keywords: string[];
+}</code></pre>
+
+                <div class="ad-container">
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-1911859184415905"
+                         data-ad-slot="0987654321"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+
+                <h2>Step 4: Create Layout Components</h2>
+                <h3>Header Component (<code>components/Header.tsx</code>):</h3>
+                <pre><code>import Link from 'next/link';
+import ThemeToggle from './ThemeToggle';
+
+const Header = () => {
+  const navItems = [
+    { name: 'Home', href: '/' },
+    { name: 'Blog', href: '/blog' },
+    { name: 'About', href: '/about' },
+  ];
+
+  return (
+    &lt;header className="sticky top-0 z-50 w-full border-b border-gray-200 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60 dark:border-gray-800 dark:bg-gray-950/95"&gt;
+      &lt;div className="container mx-auto px-4 sm:px-6 lg:px-8"&gt;
+        &lt;div className="flex h-16 items-center justify-between"&gt;
+          &lt;div className="flex items-center"&gt;
+            &lt;Link href="/" className="text-xl font-bold text-gray-900 dark:text-white"&gt;
+              NextBlog
+            &lt;/Link&gt;
+            &lt;nav className="ml-10 hidden space-x-8 md:flex"&gt;
+              {navItems.map((item) =&gt; (
+                &lt;Link
+                  key={item.name}
+                  href={item.href}
+                  className="text-sm font-medium text-gray-700 transition-colors hover:text-gray-900 dark:text-gray-300 dark:hover:text-white"
+                &gt;
+                  {item.name}
+                &lt;/Link&gt;
+              ))}
+            &lt;/nav&gt;
+          &lt;/div&gt;
+          &lt;div className="flex items-center gap-4"&gt;
+            &lt;ThemeToggle /&gt;
+            &lt;button className="rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700"&gt;
+              Subscribe
+            &lt;/button&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/header&gt;
+  );
+};
+
+export default Header;</code></pre>
+
+                <h3>Blog Card Component (<code>components/BlogCard.tsx</code>):</h3>
+                <pre><code>import Image from 'next/image';
+import Link from 'next/link';
+import { CalendarDays, Clock, User } from 'lucide-react';
+import type { BlogPost } from '@/types/blog';
+
+interface BlogCardProps {
+  post: BlogPost;
+  featured?: boolean;
+}
+
+const BlogCard = ({ post, featured = false }: BlogCardProps) => {
+  if (featured) {
+    return (
+      &lt;article className="group relative overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-lg transition-all hover:shadow-xl dark:border-gray-800 dark:bg-gray-900"&gt;
+        &lt;div className="grid md:grid-cols-2"&gt;
+          &lt;div className="relative h-64 md:h-auto"&gt;
+            &lt;Image
+              src={post.image}
+              alt={post.title}
+              fill
+              className="object-cover transition-transform duration-300 group-hover:scale-105"
+              sizes="(max-width: 768px) 100vw, 50vw"
+            /&gt;
+          &lt;/div&gt;
+          &lt;div className="p-8"&gt;
+            &lt;div className="mb-4 flex flex-wrap items-center gap-4 text-sm text-gray-600 dark:text-gray-400"&gt;
+              &lt;span className="rounded-full bg-blue-100 px-3 py-1 text-blue-800 dark:bg-blue-900 dark:text-blue-200"&gt;
+                Featured
+              &lt;/span&gt;
+              {post.tags.map((tag) =&gt; (
+                &lt;span
+                  key={tag}
+                  className="rounded-full bg-gray-100 px-3 py-1 text-gray-700 dark:bg-gray-800 dark:text-gray-300"
+                &gt;
+                  {tag}
+                &lt;/span&gt;
+              ))}
+            &lt;/div&gt;
+            &lt;h2 className="mb-4 text-2xl font-bold text-gray-900 group-hover:text-blue-600 dark:text-white"&gt;
+              &lt;Link href={`/blog/${post.slug}`}&gt;{post.title}&lt;/Link&gt;
+            &lt;/h2&gt;
+            &lt;p className="mb-6 text-gray-600 dark:text-gray-300"&gt;{post.excerpt}&lt;/p&gt;
+            &lt;div className="flex items-center justify-between"&gt;
+              &lt;div className="flex items-center gap-6 text-sm text-gray-500 dark:text-gray-400"&gt;
+                &lt;span className="flex items-center gap-2"&gt;
+                  &lt;User className="h-4 w-4" /&gt;
+                  {post.author}
+                &lt;/span&gt;
+                &lt;span className="flex items-center gap-2"&gt;
+                  &lt;CalendarDays className="h-4 w-4" /&gt;
+                  {post.date}
+                &lt;/span&gt;
+                &lt;span className="flex items-center gap-2"&gt;
+                  &lt;Clock className="h-4 w-4" /&gt;
+                  {post.readTime}
+                &lt;/span&gt;
+              &lt;/div&gt;
+              &lt;Link
+                href={`/blog/${post.slug}`}
+                className="font-semibold text-blue-600 hover:text-blue-700 dark:text-blue-400"
+              &gt;
+                Read more →
+              &lt;/Link&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/article&gt;
+    );
+  }
+
+  return (
+    &lt;article className="group overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm transition-all hover:shadow-md dark:border-gray-800 dark:bg-gray-900"&gt;
+      &lt;div className="relative h-48"&gt;
+        &lt;Image
+          src={post.image}
+          alt={post.title}
+          fill
+          className="object-cover transition-transform duration-300 group-hover:scale-105"
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+        /&gt;
+      &lt;/div&gt;
+      &lt;div className="p-6"&gt;
+        &lt;div className="mb-3 flex flex-wrap items-center gap-2"&gt;
+          {post.tags.map((tag) =&gt; (
+            &lt;span
+              key={tag}
+              className="rounded-full bg-gray-100 px-2 py-1 text-xs text-gray-700 dark:bg-gray-800 dark:text-gray-300"
+            &gt;
+              {tag}
+            &lt;/span&gt;
+          ))}
+        &lt;/div&gt;
+        &lt;h3 className="mb-3 text-xl font-bold text-gray-900 group-hover:text-blue-600 dark:text-white"&gt;
+          &lt;Link href={`/blog/${post.slug}`}&gt;{post.title}&lt;/Link&gt;
+        &lt;/h3&gt;
+        &lt;p className="mb-4 text-gray-600 dark:text-gray-300 line-clamp-2"&gt;{post.excerpt}&lt;/p&gt;
+        &lt;div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400"&gt;
+          &lt;div className="flex items-center gap-4"&gt;
+            &lt;span className="flex items-center gap-1"&gt;
+              &lt;User className="h-4 w-4" /&gt;
+              {post.author}
+            &lt;/span&gt;
+            &lt;span&gt;{post.date}&lt;/span&gt;
+          &lt;/div&gt;
+          &lt;span className="flex items-center gap-1"&gt;
+            &lt;Clock className="h-4 w-4" /&gt;
+            {post.readTime}
+          &lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/article&gt;
+  );
+};
+
+export default BlogCard;</code></pre>
+
+                <div class="ad-container">
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-1911859184415905"
+                         data-ad-slot="1122334455"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+
+                <h2>Step 5: Create Blog Data Service</h2>
+                <p>Create <code>lib/blog-data.ts</code>:</p>
+                <pre><code>import { BlogPost } from '@/types/blog';
+
+export const getBlogPosts = async (): Promise&lt;BlogPost[]&gt; => {
+  // In a real app, this would fetch from a database or CMS
+  return [
+    {
+      id: '1',
+      title: 'Getting Started with Next.js 14',
+      slug: 'getting-started-with-nextjs-14',
+      excerpt: 'Learn how to build modern web applications with the latest features of Next.js 14.',
+      content: `Next.js 14 introduces several groundbreaking features...`,
+      author: 'Jane Doe',
+      date: '2024-01-15',
+      tags: ['Next.js', 'React', 'TypeScript'],
+      readTime: '5 min read',
+      image: 'https://images.unsplash.com/photo-1551650975-87deedd944c3?w=800&auto=format&fit=crop',
+      featured: true,
+    },
+    // More posts...
+  ];
+};
+
+export const getBlogPost = async (slug: string): Promise&lt;BlogPost | null&gt; => {
+  const posts = await getBlogPosts();
+  return posts.find((post) => post.slug === slug) || null;
+};
+
+export const getFeaturedPosts = async (): Promise&lt;BlogPost[]&gt; => {
+  const posts = await getBlogPosts();
+  return posts.filter((post) => post.featured);
+};
+
+export const getRecentPosts = async (count: number = 3): Promise&lt;BlogPost[]&gt; => {
+  const posts = await getBlogPosts();
+  return posts.slice(0, count);
+};</code></pre>
+
+                <h2>Step 6: Create Main Layout</h2>
+                <p>Create <code>app/layout.tsx</code>:</p>
+                <pre><code>import type { Metadata } from 'next';
+import { Inter } from 'next/font/google';
+import './globals.css';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
+
+const inter = Inter({ subsets: ['latin'] });
+
+export const metadata: Metadata = {
+  title: 'NextBlog - Modern Blog with Next.js 14',
+  description: 'A modern blog built with Next.js 14 featuring cutting-edge web development techniques.',
+  keywords: ['Next.js', 'React', 'TypeScript', 'Blog', 'Web Development'],
+  authors: [{ name: 'Your Name' }],
+  openGraph: {
+    type: 'website',
+    locale: 'en_US',
+    url: 'https://nextblog.example.com',
+    title: 'NextBlog - Modern Blog with Next.js 14',
+    description: 'A modern blog built with Next.js 14',
+    siteName: 'NextBlog',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'NextBlog - Modern Blog with Next.js 14',
+    description: 'A modern blog built with Next.js 14',
+    creator: '@yourtwitter',
+  },
+};
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    &lt;html lang="en" className="dark"&gt;
+      &lt;body className={`${inter.className} bg-gray-50 text-gray-900 dark:bg-gray-950 dark:text-gray-100`}&gt;
+        &lt;div className="flex min-h-screen flex-col"&gt;
+          &lt;Header /&gt;
+          &lt;main className="flex-1"&gt;{children}&lt;/main&gt;
+          &lt;Footer /&gt;
+        &lt;/div&gt;
+      &lt;/body&gt;
+    &lt;/html&gt;
+  );
+}</code></pre>
+
+                <h2>Step 7: Create Home Page</h2>
+                <p>Create <code>app/page.tsx</code>:</p>
+                <pre><code>import Link from 'next/link';
+import { ArrowRight } from 'lucide-react';
+import BlogCard from '@/components/BlogCard';
+import { getFeaturedPosts, getRecentPosts } from '@/lib/blog-data';
+
+export default async function HomePage() {
+  const [featuredPosts, recentPosts] = await Promise.all([
+    getFeaturedPosts(),
+    getRecentPosts(4),
+  ]);
+
+  return (
+    &lt;&gt;
+      {/* Hero Section */}
+      &lt;section className="relative overflow-hidden bg-gradient-to-br from-blue-50 to-indigo-100 py-20 dark:from-gray-900 dark:to-gray-800"&gt;
+        &lt;div className="container relative mx-auto px-4 sm:px-6 lg:px-8"&gt;
+          &lt;div className="text-center"&gt;
+            &lt;h1 className="mb-6 text-5xl font-bold text-gray-900 dark:text-white sm:text-6xl lg:text-7xl"&gt;
+              Welcome to{' '}
+              &lt;span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"&gt;
+                NextBlog
+              &lt;/span&gt;
+            &lt;/h1&gt;
+            &lt;p className="mx-auto mb-10 max-w-2xl text-xl text-gray-600 dark:text-gray-300"&gt;
+              A modern blog built with Next.js 14, featuring cutting-edge web development techniques,
+              server components, and optimal performance.
+            &lt;/p&gt;
+            &lt;div className="flex flex-col justify-center gap-4 sm:flex-row"&gt;
+              &lt;Link
+                href="/blog"
+                className="inline-flex items-center justify-center rounded-lg bg-blue-600 px-8 py-3 text-lg font-semibold text-white hover:bg-blue-700"
+              &gt;
+                Explore Articles
+                &lt;ArrowRight className="ml-2 h-5 w-5" /&gt;
+              &lt;/Link&gt;
+              &lt;Link
+                href="/about"
+                className="inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-8 py-3 text-lg font-semibold text-gray-900 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:hover:bg-gray-700"
+              &gt;
+                Learn More
+              &lt;/Link&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/section&gt;
+
+      {/* Featured Posts */}
+      &lt;section className="py-16"&gt;
+        &lt;div className="container mx-auto px-4 sm:px-6 lg:px-8"&gt;
+          &lt;div className="mb-12 text-center"&gt;
+            &lt;h2 className="mb-4 text-3xl font-bold text-gray-900 dark:text-white"&gt;
+              Featured Articles
+            &lt;/h2&gt;
+            &lt;p className="text-gray-600 dark:text-gray-400"&gt;
+              Handpicked articles showcasing the latest in web development
+            &lt;/p&gt;
+          &lt;/div&gt;
+          &lt;div className="space-y-8"&gt;
+            {featuredPosts.map((post) =&gt; (
+              &lt;BlogCard key={post.id} post={post} featured /&gt;
+            ))}
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/section&gt;
+
+      {/* Recent Posts */}
+      &lt;section className="py-16 bg-gray-50 dark:bg-gray-900"&gt;
+        &lt;div className="container mx-auto px-4 sm:px-6 lg:px-8"&gt;
+          &lt;div className="mb-12 flex items-center justify-between"&gt;
+            &lt;div&gt;
+              &lt;h2 className="text-3xl font-bold text-gray-900 dark:text-white"&gt;
+                Recent Articles
+              &lt;/h2&gt;
+              &lt;p className="mt-2 text-gray-600 dark:text-gray-400"&gt;
+                Latest insights and tutorials
+              &lt;/p&gt;
+            &lt;/div&gt;
+            &lt;Link
+              href="/blog"
+              className="flex items-center text-blue-600 hover:text-blue-700 dark:text-blue-400"
+            &gt;
+              View all articles
+              &lt;ArrowRight className="ml-2 h-5 w-5" /&gt;
+            &lt;/Link&gt;
+          &lt;/div&gt;
+          &lt;div className="grid gap-8 md:grid-cols-2"&gt;
+            {recentPosts.map((post) =&gt; (
+              &lt;BlogCard key={post.id} post={post} /&gt;
+            ))}
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/section&gt;
+
+      {/* CTA Section */}
+      &lt;section className="py-20"&gt;
+        &lt;div className="container mx-auto px-4 sm:px-6 lg:px-8"&gt;
+          &lt;div className="rounded-2xl bg-gradient-to-r from-blue-600 to-purple-600 p-12 text-center"&gt;
+            &lt;h2 className="mb-6 text-4xl font-bold text-white"&gt;
+              Never Miss an Update
+            &lt;/h2&gt;
+            &lt;p className="mb-8 text-xl text-blue-100"&gt;
+              Subscribe to our newsletter and get the latest articles delivered to your inbox.
+            &lt;/p&gt;
+            &lt;form className="mx-auto flex max-w-md gap-4"&gt;
+              &lt;input
+                type="email"
+                placeholder="Your email address"
+                className="flex-1 rounded-lg px-6 py-3 focus:outline-none focus:ring-2 focus:ring-white"
+              /&gt;
+              &lt;button
+                type="submit"
+                className="rounded-lg bg-white px-8 py-3 font-semibold text-blue-600 hover:bg-gray-100"
+              &gt;
+                Subscribe
+              &lt;/button&gt;
+            &lt;/form&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/section&gt;
+    &lt;/&gt;
+  );
+}</code></pre>
+
+                <div class="ad-container">
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-1911859184415905"
+                         data-ad-slot="1122334455"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+
+                <h2>Step 8: Create Blog Pages</h2>
+                <h3>Blog Listing Page (<code>app/(blog)/page.tsx</code>):</h3>
+                <pre><code>import { Search } from 'lucide-react';
+import BlogCard from '@/components/BlogCard';
+import { getBlogPosts } from '@/lib/blog-data';
+
+export const metadata = {
+  title: 'Blog - NextBlog',
+  description: 'Explore our collection of articles on web development and Next.js',
+};
+
+export default async function BlogPage() {
+  const posts = await getBlogPosts();
+
+  const categories = ['All', 'Next.js', 'React', 'TypeScript', 'Performance', 'SEO'];
+
+  return (
+    &lt;div className="min-h-screen bg-gray-50 py-12 dark:bg-gray-950"&gt;
+      &lt;div className="container mx-auto px-4 sm:px-6 lg:px-8"&gt;
+        {/* Header */}
+        &lt;div className="mb-12 text-center"&gt;
+          &lt;h1 className="mb-4 text-4xl font-bold text-gray-900 dark:text-white md:text-5xl"&gt;
+            Our Blog
+          &lt;/h1&gt;
+          &lt;p className="mx-auto max-w-2xl text-lg text-gray-600 dark:text-gray-400"&gt;
+            Insights, tutorials, and best practices for modern web development
+          &lt;/p&gt;
+        &lt;/div&gt;
+
+        {/* Search and Filter */}
+        &lt;div className="mb-12"&gt;
+          &lt;div className="mb-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between"&gt;
+            &lt;div className="relative flex-1"&gt;
+              &lt;Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" /&gt;
+              &lt;input
+                type="search"
+                placeholder="Search articles..."
+                className="w-full rounded-lg border border-gray-300 bg-white py-3 pl-12 pr-4 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-900"
+              /&gt;
+            &lt;/div&gt;
+            &lt;div className="flex gap-2"&gt;
+              {categories.map((category) =&gt; (
+                &lt;button
+                  key={category}
+                  className="rounded-full px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 dark:hover:bg-gray-800"
+                &gt;
+                  {category}
+                &lt;/button&gt;
+              ))}
+            &lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+
+        {/* Blog Posts Grid */}
+        &lt;div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3"&gt;
+          {posts.map((post) =&gt; (
+            &lt;BlogCard key={post.id} post={post} /&gt;
+          ))}
+        &lt;/div&gt;
+
+        {/* Pagination */}
+        &lt;div className="mt-16 flex justify-center"&gt;
+          &lt;nav className="flex gap-2"&gt;
+            {[1, 2, 3, 4].map((page) =&gt; (
+              &lt;button
+                key={page}
+                className={`flex h-10 w-10 items-center justify-center rounded-lg ${
+                  page === 1
+                    ? 'bg-blue-600 text-white'
+                    : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800'
+                }`}
+              &gt;
+                {page}
+              &lt;/button&gt;
+            ))}
+          &lt;/nav&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  );
+}</code></pre>
+
+                <h2>Step 9: Configure Tailwind CSS</h2>
+                <p>Update <code>tailwind.config.ts</code>:</p>
+                <pre><code>import type { Config } from 'tailwindcss'
+
+const config: Config = {
+  darkMode: 'class',
+  content: [
+    './pages/**/*.{js,ts,jsx,tsx,mdx}',
+    './components/**/*.{js,ts,jsx,tsx,mdx}',
+    './app/**/*.{js,ts,jsx,tsx,mdx}',
+  ],
+  theme: {
+    extend: {
+      colors: {
+        background: 'var(--background)',
+        foreground: 'var(--foreground)',
+      },
+      animation: {
+        'fade-in': 'fadeIn 0.5s ease-in-out',
+        'slide-up': 'slideUp 0.3s ease-out',
+      },
+      keyframes: {
+        fadeIn: {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
+        },
+        slideUp: {
+          '0%': { transform: 'translateY(10px)', opacity: '0' },
+          '100%': { transform: 'translateY(0)', opacity: '1' },
+        },
+      },
+    },
+  },
+  plugins: [
+    require('@tailwindcss/typography'),
+  ],
+}
+
+export default config</code></pre>
+
+                <h2>Step 10: Run Your Blog</h2>
+                <p>Start the development server:</p>
+                <pre><code>npm run dev</code></pre>
+                <p>Your blog will be available at <code>http://localhost:3000</code></p>
+
+                <h2>Key Next.js 14 Features Demonstrated:</h2>
+                <ol>
+                    <li><strong>App Router</strong>: File-based routing with nested layouts</li>
+                    <li><strong>Server Components</strong>: Default rendering for better performance</li>
+                    <li><strong>Static Metadata</strong>: SEO optimization with metadata API</li>
+                    <li><strong>Dynamic Routes</strong>: Blog post pages with <code>[slug]</code> dynamic segments</li>
+                    <li><strong>Image Optimization</strong>: Using Next.js Image component</li>
+                    <li><strong>Dark Mode</strong>: Implemented with Tailwind CSS</li>
+                    <li><strong>Responsive Design</strong>: Mobile-first approach</li>
+                </ol>
+
+                <h2>Next Steps for Production:</h2>
+                <ol>
+                    <li><strong>Add a CMS</strong>: Connect to Sanity, Contentful, or Strapi</li>
+                    <li><strong>Add Comments</strong>: Implement Disqus or build your own</li>
+                    <li><strong>Authentication</strong>: Add user accounts with NextAuth.js</li>
+                    <li><strong>Search Functionality</strong>: Implement Algolia or custom search</li>
+                    <li><strong>Deployment</strong>: Deploy to Vercel for optimal performance</li>
+                    <li><strong>Analytics</strong>: Add Google Analytics or Vercel Analytics</li>
+                    <li><strong>RSS Feed</strong>: Generate RSS feed for blog posts</li>
+                </ol>
+
+                <h2>Conclusion</h2>
+                <p>You've built a fully-functional modern blog using Next.js 14! This tutorial covered:</p>
+                <ul>
+                    <li>Setting up Next.js 14 with TypeScript and Tailwind CSS</li>
+                    <li>Implementing the App Router with nested layouts</li>
+                    <li>Creating reusable components</li>
+                    <li>Working with server components for data fetching</li>
+                    <li>Implementing dark mode toggle</li>
+                    <li>Building responsive design</li>
+                    <li>Adding SEO optimization</li>
+                </ul>
+                <p>This blog is production-ready and can be extended with additional features based on your needs. The modular architecture makes it easy to add new features and maintain the codebase.</p>
+
+                <div class="tags">
+                    <strong>Tags:</strong>
+                    <span class="tag">#NextJS14</span>
+                    <span class="tag">#WebDevelopment</span>
+                    <span class="tag">#React</span>
+                    <span class="tag">#TypeScript</span>
+                    <span class="tag">#BlogDevelopment</span>
+                </div>
+            </div>
+            
+            <div class="post-navigation">
+                <div class="prev-post">
+                    <strong>Previous:</strong>
+                    <a href="vue-3-composition-api.html">← Vue 3 Composition API: Complete Guide</a>
+                </div>
+                <div class="next-post">
+                    <strong>Next:</strong>
+                    <a href="tailwind-css-guide.html">Complete Tailwind CSS Guide →</a>
+                </div>
+            </div>
+        </article>
+        
+        <aside class="sidebar">
+            <div class="ad-container">
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-1911859184415905"
+                     data-ad-slot="1122334455"
+                     data-ad-format="auto"
+                     data-full-width-responsive="true"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+            </div>
+            
+            <div class="related-posts">
+                <h3>Related Posts</h3>
+                <ul>
+                    <li><a href="react-19-new-features.html">React 19: A Game-Changer for Modern Web Development</a></li>
+                    <li><a href="vue-3-composition-api.html">Vue 3 Composition API: Complete Guide</a></li>
+                    <li><a href="typescript-beginners.html">TypeScript for Beginners: Web Development Guide</a></li>
+                    <li><a href="../ai-machine-learning/tensorflow-tutorial.html">TensorFlow Tutorial: Building Neural Networks</a></li>
+                </ul>
+            </div>
+            
+            <div class="category-links">
+                <h3>Explore Categories</h3>
+                <ul>
+                    <li><a href="../ai-machine-learning/index.html">AI & Machine Learning</a></li>
+                    <li><a href="../cybersecurity/index.html">Cybersecurity</a></li>
+                    <li><a href="../mobile-development/index.html">Mobile Development</a></li>
+                    <li><a href="../cloud-computing/index.html">Cloud Computing</a></li>
+                </ul>
+            </div>
+        </aside>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 Rehan's Tech Blog. All rights reserved.</p>
+            <p>Contact: <a href="mailto:rehanjamadar914@gmail.com">rehanjamadar914@gmail.com</a> | +91 97671360</p>
+            <div class="social-links">
+                <a href="#">GitHub</a> | <a href="#">LinkedIn</a> | <a href="#">Twitter</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../../js/main.js"></script>
+</body>
+</html>
