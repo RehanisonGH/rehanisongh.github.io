@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Complete Microsoft Azure guide covering core cloud services, deployment models, cost management, and real-world use cases.">
+    <title>Microsoft Azure Guide: Cloud Computing Essentials - Cloud Computing - Rehan's Tech Blog</title>
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/theme.css">
+    <!-- keeping AdSense same account; safe for domain rehanisongh.github.io -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1911859184415905" crossorigin="anonymous"></script>
+</head>
+<body>
+    <!-- light theme, clean layout, no dark/black styles – matches original design -->
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo">
+                    <h1><a href="../../index.html">Rehan's Tech Blog</a></h1>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="../../index.html">Home</a></li>
+                    <li class="dropdown">
+                        <a href="#">Categories</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="../web-development/index.html">Web Development</a></li>
+                            <li><a href="../ai-machine-learning/index.html">AI & Machine Learning</a></li>
+                            <li><a href="../cybersecurity/index.html">Cybersecurity</a></li>
+                            <li><a href="../mobile-development/index.html">Mobile Development</a></li>
+                            <li><a href="index.html">Cloud Computing</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="../../about.html">About</a></li>
+                    <li><a href="../../contact.html">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <article class="blog-post">
+            <header class="post-header">
+                <nav class="breadcrumb">
+                    <a href="../../index.html">Home</a> &gt;
+                    <a href="index.html">Cloud Computing</a> &gt;
+                    <span>Microsoft Azure Guide</span>
+                </nav>
+                <h1>Microsoft Azure Guide: Core Services, Architecture & Best Practices (2024)</h1>
+                <div class="post-meta">
+                    <span>By Rehan</span>
+                    <span>February 18, 2024</span>
+                    <span>14 min read</span>
+                </div>
+            </header>
+            
+            <div class="post-content">
+                <!-- introductory paragraph, keeping same ad density pattern -->
+                <h2>Introduction</h2>
+                <p>Microsoft Azure has grown into one of the most comprehensive cloud platforms, offering over 200 products and cloud services. Whether you're migrating legacy workloads, building cloud-native applications, or deploying AI solutions, Azure provides the infrastructure, platform, and tools. This guide covers everything a cloud practitioner needs — from core compute and storage to governance, cost optimization, and real-world architectures. No dark themes, just plain light-mode knowledge.</p>
+
+                <!-- first ad placement – in-article fluid -->
+                <div class="ad-container">
+                    <ins class="adsbygoogle"
+                         style="display:block; text-align:center;"
+                         data-ad-layout="in-article"
+                         data-ad-format="fluid"
+                         data-ad-client="ca-pub-1911859184415905"
+                         data-ad-slot="1234567890"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+
+                <h2>Why Azure? The Enterprise-Ready Cloud</h2>
+                <p>With a global footprint of 60+ regions, Azure leads in hybrid capabilities, compliance certifications, and seamless integration with Microsoft products. Below we break down the essential categories every developer and architect should master.</p>
+                
+                <h3>1. Azure Compute: VMs, App Service, Containers & Serverless</h3>
+                <p>Azure offers multiple compute models. <strong>Virtual Machines</strong> (IaaS) give you full control; <strong>App Service</strong> provides a fully managed PaaS for web apps; <strong>Azure Kubernetes Service (AKS)</strong> simplifies container orchestration; and <strong>Azure Functions</strong> delivers event-driven serverless compute.</p>
+                
+                <h4>Quick comparison:</h4>
+                <ul>
+                    <li><strong>Virtual Machines</strong> – lift-and-shift, custom OS, scaling sets.</li>
+                    <li><strong>App Service</strong> – auto-scaling, CI/CD integration, Windows/Linux.</li>
+                    <li><strong>AKS</strong> – managed Kubernetes, DevOps friendly, Azure AD integration.</li>
+                    <li><strong>Functions</strong> – consumption plan, triggers (blob, queue, HTTP).</li>
+                </ul>
+
+                <pre><code>// Example: Deploy a Node.js web app to Azure App Service via Azure CLI
+az group create --name myResourceGroup --location eastus
+az appservice plan create --name myPlan --resource-group myResourceGroup --sku B1 --is-linux
+az webapp create --resource-group myResourceGroup --plan myPlan --name myUniqueAppName --runtime "NODE:18-lts"
+az webapp deployment source config --name myUniqueAppName --resource-group myResourceGroup --repo-url https://github.com/user/repo --branch main</code></pre>
+
+                <h3>2. Azure Storage: Blob, Disk, Files & Data Lake</h3>
+                <p>Azure Storage is massively scalable, secure, and offers multiple data services. <strong>Blob storage</strong> for unstructured data, <strong>Managed Disks</strong> for VM disks, <strong>Azure Files</strong> for SMB shares, and <strong>Data Lake Gen2</strong> for big data analytics.</p>
+
+                <h4>Hot, Cool, and Archive tiers</h4>
+                <p>Optimize cost by moving infrequently accessed data to Cool or Archive. Lifecycle management policies automate transitions.</p>
+                
+                <pre><code># Upload a file to Azure Blob Storage using AzCopy
+azcopy copy 'C:\local\file.txt' 'https://mystorageaccount.blob.core.windows.net/mycontainer/file.txt?[SAS_TOKEN]'</code></pre>
+
+                <!-- second ad – auto-sized -->
+                <div class="ad-container">
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-1911859184415905"
+                         data-ad-slot="0987654321"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+
+                <h3>3. Networking: Virtual Network, Load Balancer, CDN, and Firewall</h3>
+                <p>Secure connectivity is core to Azure. Build isolated networks with <strong>Azure Virtual Network (VNet)</strong>, distribute traffic with <strong>Azure Load Balancer</strong> or <strong>Application Gateway</strong>, and protect applications with <strong>Azure Firewall</strong> and <strong>DDoS Protection</strong>. Global reach via <strong>Azure Front Door</strong> and <strong>CDN</strong>.</p>
+                
+                <h4>Typical hub-spoke topology</h4>
+                <ul>
+                    <li>Hub VNet: shared services (firewall, management).</li>
+                    <li>Spoke VNets: isolated workloads (prod, dev).</li>
+                    <li>VNet peering with traffic flow through hub.</li>
+                </ul>
+
+                <h3>4. Azure Databases: SQL, Cosmos DB, PostgreSQL, MySQL</h3>
+                <p><strong>Azure SQL Database</strong> – fully managed SQL Server; <strong>Cosmos DB</strong> – globally distributed multi-model database; <strong>Azure Database for PostgreSQL/MySQL</strong> – community editions with enterprise manageability. Also <strong>Azure Cache for Redis</strong> for low-latency caching.</p>
+
+                <pre><code>// Create Cosmos DB (NoSQL API) via Azure CLI
+az cosmosdb create --name mycosmosdb --resource-group myResourceGroup --kind GlobalDocumentDB
+az cosmosdb sql database create --account-name mycosmosdb --name ProductsDB --resource-group myResourceGroup</code></pre>
+
+                <h3>5. Identity & Security: Azure AD, RBAC, Key Vault</h3>
+                <p><strong>Azure Active Directory</strong> is the backbone of identity, providing SSO, MFA, and conditional access. <strong>Role-Based Access Control (RBAC)</strong> grants granular permissions. <strong>Key Vault</strong> safeguards secrets, keys, and certificates. For workloads, <strong>Managed Identities</strong> eliminate credential storage.</p>
+
+                <h4>Best practice: always use managed identities</h4>
+                <pre><code>// Example: enable system-assigned managed identity for VM
+az vm identity assign --resource-group myResourceGroup --name myVM</code></pre>
+
+                <!-- third ad placement -->
+                <div class="ad-container">
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-1911859184415905"
+                         data-ad-slot="1122334455"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+
+                <h2>Architecture deep-dive: Microservices on Azure</h2>
+                <p>Let's combine services to build a resilient, scalable solution. Consider an e‑commerce backend using AKS, Cosmos DB, Redis Cache, API Management, and Event Grid.</p>
+                
+                <h3>Components:</h3>
+                <ul>
+                    <li><strong>AKS</strong> – containerized order service, product catalog.</li>
+                    <li><strong>Cosmos DB</strong> – globally replicated product inventory.</li>
+                    <li><strong>Azure Cache for Redis</strong> – session store, rate limiting.</li>
+                    <li><strong>API Management</strong> – expose APIs with policies and subscription keys.</li>
+                    <li><strong>Event Grid</strong> – serverless event routing (order created → email function).</li>
+                </ul>
+                
+                <pre><code>// AKS deployment snippet (deployment.yaml)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: order-api
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: order-api
+  template:
+    metadata:
+      labels:
+        app: order-api
+    spec:
+      containers:
+      - name: order-api
+        image: myacr.azurecr.io/order-api:v1
+        ports:
+        - containerPort: 8080
+        env:
+        - name: COSMOS_CONNECTION
+          valueFrom:
+            secretKeyRef: 
+              name: cosmos-secret
+              key: connection</code></pre>
+
+                <h3>6. Azure DevOps & Infrastructure as Code</h3>
+                <p>Adopt DevOps with <strong>Azure Repos</strong>, <strong>Pipelines</strong>, and <strong>Bicep/ARM</strong> templates. <strong>Bicep</strong> is a domain-specific language for declarative Azure deployments, simpler than raw ARM JSON.</p>
+                
+                <pre><code>// Bicep sample – deploy storage account and blob container
+param storageName string = 'stg${uniqueString(resourceGroup().id)}'
+param containerName string = 'logs'
+
+resource sa 'Microsoft.Storage/storageAccounts@2023-01-01' = {
+  name: storageName
+  location: resourceGroup().location
+  sku: { name: 'Standard_LRS' }
+  kind: 'StorageV2'
+}
+
+resource container 'Microsoft.Storage/storageAccounts/blobServices/containers@2023-01-01' = {
+  name: '${sa.name}/default/${containerName}'
+}</code></pre>
+
+                <h2>Cost Management and Governance</h2>
+                <p>Azure provides robust tools to control spending: <strong>Azure Policy</strong> to enforce rules, <strong>Management Groups</strong> + <strong>Subscriptions</strong> for organizational hierarchy, and <strong>Cost Management + Billing</strong> for budgets and anomaly alerts. Use tags to attribute costs.</p>
+                
+                <h4>Recommendations for cost efficiency:</h4>
+                <ul>
+                    <li>Reserved Instances for steady-state VMs (up to 72% savings).</li>
+                    <li>Azure Hybrid Benefit – reuse Windows Server/SQL Server licenses.</li>
+                    <li>Scale down/up based on schedule (DevTest labs).</li>
+                    <li>Use Spot VMs for batch workloads.</li>
+                </ul>
+
+                <!-- 4th ad – keeping consistent with pattern -->
+                <div class="ad-container">
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-1911859184415905"
+                         data-ad-slot="9988776655"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+
+                <h2>Migration: On‑prem to Azure – the 5 R's</h2>
+                <p>Leverage <strong>Azure Migrate</strong> to assess and migrate. Common strategies: Rehost (IaaS), Refactor (PaaS), Rearchitect (cloud-native), Rebuild, or Replace (SaaS). Example: moving SQL Server to Azure SQL Managed Instance reduces maintenance.</p>
+                
+                <h3>Case snapshot: logistics company</h3>
+                <p>After moving legacy warehouse management to Azure VMs and refactoring the reporting layer to Azure Synapse, they achieved 40% lower TCO and near-zero downtime during peak.</p>
+                
+                <h2>Azure for AI/ML and IoT</h2>
+                <p><strong>Azure Machine Learning</strong> – end-to-end platform; <strong>Cognitive Services</strong> – prebuilt vision/speech/language APIs; <strong>Azure IoT Hub</strong> – bi-directional communication with millions of devices. These services fit seamlessly into the ecosystem.</p>
+
+                <pre><code>// Use Azure Cognitive Services Text Analytics client library (Python)
+from azure.ai.textanalytics import TextAnalyticsClient
+from azure.core.credentials import AzureKeyCredential
+
+endpoint = "https://mytextanalytics.cognitiveservices.azure.com/"
+key = "my_key"
+credential = AzureKeyCredential(key)
+text_analytics_client = TextAnalyticsClient(endpoint, credential)
+
+documents = ["Azure is a comprehensive and scalable cloud platform."]
+response = text_analytics_client.extract_key_phrases(documents)
+for doc in response:
+    print(doc.key_phrases)</code></pre>
+
+                <h2>Certification roadmap for Azure professionals</h2>
+                <p>Microsoft Learn offers role-based certifications. Start with <strong>AZ-900 (Azure Fundamentals)</strong>, then <strong>AZ-104 (Administrator)</strong> or <strong>AZ-204 (Developer)</strong>. For architects: <strong>AZ-305</strong>. Keep labs active.</p>
+
+                <h2>Best practices: reliability & performance</h2>
+                <ul>
+                    <li><strong>Availability Zones</strong> for high‑availability.</li>
+                    <li><strong>Auto‑scale</strong> rules based on metrics (CPU, queue length).</li>
+                    <li><strong>Azure Monitor</strong> + Application Insights – detect anomalies and set alerts.</li>
+                    <li><strong>Backup</strong> vaults and Site Recovery for DR.</li>
+                </ul>
+
+                <h2>Conclusion: why Azure now?</h2>
+                <p>Microsoft Azure continues to innovate, with recent advancements in Azure OpenAI Service, confidential computing, and sustainable data centers. Whether you're a startup or a Fortune 500, Azure's hybrid consistency, developer velocity, and responsible AI principles make it a powerful choice. This guide covered the pillars – but the cloud evolves fast. Keep experimenting, use the free account, and join the community.</p>
+                
+                <p><strong>Ready to architect on Azure?</strong> Start with a free trial ($200 credit). Deploy your first VM, set up a static website on Blob Storage, or create a serverless API. Cloud is about continuous learning; you've got this.</p>
+                
+                <div class="tags">
+                    <strong>Tags:</strong>
+                    <span class="tag">#Azure</span>
+                    <span class="tag">#CloudComputing</span>
+                    <span class="tag">#Microsoft</span>
+                    <span class="tag">#DevOps</span>
+                    <span class="tag">#AKS</span>
+                    <span class="tag">#Serverless</span>
+                </div>
+            </div> <!-- .post-content -->
+            
+            <!-- navigation – keeping exactly same pattern as React post -->
+            <div class="post-navigation">
+                <div class="prev-post">
+                    <strong>Previous:</strong>
+                    <a href="../web-development/containers-guide.html">← Containers Guide: App's Perfect Packaging</a>
+                </div>
+                <div class="next-post">
+                    <strong>Next:</strong>
+                    <a href="aws-vs-azure-2024.html">AWS vs Azure: 2024 Cloud Comparison →</a>
+                </div>
+            </div>
+        </article>
+        
+        <!-- SIDEBAR – consistent with original layout, light theme, no dark -->
+        <aside class="sidebar">
+            <div class="ad-container">
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-1911859184415905"
+                     data-ad-slot="1122334455"
+                     data-ad-format="auto"
+                     data-full-width-responsive="true"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+            </div>
+            
+            <div class="related-posts">
+                <h3>Related Cloud Posts</h3>
+                <ul>
+                    <li><a href="containers-guide.html">Containers Guide: Docker & Azure Kubernetes</a></li>
+                    <li><a href="serverless-azure-functions.html">Azure Functions: Serverless Cookbook</a></li>
+                    <li><a href="../devops/terraform-azure.html">Terraform on Azure: IaC Workflow</a></li>
+                    <li><a href="../ai-machine-learning/azure-openai-gpt4.html">Azure OpenAI: GPT-4 Integration</a></li>
+                </ul>
+            </div>
+            
+            <div class="category-links">
+                <h3>All Categories</h3>
+                <ul>
+                    <li><a href="../web-development/index.html">Web Development</a></li>
+                    <li><a href="../ai-machine-learning/index.html">AI & Machine Learning</a></li>
+                    <li><a href="../cybersecurity/index.html">Cybersecurity</a></li>
+                    <li><a href="../mobile-development/index.html">Mobile Development</a></li>
+                </ul>
+            </div>
+        </aside>
+    </main>
+
+    <!-- footer as-is, no dark colors, using light background -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 Rehan's Tech Blog. All rights reserved.</p>
+            <p>Contact: <a href="mailto:rehanjamadar914@gmail.com">rehanjamadar914@gmail.com</a> | +91 97671360</p>
+            <div class="social-links">
+                <a href="#">GitHub</a> | <a href="#">LinkedIn</a> | <a href="#">Twitter</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../../js/main.js"></script>
+</body>
+</html>

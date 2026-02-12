@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Complete NLP tutorial: from basic text preprocessing to transformer models and practical implementations">
+    <title>Natural Language Processing (NLP) Tutorial - AI & Machine Learning - Rehan's Tech Blog</title>
+    <!-- Light theme, clean CSS – no dark/black backgrounds -->
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/theme.css">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1911859184415905" crossorigin="anonymous"></script>
+    <style>
+        /* inline safety: enforce light mode and no dark/black backgrounds */
+        body { background-color: #ffffff; color: #222; }
+        .header, .footer, .container, .sidebar, .blog-post, .ad-container { background-color: #fff; }
+        pre { background: #f8f9fa; color: #2c3e50; border: 1px solid #eaecef; }
+        code { background: #f1f3f5; color: #d63384; }
+        .breadcrumb, .post-meta, .tags { color: #495057; }
+        a { color: #0d6efd; }
+        a:hover { color: #0a58ca; }
+        h1, h2, h3, h4 { color: #0b2b4a; }
+        .dropdown-menu { background: #fff; border: 1px solid #dee2e6; }
+        blockquote { background: #f8f9fa; border-left: 4px solid #6c757d; }
+    </style>
+</head>
+<body>
+    <!-- Exactly same header, no dark mode -->
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo">
+                    <h1><a href="../../index.html">Rehan's Tech Blog</a></h1>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="../../index.html">Home</a></li>
+                    <li class="dropdown">
+                        <a href="#">Categories</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="../web-development/index.html">Web Development</a></li>
+                            <li><a href="index.html">AI & Machine Learning</a></li>
+                            <li><a href="../cybersecurity/index.html">Cybersecurity</a></li>
+                            <li><a href="../mobile-development/index.html">Mobile Development</a></li>
+                            <li><a href="../cloud-computing/index.html">Cloud Computing</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="../../about.html">About</a></li>
+                    <li><a href="../../contact.html">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <article class="blog-post">
+            <header class="post-header">
+                <!-- Breadcrumb: AI & Machine Learning category -->
+                <nav class="breadcrumb">
+                    <a href="../../index.html">Home</a> &gt;
+                    <a href="index.html">AI & Machine Learning</a> &gt;
+                    <span>NLP Tutorial: Complete Hands-On Guide</span>
+                </nav>
+                <h1>Natural Language Processing (NLP) Tutorial: From Text Preprocessing to Transformers</h1>
+                <div class="post-meta">
+                    <span>By Rehan</span>
+                    <span>February 12, 2026</span>
+                    <span>18 min read</span>
+                </div>
+            </header>
+            
+            <div class="post-content">
+                <!-- Category label: AI & Machine Learning (no dark) -->
+                <p style="font-style: italic; color: #2c6b9e;">📌 Under category: <strong>AI & Machine Learning</strong> — complete NLP tutorial for beginners and practitioners.</p>
+
+                <h2>Introduction</h2>
+                <p>Natural Language Processing (NLP) is one of the most transformative fields in artificial intelligence. From chatbots to sentiment analysis, language models power modern AI. In this comprehensive tutorial, you'll learn practical NLP skills: text preprocessing, classical approaches, word embeddings, and modern transformer-based models — all with clean, executable examples. By the end, you'll be ready to build your own NLP pipelines.</p>
+                
+                <!-- In-article Ad 1 -->
+                <div class="ad-container" style="margin: 30px 0; padding: 10px 0;">
+                    <ins class="adsbygoogle"
+                         style="display:block; text-align:center;"
+                         data-ad-layout="in-article"
+                         data-ad-format="fluid"
+                         data-ad-client="ca-pub-1911859184415905"
+                         data-ad-slot="1234567890"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+
+                <h2>1. Core Text Preprocessing</h2>
+                <p>Every NLP pipeline starts with cleaning and normalizing text. We'll use Python (NLTK / spaCy) in spirit, but focus on concepts. Below is a reusable preprocessing function.</p>
+                
+                <pre><code>import re
+import nltk
+from nltk.corpus import stopwords
+from nltk.stem import PorterStemmer, WordNetLemmatizer
+
+def preprocess_text(text, lemmatize=True):
+    # Lowercase & remove special characters
+    text = re.sub(r'[^a-zA-Z\s]', '', text.lower())
+    tokens = text.split()
+    # Stopword removal
+    stop_words = set(stopwords.words('english'))
+    tokens = [t for t in tokens if t not in stop_words]
+    # Stemming or Lemmatization
+    if lemmatize:
+        lemmatizer = WordNetLemmatizer()
+        tokens = [lemmatizer.lemmatize(t) for t in tokens]
+    else:
+        stemmer = PorterStemmer()
+        tokens = [stemmer.stem(t) for t in tokens]
+    return ' '.join(tokens)
+
+# Example
+sample = "NLP is amazing! I'm learning text processing in 2026."
+print(preprocess_text(sample))
+# Output: "nlp amazing learning text processing"</code></pre>
+
+                <h3>Key steps explained</h3>
+                <ul>
+                    <li><strong>Tokenization:</strong> splitting into words.</li>
+                    <li><strong>Stopword removal:</strong> filter common words (the, is, etc).</li>
+                    <li><strong>Stemming/Lemmatization:</strong> reduce words to root form.</li>
+                    <li><strong>Noise removal:</strong> punctuation, numbers, lowercasing.</li>
+                </ul>
+
+                <h2>2. Feature Engineering: Bag-of-Words & TF-IDF</h2>
+                <p>Before deep learning, classical NLP relied on statistical representations.</p>
+                
+                <pre><code>from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
+
+corpus = [
+    "I love NLP and machine learning",
+    "NLP is fascinating and useful",
+    "Machine learning includes deep learning"
+]
+
+# Bag-of-Words
+bow = CountVectorizer(max_features=100)
+X_bow = bow.fit_transform(corpus)
+print("Vocabulary:", bow.get_feature_names_out())
+
+# TF-IDF (term frequency–inverse document frequency)
+tfidf = TfidfVectorizer()
+X_tfidf = tfidf.fit_transform(corpus)</code></pre>
+                
+                <p>TF-IDF downweights commonly occurring words and highlights distinctive terms — still used in many retrieval systems.</p>
+
+                <div class="ad-container" style="margin: 30px 0;">
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-1911859184415905"
+                         data-ad-slot="0987654321"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+
+                <h2>3. Word Embeddings: Word2Vec and GloVe</h2>
+                <p>Dense vector representations capture semantic meaning. Here's training a Word2Vec model using Gensim.</p>
+                
+                <pre><code>from gensim.models import Word2Vec
+
+# Tokenized sentences (each sentence as list of words)
+sentences = [["nlp", "tutorial", "advanced"], 
+             ["word", "embeddings", "capture", "semantics"],
+             ["deep", "learning", "nlp", "transformer"]]
+
+model = Word2Vec(sentences, vector_size=100, window=5, min_count=1, workers=4)
+vector = model.wv['nlp']  # 100-dim vector
+similar = model.wv.most_similar('nlp')
+print(similar)</code></pre>
+
+                <p>Pre-trained GloVe or FastText embeddings can be loaded for better coverage.</p>
+
+                <h2>4. Sequence Models: RNN, LSTM, GRU (brief review)</h2>
+                <p>Recurrent architectures process word by word. Below is a sentiment classifier using LSTM in TensorFlow/Keras.</p>
+                
+                <pre><code>import tensorflow as tf
+from tensorflow.keras.layers import Embedding, LSTM, Dense
+from tensorflow.keras.models import Sequential
+
+model = Sequential([
+    Embedding(input_dim=10000, output_dim=128, input_length=100),
+    LSTM(units=64, dropout=0.2),
+    Dense(1, activation='sigmoid')
+])
+model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
+# Assume X_train_padded, y_train prepared
+# model.fit(X_train_padded, y_train, epochs=5, batch_size=32)</code></pre>
+
+                <h2>5. Transformers: The Modern Standard</h2>
+                <p>Since 2018, transformers (BERT, GPT, T5) dominate NLP. We'll use Hugging Face <code>transformers</code> library for state-of-the-art results.</p>
+                
+                <h3>5.1 Pipeline API – easiest inference</h3>
+                <pre><code>from transformers import pipeline
+
+classifier = pipeline("sentiment-analysis")
+result = classifier("I absolutely love this NLP tutorial!")[0]
+print(f"label: {result['label']}, score: {result['score']:.4f}")
+# label: POSITIVE, score: 0.9998</code></pre>
+
+                <h3>5.2 Fine-tuning BERT for custom task</h3>
+                <pre><code>from transformers import AutoTokenizer, AutoModelForSequenceClassification, Trainer, TrainingArguments
+import torch
+
+model_name = "bert-base-uncased"
+tokenizer = AutoTokenizer.from_pretrained(model_name)
+model = AutoModelForSequenceClassification.from_pretrained(model_name, num_labels=2)
+
+# Tokenize dataset
+def tokenize_fn(batch):
+    return tokenizer(batch['text'], padding=True, truncation=True, max_length=128)
+
+# ... (training loop simplified) 
+# Trainer API automates training</code></pre>
+
+                <p>Fine-tuning BERT on domain data yields impressive accuracy even with small datasets.</p>
+
+                <!-- In-article Ad 3 -->
+                <div class="ad-container" style="margin: 30px 0;">
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-1911859184415905"
+                         data-ad-slot="1122334455"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+
+                <h2>6. Practical NLP Project: Sentiment Analysis on Tweets</h2>
+                <p>We combine preprocessing, TF-IDF / BERT, and evaluation. Below is an end-to-end skeleton.</p>
+                
+                <pre><code># 1. Load tweets (example using pandas)
+import pandas as pd
+df = pd.read_csv("tweets.csv")  # columns: text, sentiment
+
+# 2. Clean text (use function from section 1)
+df['clean_text'] = df['text'].apply(preprocess_text)
+
+# 3. Option A: TF-IDF + Logistic Regression
+from sklearn.linear_model import LogisticRegression
+from sklearn.pipeline import Pipeline
+pipe = Pipeline([
+    ('tfidf', TfidfVectorizer(max_features=5000)),
+    ('clf', LogisticRegression())
+])
+pipe.fit(df['clean_text'], df['sentiment'])
+
+# 4. Option B: DistilBERT (lightweight transformer)
+from transformers import DistilBertTokenizerFast, TFDistilBertForSequenceClassification
+tokenizer = DistilBertTokenizerFast.from_pretrained('distilbert-base-uncased')
+# ... tokenize and train</code></pre>
+
+                <h3>Evaluation metrics</h3>
+                <p>Accuracy, precision, recall, F1-score. Use classification report.</p>
+                <pre><code>from sklearn.metrics import classification_report
+y_pred = pipe.predict(X_test)
+print(classification_report(y_test, y_pred))</code></pre>
+
+                <h2>7. Advanced NLP: Named Entity Recognition (NER) & Question Answering</h2>
+                <p>Hugging Face makes NER trivial:</p>
+                <pre><code>ner = pipeline("ner", aggregation_strategy="simple")
+text = "Rehan lives in Mumbai and works at Google."
+entities = ner(text)
+for e in entities:
+    print(f"{e['word']}: {e['entity_group']}")</code></pre>
+                
+                <p>Output: <em>Rehan: PER, Mumbai: LOC, Google: ORG</em></p>
+
+                <h2>8. Large Language Models (LLMs) and Prompt Engineering</h2>
+                <p>GPT, Llama, Claude. For local prototyping, use <code>transformers</code> with text-generation pipeline.</p>
+                <pre><code>generator = pipeline('text-generation', model='gpt2')
+prompt = "Natural Language Processing is"
+output = generator(prompt, max_length=50, num_return_sequences=1)
+print(output[0]['generated_text'])</code></pre>
+                <p>Prompt engineering: zero-shot, few-shot, chain-of-thought.</p>
+
+                <div class="ad-container" style="margin: 30px 0;">
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-1911859184415905"
+                         data-ad-slot="5544332211"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+
+                <h2>9. Deployment: NLP Model as API</h2>
+                <p>FastAPI + Transformers = production-ready inference.</p>
+                <pre><code>from fastapi import FastAPI
+from pydantic import BaseModel
+from transformers import pipeline
+
+app = FastAPI()
+classifier = pipeline("sentiment-analysis")
+
+class TextItem(BaseModel):
+    text: str
+
+@app.post("/predict")
+def predict(item: TextItem):
+    result = classifier(item.text)[0]
+    return {"label": result['label'], "score": result['score']}</code></pre>
+
+                <h2>10. Best Practices & Pitfalls</h2>
+                <ul>
+                    <li><strong>Data leakage:</strong> always split before preprocessing.</li>
+                    <li><strong>Class imbalance:</strong> use weighted loss or oversampling.</li>
+                    <li><strong>Tokenization mismatch:</strong> use same tokenizer for training/inference.</li>
+                    <li><strong>Ethical NLP:</strong> bias in embeddings, fairness.</li>
+                </ul>
+
+                <h2>Conclusion</h2>
+                <p>You've gone from raw text to transformer fine-tuning. NLP is evolving at breakneck speed, but fundamentals remain. Master preprocessing, understand embeddings, and leverage pretrained models. The shift toward LLMs doesn't eliminate the need for clean data and thoughtful evaluation. Build projects, compete on Kaggle, read papers. This tutorial is your launchpad.</p>
+                <p>Next steps: explore multilingual NLP, speech processing, or multi-modal models.</p>
+                
+                <div class="tags">
+                    <strong>Tags:</strong>
+                    <span class="tag">#NLP</span>
+                    <span class="tag">#NaturalLanguageProcessing</span>
+                    <span class="tag">#Transformers</span>
+                    <span class="tag">#BERT</span>
+                    <span class="tag">#Word2Vec</span>
+                    <span class="tag">#AI</span>
+                    <span class="tag">#MachineLearning</span>
+                </div>
+            </div>
+            
+            <!-- Post navigation (keep consistent with site) -->
+            <div class="post-navigation" style="margin-top: 40px; display: flex; justify-content: space-between; border-top: 1px solid #dee2e6; padding-top: 20px;">
+                <div class="prev-post">
+                    <strong>Previous:</strong>
+                    <a href="../web-development/react-19-features.html">← React 19: Game-Changer for Web Dev</a>
+                </div>
+                <div class="next-post">
+                    <strong>Next:</strong>
+                    <a href="computer-vision-cnn-tutorial.html">Computer Vision & CNN Tutorial →</a>
+                </div>
+            </div>
+        </article>
+        
+        <!-- Sidebar with ads + category links (exactly same pattern) -->
+        <aside class="sidebar" style="background: #fff;">
+            <div class="ad-container" style="margin-bottom: 30px;">
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-1911859184415905"
+                     data-ad-slot="6655778899"
+                     data-ad-format="auto"
+                     data-full-width-responsive="true"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+            </div>
+            
+            <div class="related-posts">
+                <h3>Related AI/ML posts</h3>
+                <ul>
+                    <li><a href="chatgpt-api-guide.html">ChatGPT API Guide for AI Projects</a></li>
+                    <li><a href="computer-vision-cnn-tutorial.html">CNN for Image Recognition: Tutorial</a></li>
+                    <li><a href="llm-fine-tuning-guide.html">Fine-tuning LLMs: Complete Guide</a></li>
+                    <li><a href="../web-development/nextjs-14-tutorial.html">Next.js 14 Tutorial (AI frontend) </a></li>
+                </ul>
+            </div>
+            
+            <div class="category-links" style="margin-top: 30px;">
+                <h3>Explore Categories</h3>
+                <ul>
+                    <li><a href="../web-development/index.html">Web Development</a></li>
+                    <li><a href="../cybersecurity/index.html">Cybersecurity</a></li>
+                    <li><a href="../mobile-development/index.html">Mobile Development</a></li>
+                    <li><a href="../cloud-computing/index.html">Cloud Computing</a></li>
+                </ul>
+            </div>
+            
+            <!-- Second sidebar ad -->
+            <div class="ad-container" style="margin-top: 30px;">
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-1911859184415905"
+                     data-ad-slot="9988776655"
+                     data-ad-format="rectangle"
+                     data-full-width-responsive="true"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+            </div>
+        </aside>
+    </main>
+
+    <!-- Footer (same as provided) -->
+    <footer class="footer" style="background: #f8f9fa; color: #212529; margin-top: 50px; padding: 30px 0; border-top: 1px solid #dee2e6;">
+        <div class="container">
+            <p>&copy; 2026 Rehan's Tech Blog. All rights reserved.</p>
+            <p>Contact: <a href="mailto:rehanjamadar914@gmail.com">rehanjamadar914@gmail.com</a> | +91 97671360</p>
+            <div class="social-links">
+                <a href="#">GitHub</a> | <a href="#">LinkedIn</a> | <a href="#">Twitter</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../../js/main.js"></script>
+    <!-- Reinitialize ads (common pattern) -->
+    <script>
+        (function() {
+            if (window.adsbygoogle) {
+                try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch(e) {}
+                try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch(e) {}
+                try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch(e) {}
+                try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch(e) {}
+                try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch(e) {}
+            }
+        })();
+    </script>
+    <!-- no dark mode, all light background, category clearly AI & Machine Learning -->
+</body>
+</html>

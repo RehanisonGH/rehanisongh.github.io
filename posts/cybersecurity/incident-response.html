@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Practical incident response playbook: phases, tools, and best practices for cybersecurity professionals">
+    <title>Incident Response Playbook – Cybersecurity – Rehan's Tech Blog</title>
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/theme.css">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1911859184415905" crossorigin="anonymous"></script>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo">
+                    <h1><a href="../../index.html">Rehan's Tech Blog</a></h1>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="../../index.html">Home</a></li>
+                    <li class="dropdown">
+                        <a href="#">Categories</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="../web-development/index.html">Web Development</a></li>
+                            <li><a href="../ai-machine-learning/index.html">AI & Machine Learning</a></li>
+                            <li><a href="index.html">Cybersecurity</a></li>
+                            <li><a href="../mobile-development/index.html">Mobile Development</a></li>
+                            <li><a href="../cloud-computing/index.html">Cloud Computing</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="../../about.html">About</a></li>
+                    <li><a href="../../contact.html">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <article class="blog-post">
+            <header class="post-header">
+                <nav class="breadcrumb">
+                    <a href="../../index.html">Home</a> &gt;
+                    <a href="index.html">Cybersecurity</a> &gt;
+                    <span>Incident Response Playbook</span>
+                </nav>
+                <h1>Incident Response Playbook: From Detection to Recovery</h1>
+                <div class="post-meta">
+                    <span>By Rehan</span>
+                    <span>March 28, 2024</span>
+                    <span>12 min read</span>
+                </div>
+            </header>
+            
+            <div class="post-content">
+                <!-- Ad Slot 1: In-Article -->
+                <div class="ad-container">
+                    <ins class="adsbygoogle"
+                         style="display:block; text-align:center;"
+                         data-ad-layout="in-article"
+                         data-ad-format="fluid"
+                         data-ad-client="ca-pub-1911859184415905"
+                         data-ad-slot="9876543210"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+
+                <h2>Why Every Organization Needs an IR Plan</h2>
+                <p>Cyber threats are no longer a matter of <em>if</em> but <em>when</em>. A structured incident response (IR) framework minimises downtime, data loss, and financial damage. In this guide, we dissect the SANS six-step methodology and translate it into actionable steps – whether you're a SOC analyst or a startup founder. No fluff, only playbooks.</p>
+
+                <h2>The Six Phases of Incident Response</h2>
+                
+                <h3>1. Preparation – The foundation</h3>
+                <p>Most breaches succeed because of inadequate preparation. This phase is continuous: tools, training, and threat intelligence.</p>
+                <ul>
+                    <li><strong>Asset inventory:</strong> Know what you protect (hardware, software, data).</li>
+                    <li><strong>IR toolkit:</strong> Forensic imagers (FTK Imager), EDR (CrowdStrike, SentinelOne), log aggregators (Splunk, ELK).</li>
+                    <li><strong>Communication matrix:</strong> Internal (CISO, legal, PR) and external (law enforcement, regulators).</li>
+                    <li><strong>Tabletop exercises:</strong> Simulate ransomware, BEC, or insider threat quarterly.</li>
+                </ul>
+                <pre><code># Example: pre-configured detection rule (Sigma)
+title: Suspicious PowerShell Download
+status: stable
+description: Detects any PowerShell downloading a file
+detection:
+    selection:
+        EventID: 4688
+        ProcessCommandLine|contains|all:
+            - 'powershell'
+            - 'WebClient'
+            - 'DownloadFile'
+    condition: selection</code></pre>
+
+                <!-- Ad Slot 2: Responsive -->
+                <div class="ad-container">
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-1911859184415905"
+                         data-ad-slot="5566778899"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+
+                <h3>2. Identification – Who, what, when?</h3>
+                <p>Alert triage is an art. Don't chase false positives; validate with telemetry.</p>
+                <h4>Common detection sources:</h4>
+                <ul>
+                    <li>EDR alerts (unusual parent-child processes, LSASS access)</li>
+                    <li>User reports (phishing, unusual account behaviour)</li>
+                    <li>Network anomalies (beaconing, rare egress traffic)</li>
+                    <li>Third-party notification (CERT, dark web monitoring)</li>
+                </ul>
+                <p><strong>Key question:</strong> Is this a security incident or a false alarm? Use the Pyramid of Pain to assess severity.</p>
+                
+                <h3>3. Containment – Stop the bleeding</h3>
+                <p>Short-term containment vs. long-term remediation. Speed matters, but so does evidence preservation.</p>
+                <pre><code># Live response on Windows – capture memory & network
+privilege::debug
+sekurlsa::logonpasswords
+netstat -anob > c:\ir\connections.txt
+tasklist /v > c:\ir\processes.txt</code></pre>
+                <ul>
+                    <li><strong>Network isolation:</strong> move compromised host to quarantine VLAN, block C2 IPs at firewall.</li>
+                    <li><strong>Endpoint:</strong> disable local admin, reset service account credentials.</li>
+                    <li><strong>Cloud:</strong> revoke temporary OAuth tokens, restrict IAM roles.</li>
+                </ul>
+
+                <h3>4. Eradication – Remove the adversary</h3>
+                <p>Eliminate persistence, backdoors, and rootkits. Don't forget cloud artifacts (unused Lambda functions, compromised API keys).</p>
+                <ul>
+                    <li>Reimage endpoints – never trust a compromised host.</li>
+                    <li>Rotate all secrets in the blast radius.</li>
+                    <li>Patch the root vector (unpatched vulnerability, misconfiguration).</li>
+                </ul>
+
+                <div class="ad-container">
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-1911859184415905"
+                         data-ad-slot="3344556677"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+
+                <h3>5. Recovery – Back to business</h3>
+                <p>Restore systems cautiously. Monitor for lingering indicators.</p>
+                <ul>
+                    <li>Restore from clean, verified backups (air‑gapped if possible).</li>
+                    <li>Increase logging verbosity during restoration phase.</li>
+                    <li>Phased roll‑out to production – canary deployments.</li>
+                </ul>
+                
+                <h3>6. Lessons Learned – Close the loop</h3>
+                <p>The post‑mortem is not a blame session. Update runbooks, improve detection, and adjust budgets.</p>
+                <pre><code># Incident summary template
+- Timeline (UTC):
+- Root cause:
+- Gap in coverage:
+- Controls added:
+- Tabletop date:</code></pre>
+
+                <h2>Tools of the Trade (Open Source & Commercial)</h2>
+                <table style="width:100%; border-collapse: collapse; background: #fff; border: 1px solid #ddd;">
+                    <thead style="background: #f5f5f5;">
+                        <tr><th style="padding: 8px; border: 1px solid #ddd;">Phase</th><th style="padding: 8px; border: 1px solid #ddd;">Tool</th><th style="padding: 8px; border: 1px solid #ddd;">Usage</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td style="padding: 8px; border: 1px solid #ddd;">Preparation</td><td style="padding: 8px; border: 1px solid #ddd;">TheHive/Shuffle</td><td style="padding: 8px; border: 1px solid #ddd;">Case management & SOAR</td></tr>
+                        <tr><td style="padding: 8px; border: 1px solid #ddd;">Identification</td><td style="padding: 8px; border: 1px solid #ddd;">Wazuh / Velociraptor</td><td style="padding: 8px; border: 1px solid #ddd;">HIDS & forensic collection</td></tr>
+                        <tr><td style="padding: 8px; border: 1px solid #ddd;">Containment</td><td style="padding: 8px; border: 1px solid #ddd;">Cortex XSOAR</td><td style="padding: 8px; border: 1px solid #ddd;">Automated isolation</td></tr>
+                        <tr><td style="padding: 8px; border: 1px solid #ddd;">Eradication</td><td style="padding: 8px; border: 1px solid #ddd;">OSQuery / Kolide</td><td style="padding: 8px; border: 1px solid #ddd;">Persistence checks</td></tr>
+                    </tbody>
+                </table>
+
+                <h2>Real‑world IR: Ransomware Playbook</h2>
+                <p><strong>Scenario:</strong> Cobalt Strike beacon followed by LockBit 3.0 encryption.</p>
+                <ol>
+                    <li><strong>Detect:</strong> Splunk alert – high volume of SMB writes + event ID 5145 (network share object access).</li>
+                    <li><strong>Contain:</strong> EDR – kill process, firewall block domain controller outbound, disable AD sync.</li>
+                    <li><strong>Eradicate:</strong> Scan for scheduled tasks, WMI persistence. Reset krbtgt password twice.</li>
+                    <li><strong>Recover:</strong> Restore from immutable backups (Veeam). Deploy EDR on all domain controllers.</li>
+                </ol>
+
+                <div class="ad-container">
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-1911859184415905"
+                         data-ad-slot="7788990011"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+
+                <h2>Metrics That Matter</h2>
+                <ul>
+                    <li><strong>MTTD</strong> (Mean Time to Detect) – target &lt; 1 hour.</li>
+                    <li><strong>MTTC</strong> (Mean Time to Contain) – ideal &lt; 30 minutes.</li>
+                    <li><strong>IR coverage %</strong> – percentage of assets covered by EDR.</li>
+                    <li><strong>False positive rate</strong> – tune after each campaign.</li>
+                </ul>
+
+                <h2>Common Pitfalls & How to Avoid Them</h2>
+                <ul>
+                    <li><strong>No legal hold:</strong> Ensure chain of custody – use write blockers.</li>
+                    <li><strong>Isolating without preserving memory:</strong> Capture RAM before shutdown.</li>
+                    <li><strong>Over‑relying on automation:</strong> Human validation still required.</li>
+                    <li><strong>Ignoring insider threats:</strong> Monitor DLP, UEBA.</li>
+                </ul>
+
+                <h2>Certifications & Training Paths</h2>
+                <p>If you're building an IR career: SANS FOR508, GIAC GCIH, BTL1, or CREST CPSA. Also, contribute to open‑source DFIR projects (Plaso, Timesketch).</p>
+
+                <h2>Conclusion</h2>
+                <p>Incident response is a discipline, not a tool. Invest in preparation, practice muscle memory, and communicate clearly. Every breach is a learning opportunity – treat it as one. Bookmark this page; you might need it at 3 AM.</p>
+                
+                <p><strong>Next in series:</strong> Threat hunting with Zeek and RITA.</p>
+
+                <div class="tags">
+                    <strong>Tags:</strong>
+                    <span class="tag">#IncidentResponse</span>
+                    <span class="tag">#DFIR</span>
+                    <span class="tag">#Cybersecurity</span>
+                    <span class="tag">#SOC</span>
+                    <span class="tag">#Ransomware</span>
+                    <span class="tag">#BlueTeam</span>
+                </div>
+            </div>
+            
+            <div class="post-navigation">
+                <div class="prev-post">
+                    <strong>Previous:</strong>
+                    <a href="zero-trust-architecture.html">← Zero Trust: Beyond the Hype</a>
+                </div>
+                <div class="next-post">
+                    <strong>Next:</strong>
+                    <a href="../cloud-computing/aws-security-groups-nacl.html">AWS Security: NACLs vs Security Groups →</a>
+                </div>
+            </div>
+        </article>
+        
+        <aside class="sidebar">
+            <!-- Sidebar Ad -->
+            <div class="ad-container">
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-1911859184415905"
+                     data-ad-slot="9988776655"
+                     data-ad-format="auto"
+                     data-full-width-responsive="true"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+            </div>
+            
+            <div class="related-posts">
+                <h3>Related Posts</h3>
+                <ul>
+                    <li><a href="zero-trust-architecture.html">Zero Trust Architecture: Implementation Guide</a></li>
+                    <li><a href="siem-guide-2024.html">SIEM Buyer’s Guide: Splunk, QRadar, Wazuh</a></li>
+                    <li><a href="malware-analysis-lab.html">Build a Malware Analysis Lab (Free Tools)</a></li>
+                    <li><a href="../web-development/oauth2-jwt-security.html">OAuth2 & JWT: Security Anti‑Patterns</a></li>
+                </ul>
+            </div>
+            
+            <div class="category-links">
+                <h3>Explore Categories</h3>
+                <ul>
+                    <li><a href="../web-development/index.html">Web Development</a></li>
+                    <li><a href="../ai-machine-learning/index.html">AI & Machine Learning</a></li>
+                    <li><a href="../mobile-development/index.html">Mobile Development</a></li>
+                    <li><a href="../cloud-computing/index.html">Cloud Computing</a></li>
+                </ul>
+            </div>
+        </aside>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 Rehan's Tech Blog. All rights reserved.</p>
+            <p>Contact: <a href="mailto:rehanjamadar914@gmail.com">rehanjamadar914@gmail.com</a> | +91 97671360</p>
+            <div class="social-links">
+                <a href="#">GitHub</a> | <a href="#">LinkedIn</a> | <a href="#">Twitter</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../../js/main.js"></script>
+    <!-- Simulate AdSense loading; replace with actual if domain matches -->
+    <script>
+        // Placeholder for AdSense – no dark mode, just light.
+        (function() {
+            // Ensure adsbygoogle is initialized if ads are present.
+            if (window.adsbygoogle) {
+                try {
+                    // Only push if there are elements not yet processed.
+                    // This is a standard pattern and respects light theme.
+                } catch (e) {}
+            }
+        })();
+    </script>
+</body>
+</html>

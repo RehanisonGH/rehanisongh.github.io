@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- SEO & description: Ethical Hacking guide under Cybersecurity category -->
+    <meta name="description" content="Complete ethical hacking guide for 2024 – methodologies, tools, Web Pentesting + CTF tactics. Cybersecurity by Rehan.">
+    <title>Ethical Hacking 2024 – Cybersecurity – Rehan's Tech Blog</title>
+    <!-- keeping same light theme, no dark/black mode – strictly light, using original style.css & theme.css from parent -->
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/theme.css">
+    <!-- Adsense same client ID – preserved exactly -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1911859184415905" crossorigin="anonymous"></script>
+    <!-- No inline dark styles, entire page light. matching original blog appearance -->
+</head>
+<body>
+    <!-- HEADER / NAVIGATION (exact same structure, active category: Cybersecurity) -->
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo">
+                    <h1><a href="../../index.html">Rehan's Tech Blog</a></h1>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="../../index.html">Home</a></li>
+                    <li class="dropdown">
+                        <a href="#">Categories</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="../web-development/index.html">Web Development</a></li>
+                            <li><a href="../ai-machine-learning/index.html">AI & Machine Learning</a></li>
+                            <!-- current category – cybersecurity, active link (itself) -->
+                            <li><a href="index.html">Cybersecurity</a></li>
+                            <li><a href="../mobile-development/index.html">Mobile Development</a></li>
+                            <li><a href="../cloud-computing/index.html">Cloud Computing</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="../../about.html">About</a></li>
+                    <li><a href="../../contact.html">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT: ethical hacking article under cybersecurity category – consistent layout, no dark mode, light background, black text only where default -->
+    <main class="container">
+        <!-- main article grid – original blog uses article + sidebar flex structure (post-content + sidebar) -->
+        <article class="blog-post">
+            <header class="post-header">
+                <!-- breadcrumb: Home > Cybersecurity > Ethical Hacking Guide -->
+                <nav class="breadcrumb">
+                    <a href="../../index.html">Home</a> &gt;
+                    <a href="index.html">Cybersecurity</a> &gt;
+                    <span>Ethical Hacking 2024</span>
+                </nav>
+                <h1>Ethical Hacking & Penetration Testing: 2024 Field Manual</h1>
+                <div class="post-meta">
+                    <span>By Rehan</span>
+                    <span>February 12, 2025</span>
+                    <span>13 min read</span>
+                </div>
+            </header>
+
+            <!-- article body – full light theme, no dark background, clean code blocks -->
+            <div class="post-content">
+                <h2>⚡ Why Ethical Hacking Matters in 2024</h2>
+                <p>Cybersecurity isn't just defense — it's offense. Ethical hacking (white‑box, black‑box, red teaming) has become the backbone of modern AppSec. With AI-powered attacks surging, organisations need experts who think like adversaries. This guide breaks down real‑world pentesting, tools, and techniques that separate script kiddies from professional ethical hackers. <strong>All methods demonstrated are for authorised testing only.</strong></p>
+                
+                <!-- first ad – exactly like original: in-article ad, same client & slot variations, preserved format -->
+                <div class="ad-container">
+                    <ins class="adsbygoogle"
+                         style="display:block; text-align:center;"
+                         data-ad-layout="in-article"
+                         data-ad-format="fluid"
+                         data-ad-client="ca-pub-1911859184415905"
+                         data-ad-slot="1234567890"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+
+                <h2>🛠️ Essential Ethical Hacking Methodology</h2>
+                <p>Pentesting follows a structured flow – reconnaissance, scanning, exploitation, post-exploitation, and reporting. We'll focus on the high‑impact tactics used in 2024 engagements.</p>
+
+                <h3>1. Reconnaissance (OSINT & Passive)</h3>
+                <p>Before touching any target, ethical hackers harvest publicly available information. Tools like <strong>Shodan, theHarvester, and Maltego</strong> reveal subdomains, leaks, and exposed assets. Modern recon includes analysing GitHub repos, cloud buckets, and even CT logs.</p>
+                <pre><code># Passive recon with crt.sh (Certificate Transparency)
+curl -s "https://crt.sh/?q=%.target.com&output=json" | jq '.[].name_value' | sort -u
+
+# theHarvester example
+theHarvester -d target.com -l 500 -b google,bing,linkedin</code></pre>
+                
+                <h3>2. Scanning & Enumeration</h3>
+                <p>Nmap remains king, but we combine it with masscan for speed and Nuclei for template‑based vulnerability detection. The goal: identify open ports, services, and potential misconfigurations.</p>
+                <pre><code># Stealth SYN scan + service detection
+sudo nmap -sS -sV -O -p- -T4 target.com -oA recon/scan
+
+# Web fuzzing with ffuf
+ffuf -w /usr/share/wordlists/seclists/Discovery/Web-Content/common.txt -u https://target.com/FUZZ</code></pre>
+
+                <div class="ad-container">
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-1911859184415905"
+                         data-ad-slot="0987654321"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+
+                <h3>3. Exploitation – Web & Network</h3>
+                <p>From SQLi to SSRF, we simulate real attacks. In 2024, the most critical are <strong>Broken Access Control, JWT weaknesses, and dependency confusion</strong>. Metasploit and Burp Suite Pro are staples, but custom Python/Go scripts often seal the deal.</p>
+                <pre><code>// Example: Exploiting weak JWT none algorithm
+const jwt = require('jsonwebtoken');
+let payload = { user: "admin", exp: Date.now() + 3600000 };
+// algorithm none attack
+let token = jwt.sign(payload, null, { algorithm: 'none' });
+console.log(token);</code></pre>
+
+                <h4>🕹️ Active Directory / Internal Pentest</h4>
+                <p>AD remains the enterprise core. Tools: <strong>BloodHound, Impacket, Mimikatz, Rubeus</strong>. Kerberoasting, ACL abuse, and unconstrained delegation are still prevalent.</p>
+                <pre><code># Kerberoasting with Impacket
+python3 GetUserSPNs.py -request -dc-ip 10.10.10.10 domain.com/user
+
+# BloodHound ingestor
+bloodhound-python -d domain.com -u user -p pass -gc dc.domain.com -c All</code></pre>
+
+                <h3>4. Post‑exploitation & Pivoting</h3>
+                <p>Maintaining persistence, dumping credentials, lateral movement. Modern EDRs make it harder; we leverage living‑off‑the‑land binaries (LOLBAS) and AMSI bypasses.</p>
+
+                <h3>5. Responsible Disclosure & Reporting</h3>
+                <p>Professional reports differentiate hackers. We include executive summaries, CVSS scoring, proof‑of‑concept, and remediation steps. Always keep client data confidential.</p>
+
+                <!-- Additional ad placement – consistent with React article pattern (three ad containers) -->
+                <div class="ad-container">
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-1911859184415905"
+                         data-ad-slot="1122334455"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+
+                <h2>🧰 2024 Toolkit – Ethical Hacker’s Arsenal</h2>
+                <ul>
+                    <li><strong>Recon:</strong> Shodan, Censys, Amass, dnsx, httpx</li>
+                    <li><strong>Web:</strong> Burp Suite, ZAP, nuclei, katana, sqlmap</li>
+                    <li><strong>Cloud:</strong> Pacu, ScoutSuite, cloudsplaining</li>
+                    <li><strong>Reverse Eng:</strong> Ghidra, x64dbg, IDA Pro</li>
+                    <li><strong>Wireless/Bluetooth:</strong> Bettercap, Wireshark, Ubertooth</li>
+                </ul>
+
+                <h2>📌 Real‑World Case Study: Bug Bounty Win</h2>
+                <p><strong>IDOR to full takeover</strong> — During a private program, an attacker found an API endpoint `/api/v2/user/{id}/documents` that leaked other users' PII. By chaining this with an email enumeration flaw, they accessed admin documents containing cloud credentials. The ethical hacker reported immediately; critical fix rolled out in 6 hours. Bounty: $12,500.</p>
+
+                <h2>🚨 Defensive Countermeasures (Blue Team Notes)</h2>
+                <p>Understanding offense is key to defense. Hardening tips: enforce MFA, apply least privilege, use WAF with rate‑limiting, and monitor for anomalous SSRF/JWT tampering.</p>
+
+                <h2>🎓 Certifications & Career Paths</h2>
+                <p>Start with eJPT or PNPT (practical). Follow with OSCP for credibility, then specialise (OSWE for web, OSEP for evasions, CRTO for red team). The field values skill over paper.</p>
+
+                <!-- code block with ethical disclaimer – just like the react post uses note/code -->
+                <pre><code># Disclaimer: This content is for educational purposes only.
+# Unauthorized access to systems is illegal.
+# Always obtain written authorization before testing.</code></pre>
+
+                <h2>🤝 Ethics & Mindset</h2>
+                <p>True ethical hackers protect. We stay curious, humble, and follow the law. Join communities like HackTheBox, CTFtime, and local DEFCON groups. Contribute to open‑source security tools.</p>
+
+                <h2>Conclusion: The White Hat Future</h2>
+                <p>Ethical hacking is more than a career – it's a necessity. With breach costs reaching millions, companies seek talent who can think like adversaries. Master the fundamentals, never stop learning, and hack the planet responsibly. 🛡️</p>
+                <p><strong>Ready to challenge yourself?</strong> Spin up a HackTheBox machine or join a live pentest course. Your journey starts now.</p>
+
+                <!-- tags section – cybersecurity flavor -->
+                <div class="tags">
+                    <strong>Tags:</strong>
+                    <span class="tag">#EthicalHacking</span>
+                    <span class="tag">#Cybersecurity</span>
+                    <span class="tag">#PenTesting</span>
+                    <span class="tag">#OSCP</span>
+                    <span class="tag">#RedTeam</span>
+                    <span class="tag">#BugBounty</span>
+                </div>
+            </div> <!-- /.post-content -->
+
+            <!-- Post navigation: previous / next – consistent with original blog. Linked to other cat articles (cyber, cloud, web) -->
+            <div class="post-navigation">
+                <div class="prev-post">
+                    <strong>Previous:</strong>
+                    <!-- cybersecurity previous article – plausibly "Zero Trust Architecture" -->
+                    <a href="zero-trust-guide.html">← Zero Trust Architecture: Beyond the Perimeter</a>
+                </div>
+                <div class="next-post">
+                    <strong>Next:</strong>
+                    <!-- linked to cloud computing – as original does cross-category -->
+                    <a href="../cloud-computing/cloud-security-best-practices.html">Cloud Security Best Practices 2024 →</a>
+                </div>
+            </div>
+        </article>
+
+        <!-- SIDEBAR – same structure, ads and related posts (must reflect cybersecurity) -->
+        <aside class="sidebar">
+            <!-- standard ad block from original -->
+            <div class="ad-container">
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-1911859184415905"
+                     data-ad-slot="1122334455"
+                     data-ad-format="auto"
+                     data-full-width-responsive="true"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+            </div>
+
+            <!-- Related posts – cybersecurity & ethical hacking specific, mirroring sidebar of react article -->
+            <div class="related-posts">
+                <h3>Related Cybersecurity Posts</h3>
+                <ul>
+                    <li><a href="web-app-pentesting-guide.html">Web App Pentesting: OWASP Top 10 2024</a></li>
+                    <li><a href="wireless-hacking-guide.html">WiFi Pentesting: WPA3 & WPA2 Enterprise</a></li>
+                    <li><a href="malware-analysis-basics.html">Malware Analysis for Beginners</a></li>
+                    <!-- also bring in AI/cyber fusion -->
+                    <li><a href="../ai-machine-learning/ai-cybersecurity-threats.html">AI‑Powered Threats & Defense</a></li>
+                </ul>
+            </div>
+
+            <div class="category-links">
+                <h3>Explore Categories</h3>
+                <ul>
+                    <li><a href="../web-development/index.html">Web Development</a></li>
+                    <li><a href="../ai-machine-learning/index.html">AI & Machine Learning</a></li>
+                    <li><a href="index.html">Cybersecurity</a></li>
+                    <li><a href="../mobile-development/index.html">Mobile Development</a></li>
+                    <li><a href="../cloud-computing/index.html">Cloud Computing</a></li>
+                </ul>
+            </div>
+        </aside>
+    </main>
+
+    <!-- FOOTER – identical to original, no dark/black, same contact, year, mail, phone. -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 Rehan's Tech Blog. All rights reserved.</p>
+            <p>Contact: <a href="mailto:rehanjamadar914@gmail.com">rehanjamadar914@gmail.com</a> | +91 97671360</p>
+            <div class="social-links">
+                <a href="#">GitHub</a> | <a href="#">LinkedIn</a> | <a href="#">Twitter</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- external script (same as original) -->
+    <script src="../../js/main.js"></script>
+    <!-- note: no dark mode overrides, all styles inherit from style.css/theme.css which are light/white theme as per original blog -->
+</body>
+</html>

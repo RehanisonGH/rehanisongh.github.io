@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Cloud security fundamentals: IAM, encryption, shared responsibility model, and best practices for AWS, Azure, GCP.">
+    <title>Cloud Security Essentials - Cybersecurity - Rehan's Tech Blog</title>
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/theme.css">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1911859184415905" crossorigin="anonymous"></script>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo">
+                    <h1><a href="../../index.html">Rehan's Tech Blog</a></h1>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="../../index.html">Home</a></li>
+                    <li class="dropdown">
+                        <a href="#">Categories</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="../web-development/index.html">Web Development</a></li>
+                            <li><a href="../ai-machine-learning/index.html">AI & Machine Learning</a></li>
+                            <li><a href="index.html">Cybersecurity</a></li>
+                            <li><a href="../mobile-development/index.html">Mobile Development</a></li>
+                            <li><a href="../cloud-computing/index.html">Cloud Computing</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="../../about.html">About</a></li>
+                    <li><a href="../../contact.html">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <article class="blog-post">
+            <header class="post-header">
+                <nav class="breadcrumb">
+                    <a href="../../index.html">Home</a> &gt;
+                    <a href="index.html">Cybersecurity</a> &gt;
+                    <span>Cloud Security Essentials</span>
+                </nav>
+                <h1>Cloud Security 2024: IAM, Zero Trust & Shared Responsibility</h1>
+                <div class="post-meta">
+                    <span>By Rehan</span>
+                    <span>February 12, 2025</span>
+                    <span>12 min read</span>
+                </div>
+            </header>
+            
+            <div class="post-content">
+                <h2>Introduction</h2>
+                <p>As organizations accelerate cloud adoption, securing infrastructure, applications, and data in AWS, Azure, and GCP has never been more critical. Cloud security is not just the provider's responsibility — it demands a shared mindset, robust Identity and Access Management (IAM), and continuous compliance. This guide breaks down the core pillars of modern cloud security, including real-world misconfigurations, hands-on IAM hardening, and Zero Trust architecture. Whether you're a cloud engineer or a security analyst, you'll walk away with actionable defenses for your cloud environment.</p>
+
+                <div class="ad-container">
+                    <ins class="adsbygoogle"
+                         style="display:block; text-align:center;"
+                         data-ad-layout="in-article"
+                         data-ad-format="fluid"
+                         data-ad-client="ca-pub-1911859184415905"
+                         data-ad-slot="1234567890"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+
+                <h2>1. The Shared Responsibility Model (Decoded)</h2>
+                <p>One of the most misunderstood concepts in cloud security. Let's clarify: the cloud provider secures <strong>of</strong> the cloud; you secure <strong>in</strong> the cloud.</p>
+                
+                <h4>Who is responsible for what?</h4>
+                <ul>
+                    <li><strong>AWS/Azure/GCP:</strong> Physical security, network infrastructure, virtualization layer, hardware.</li>
+                    <li><strong>You (the customer):</strong> Identity & access, data encryption (at rest/in transit), OS patches, firewall rules, network ACLs, application configurations.</li>
+                    <li><strong>Common pitfall:</strong> Leaving S3 buckets or Azure Blob containers publicly writable — 90% of cloud breaches involve customer misconfiguration (Cloud Security Alliance).</li>
+                </ul>
+
+                <pre><code># Example: Publicly exposed AWS S3 bucket policy (DON'T DO THIS)
+{
+  "Effect": "Allow",
+  "Principal": "*",
+  "Action": "s3:GetObject",
+  "Resource": "arn:aws:s3:::confidential-bucket/*"
+}
+// ❌ This grants anonymous read access to everyone.</code></pre>
+
+                <h2>2. Identity and Access Management (IAM) Hardening</h2>
+                <p>Weak IAM is the root cause of 70% of cloud data breaches. Enforce least privilege, use temporary credentials, and audit continuously.</p>
+
+                <h3>Critical IAM Controls</h3>
+                <ul>
+                    <li><strong>No root user:</strong> Enable MFA, remove access keys, delegate via roles.</li>
+                    <li><strong>Use IAM roles instead of long-lived keys:</strong> EC2 instance profiles, OIDC federation for Kubernetes.</li>
+                    <li><strong>Permission boundaries & SCPs:</strong> Service control policies in AWS Organizations to restrict even admins.</li>
+                    <li><strong>Conditional access (Azure AD):</strong> Risk-based sign-in, device compliance.</li>
+                </ul>
+
+                <pre><code>// Secure IAM role trust policy (AWS)
+{
+  "Effect": "Allow",
+  "Principal": {
+    "Federated": "accounts.google.com"
+  },
+  "Action": "sts:AssumeRoleWithWebIdentity",
+  "Condition": {
+    "StringEquals": {
+      "token.actionscript.us:sub": "service-account@project.iam.gserviceaccount.com"
+    }
+  }
+}</code></pre>
+
+                <h3>3. Zero Trust Network Security</h3>
+                <p>Castle-and-moat is dead. Assume breach, verify explicitly, and segment everything.</p>
+
+                <h4>Practical Zero Trust in the cloud:</h4>
+                <ul>
+                    <li><strong>Micro-segmentation:</strong> Use Kubernetes Network Policies, AWS Security Groups (stateful), Azure NSGs.</li>
+                    <li><strong>No direct internet access:</strong> VPC peering, PrivateLink, or Google Cloud VPC SC.</li>
+                    <li><strong>Cloud WAF & DDoS protection:</strong> AWS WAF, Cloud Armor, Azure DDoS Protection.</li>
+                    <li><strong>Secure endpoints:</strong> BeyondCorp / Zero Trust proxies (Zscaler, Cloudflare Access).</li>
+                </ul>
+
+                <pre><code># Kubernetes NetworkPolicy – deny all ingress except from monitoring
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: deny-external
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          name: observability</code></pre>
+
+                <div class="ad-container">
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-1911859184415905"
+                         data-ad-slot="0987654321"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+
+                <h2>4. Encryption & Key Management</h2>
+                <p>Data at rest and in transit must be encrypted — but proper key management is non-negotiable.</p>
+                
+                <h3>Common pitfalls</h3>
+                <ul>
+                    <li>Using default KMS keys without rotation.</li>
+                    <li>Embedding secrets in code or environment variables (use Hashicorp Vault / AWS Secrets Manager).</li>
+                    <li>Disabling TLS 1.2/1.3 on load balancers.</li>
+                </ul>
+
+                <h4>Best practices:</h4>
+                <ul>
+                    <li><strong>Enforce encryption at rest:</strong> S3-SSE, EBS volumes, RDS encryption.</li>
+                    <li><strong>Customer-managed keys (CMK):</strong> With automatic rotation (AWS KMS, Azure Key Vault, GCP Cloud KMS).</li>
+                    <li><strong>Secrets management:</strong> Inject via CSI driver or external secrets operator.</li>
+                </ul>
+
+                <pre><code>// Terraform: AWS S3 bucket with enforced encryption
+resource "aws_s3_bucket" "secure_bucket" {
+  bucket = "rehan-secure-logs"
+  
+  server_side_encryption_configuration {
+    rule {
+      apply_server_side_encryption_by_default {
+        sse_algorithm = "aws:kms"
+        kms_master_key_id = aws_kms_key.bucket_key.arn
+      }
+    }
+  }
+}</code></pre>
+
+                <h2>5. Cloud Security Posture Management (CSPM)</h2>
+                <p>Continuous compliance monitoring against benchmarks (CIS, NIST, PCI-DSS). Manual reviews are dead — automation is the only way.</p>
+                
+                <h3>Tools & tactics:</h3>
+                <ul>
+                    <li><strong>Native tools:</strong> AWS Config, Azure Security Center, GCP Security Command Center.</li>
+                    <li><strong>Open source:</strong> Prowler, ScoutSuite, Checkov (IaC scanning).</li>
+                    <li><strong>Remediation:</strong> Auto-remediate non-compliant resources via EventBridge / Cloud Functions.</li>
+                </ul>
+
+                <pre><code># Prowler command – CIS benchmark check
+prowler aws --checks check_s3_bucket_public_read,check_iam_root_mfa
+# Outputs violations and fixes in CLI or CSV</code></pre>
+
+                <h2>6. Container & Kubernetes Security</h2>
+                <p>Containers add new layers, but also new risks. Image vulnerabilities, excessive privileges, and runtime threats.</p>
+
+                <h4>Attack chain prevention:</h4>
+                <ol>
+                    <li><strong>Build phase:</strong> Scan images with Trivy, Grype, or ECR scan; use minimal base images (distroless).</li>
+                    <li><strong>Deploy phase:</strong> Admission controllers (OPA/Gatekeeper, Kyverno) enforce no privileged containers, read-only root.</li>
+                    <li><strong>Runtime:</strong> Falco, Cilium Tetragon for behavioral detection.</li>
+                </ol>
+
+                <pre><code># OPA Gatekeeper policy: block privileged containers
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sNoPrivileged
+metadata:
+  name: no-privileged-containers
+spec:
+  match:
+    kinds:
+      - apiGroups: [""]
+        kinds: ["Pod"]
+  parameters:
+    exemptImages: ["gcr.io/google-containers/pause"]</code></pre>
+
+                <div class="ad-container">
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-1911859184415905"
+                         data-ad-slot="1122334455"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+
+                <h2>7. Incident Response in the Cloud</h2>
+                <p>IR shifts when you don’t own the physical servers. You need cloud-native forensics, and rapid isolation.</p>
+
+                <h3>IR playbook example (AWS):</h3>
+                <ol>
+                    <li><strong>Detect:</strong> GuardDuty finding (crypto miner, backdoor).</li>
+                    <li><strong>Isolate:</strong> Detach instance from security group, remove IAM role, take EBS snapshot.</li>
+                    <li><strong>Investigate:</strong> CloudTrail logs, VPC Flow Logs, Inspector agent findings.</li>
+                    <li><strong>Recover:</strong> Restore clean AMI, rotate keys.</li>
+                </ol>
+
+                <pre><code># AWS CLI: isolate compromised EC2 instance
+aws ec2 modify-instance-attribute --instance-id i-0abc123 --groups sg-isolated
+aws iam remove-role-from-instance-profile --instance-id i-0abc123 --role compromised-role</code></pre>
+
+                <h2>8. Compliance & Regulations</h2>
+                <p>GDPR, HIPAA, SOC2, FedRAMP – cloud adds complexity to audits.</p>
+                <ul>
+                    <li><strong>Data residency:</strong> Keep data in specific regions (e.g., eu-central-1 for GDPR).</li>
+                    <li><strong>Log retention:</strong> Enable CloudTrail / Azure Log Analytics with immutability.</li>
+                    <li><strong>Third-party audits:</strong> Use AWS Artifact or Azure Service Trust Portal for certifications.</li>
+                </ul>
+
+                <h2>Case Study: Capital One Breach (2019)</h2>
+                <p>A WAF misconfiguration allowed SSRF, leading to stolen credentials. Root cause: overly permissive IAM role attached to WAF. </p>
+                <h4>Prevention today:</h4>
+                <ul>
+                    <li>Metadata service v2 (IMDSv2) required.</li>
+                    <li>IAM conditions: <code>aws:SourceIp</code>, <code>aws:ViaAWSService</code>.</li>
+                    <li>VPC endpoints for S3/SSM, no internet gateway.</li>
+                </ul>
+                
+                <h2>Automation & DevSecOps</h2>
+                <p>Shift left security: Scan Terraform, CloudFormation, and manifests before deployment.</p>
+                <ul>
+                    <li><strong>Checkov</strong> / <strong>tfsec</strong> for misconfigurations (e.g., S3 bucket logging disabled).</li>
+                    <li><strong>Pre-commit hooks</strong> for secret detection (detect-secrets, truffleHog).</li>
+                    <li><strong>CI/CD guardrails:</strong> GitHub Advanced Security, GitLab SAST.</li>
+                </ul>
+
+                <pre><code># Checkov: detect S3 without versioning
+checkov -d . --framework terraform
+# Pass: Ensure S3 bucket has versioning enabled (CKV_AWS_21)</code></pre>
+
+                <h2>Looking Ahead: AI & Cloud Security</h2>
+                <ul>
+                    <li><strong>CSPM+AI:</strong> Predictive analytics for privilege escalation.</li>
+                    <li><strong>LLM-based log analysis:</strong> Amazon Q, Microsoft Security Copilot.</li>
+                    <li><strong>Confidential computing:</strong> Always encrypted in use (AMD SEV-SNP, Intel TDX).</li>
+                </ul>
+
+                <div class="ad-container">
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-1911859184415905"
+                         data-ad-slot="1122334455"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+
+                <h2>Conclusion</h2>
+                <p>Cloud security in 2025 is a shared, automated, and continuous process. The fundamentals remain: lock down IAM, encrypt everything, monitor posture, and assume breach. Start by enabling CSPM tools, removing public access, and implementing Zero Trust principles. The cloud can be more secure than on-prem — if you follow the blueprint above.</p>
+                <p><strong>Ready to harden your cloud?</strong> Audit your environment with <a href="#">Prowler</a> today, and revisit your IAM policies. Your future self (and security team) will thank you.</p>
+                
+                <div class="tags">
+                    <strong>Tags:</strong>
+                    <span class="tag">#CloudSecurity</span>
+                    <span class="tag">#AWS</span>
+                    <span class="tag">#Azure</span>
+                    <span class="tag">#GCP</span>
+                    <span class="tag">#ZeroTrust</span>
+                    <span class="tag">#IAM</span>
+                    <span class="tag">#DevSecOps</span>
+                </div>
+            </div>
+            
+            <div class="post-navigation">
+                <div class="prev-post">
+                    <strong>Previous:</strong>
+                    <a href="../ai-machine-learning/ai-red-teaming.html">← AI Red Teaming: Adversarial Attacks on LLMs</a>
+                </div>
+                <div class="next-post">
+                    <strong>Next:</strong>
+                    <a href="ransomware-defense-2025.html">Ransomware Defense: 2025 Strategies →</a>
+                </div>
+            </div>
+        </article>
+        
+        <aside class="sidebar">
+            <div class="ad-container">
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-1911859184415905"
+                     data-ad-slot="1122334455"
+                     data-ad-format="auto"
+                     data-full-width-responsive="true"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+            </div>
+            
+            <div class="related-posts">
+                <h3>Related Cybersecurity Posts</h3>
+                <ul>
+                    <li><a href="kubernetes-secrets-management.html">K8s Secrets: HashiCorp Vault & External Secrets</a></li>
+                    <li><a href="zero-trust-network-architecture.html">ZTNA: BeyondCorp vs Cloudflare Access</a></li>
+                    <li><a href="aws-config-iac-scanning.html">IaC Security: AWS Config & Checkov Pipeline</a></li>
+                    <li><a href="../cloud-computing/serverless-security.html">OWASP Top 10 for Serverless</a></li>
+                </ul>
+            </div>
+            
+            <div class="category-links">
+                <h3>Explore Categories</h3>
+                <ul>
+                    <li><a href="../ai-machine-learning/index.html">AI & Machine Learning</a></li>
+                    <li><a href="../web-development/index.html">Web Development</a></li>
+                    <li><a href="../mobile-development/index.html">Mobile Development</a></li>
+                    <li><a href="../cloud-computing/index.html">Cloud Computing</a></li>
+                </ul>
+            </div>
+        </aside>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 Rehan's Tech Blog. All rights reserved.</p>
+            <p>Contact: <a href="mailto:rehanjamadar914@gmail.com">rehanjamadar914@gmail.com</a> | +91 97671360</p>
+            <div class="social-links">
+                <a href="#">GitHub</a> | <a href="#">LinkedIn</a> | <a href="#">Twitter</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../../js/main.js"></script>
+</body>
+</html>

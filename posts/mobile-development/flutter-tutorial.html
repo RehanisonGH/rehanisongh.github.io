@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <meta name="description" content="Complete Flutter tutorial for 2024 – build iOS/Android apps from scratch with widgets, state management & Firebase.">
+    <title>Flutter Tutorial 2024: Build Native Apps – Mobile Development – Rehan's Tech Blog</title>
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/theme.css">
+    <!-- Google AdSense same account – consistent with site policy -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1911859184415905" crossorigin="anonymous"></script>
+</head>
+<body>
+    <!-- Header – exactly same structure, no dark mode, clean light design -->
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo">
+                    <h1><a href="../../index.html">Rehan's Tech Blog</a></h1>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="../../index.html">Home</a></li>
+                    <li class="dropdown">
+                        <a href="#">Categories</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="../web-development/index.html">Web Development</a></li>
+                            <li><a href="../ai-machine-learning/index.html">AI & Machine Learning</a></li>
+                            <li><a href="../cybersecurity/index.html">Cybersecurity</a></li>
+                            <li><a href="index.html">Mobile Development</a></li>
+                            <li><a href="../cloud-computing/index.html">Cloud Computing</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="../../about.html">About</a></li>
+                    <li><a href="../../contact.html">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Main article layout: identical to React post but with Flutter content -->
+        <article class="blog-post">
+            <header class="post-header">
+                <!-- Breadcrumb points to Mobile Development category -->
+                <nav class="breadcrumb">
+                    <a href="../../index.html">Home</a> &gt;
+                    <a href="index.html">Mobile Development</a> &gt;
+                    <span>Flutter 2024 Complete Tutorial</span>
+                </nav>
+                <h1>Flutter 3.16+ : Build Beautiful Native Apps – The Ultimate 2024 Tutorial</h1>
+                <div class="post-meta">
+                    <span>By Rehan</span>
+                    <span>February 22, 2024</span>
+                    <span>14 min read</span>
+                </div>
+            </header>
+            
+            <div class="post-content">
+                <!-- INTRODUCTION – exactly same style as React 19 post but Flutter-focused -->
+                <h2>Why Flutter in 2024?</h2>
+                <p>Flutter is no longer just "the new cross-platform kid" – it's a mature, production-proven framework used by Google, BMW, Alibaba, and countless startups. With the release of Flutter 3.16 (Dart 3.2), Impeller engine on iOS, and massive performance boosts, Flutter now delivers 120fps smoothness even on low-end devices. In this comprehensive guide, you'll go from zero to a production-ready app with state management, Firebase, and custom animations. <strong>Welcome to the complete Flutter tutorial.</strong></p>
+
+                <!-- Ad placement – same in-article format -->
+                <div class="ad-container">
+                    <ins class="adsbygoogle"
+                         style="display:block; text-align:center;"
+                         data-ad-layout="in-article"
+                         data-ad-format="fluid"
+                         data-ad-client="ca-pub-1911859184415905"
+                         data-ad-slot="1234567890"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+
+                <h2>Flutter’s Core Superpowers</h2>
+                
+                <!-- 1. Hot reload & widget philosophy -->
+                <h3>1. Hot Reload & Declarative UI</h3>
+                <p>Flutter’s hot reload is legendary. Change code, press save, and see the update in under a second – without losing state. Combined with a <em>declarative</em> widget system (inspired by React), you describe what the UI should look like for a given state. Everything is a widget – from padding to the app itself.</p>
+                
+                <pre><code>// Minimal Flutter app – everything is a widget
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(title: const Text('Flutter 2024')),
+        body: const Center(
+          child: Text('Hello, Rehan\'s readers!'),
+        ),
+      ),
+    );
+  }
+}</code></pre>
+
+                <h3>2. Impeller Engine: iOS silky smooth</h3>
+                <p>Flutter 3.16+ enables <strong>Impeller</strong> by default on iOS, eliminating shader compilation jank. Apps now scroll at 120fps from the first frame. Android support is in preview.</p>
+                
+                <h3>3. Dart 3 – Full-featured, sound null safety</h3>
+                <p>Dart 3 brings records, patterns, and primary constructors. You write less boilerplate and catch errors at compile time.</p>
+
+                <pre><code>// Dart 3 pattern matching & records
+(double lat, double lng) parseLocation(String input) {
+  final parts = input.split(',');
+  return (double.parse(parts[0]), double.parse(parts[1]));
+}
+
+void main() {
+  final (lat, lng) = parseLocation('40.7128,-74.0060');
+  print('Lat: $lat, Lng: $lng');
+}</code></pre>
+
+                <!-- Second ad – auto-sized, same slots -->
+                <div class="ad-container">
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-1911859184415905"
+                         data-ad-slot="0987654321"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+
+                <h2>State Management – The Right Way (2024 Edition)</h2>
+                <p>Gone are the days of `setState` spaghetti. We compare the top four approaches and recommend the best for each scenario.</p>
+                
+                <h4>🔹 Riverpod 2.5 (Recommended for most apps)</h4>
+                <p>Compile-safe, no context required, and perfect for large teams.</p>
+                <pre><code>final counterProvider = StateProvider&lt;int&gt;((ref) => 0);
+
+class CounterWidget extends ConsumerWidget {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final count = ref.watch(counterProvider);
+    return ElevatedButton(
+      onPressed: () => ref.read(counterProvider.notifier).state++,
+      child: Text('Count $count'),
+    );
+  }
+}</code></pre>
+
+                <h4>🔹 BLoC / Cubit</h4>
+                <p>Ideal if you come from Angular/Reactive background and need formal events/states.</p>
+                
+                <h4>🔹 Flutter Bloc (with sealed classes)</h4>
+                <pre><code>// freezed + bloc for predictable state
+part 'auth_state.freezed.dart';
+
+@freezed
+class AuthState with _$AuthState {
+  const factory AuthState.initial() = _Initial;
+  const factory AuthState.authenticated(User user) = _Authenticated;
+  const factory AuthState.error(String message) = _Error;
+}</code></pre>
+
+                <h3>4. Flutter Firebase – integrated like never before</h3>
+                <p>FlutterFire is fully null-safe, and with Firebase AI extensions, you can add ML features with one click.</p>
+                <pre><code>// Firebase Auth + Firestream realtime
+final user = await FirebaseAuth.instance.signInAnonymously();
+final snap = await FirebaseFirestore.instance
+    .collection('posts')
+    .where('author', isEqualTo: user.uid)
+    .get();</code></pre>
+
+                <!-- mid article ad slot -->
+                <div class="ad-container">
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-1911859184415905"
+                         data-ad-slot="1122334455"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+
+                <h2>Navigation made simple – go_router 13+</h2>
+                <p>Declarative, type-safe routing with built-in redirections and deep linking.</p>
+                <pre><code>final router = GoRouter(
+  routes: [
+    GoRoute(
+      path: '/',
+      builder: (context, state) => HomeScreen(),
+      routes: [
+        GoRoute(
+          path: 'profile/:id',
+          builder: (context, state) => ProfileScreen(id: state.pathParameters['id']!),
+        ),
+      ],
+    ),
+  ],
+);</code></pre>
+
+                <h2>Performance: Beyond the basics</h2>
+                <ul>
+                    <li><strong>Use `const` constructors</strong> whenever possible – saves rebuilds.</li>
+                    <li><strong>ListView.builder</strong> for long lists, never `ListView(children: ...)` with 1000+ items.</li>
+                    <li><strong>RepaintBoundary</strong> to isolate expensive animations.</li>
+                    <li><strong>Image.network caching:</strong> Use `cached_network_image` or `image_picker`.</li>
+                </ul>
+                
+                <pre><code>// extreme performance: const + itemExtractor
+ListView.builder(
+  itemCount: 10000,
+  itemExtent: 50, // helps render quickly
+  itemBuilder: (context, index) => const ListTile(title: Text('Efficient')),
+);</code></pre>
+
+                <h2>Flutter 3.19+ What’s new?</h2>
+                <p>As of early 2024: <strong>Wasm</strong> (WebAssembly) support for web, multi-view embedding on desktop, and <strong>Dart macros</strong> (preview) for code generation without build_runner.</p>
+
+                <h3>Case Study: Fintech app rebuild</h3>
+                <p>A trading app migrated from React Native to Flutter. Results: crash rate dropped from 0.8% to 0.07%, development time reduced by 35% after 3 months. Flutter’s single codebase, pixel-perfect custom designs and Isolate compute made the difference.</p>
+
+                <h2>Step-by-step: Your first Flutter 2024 project</h2>
+                <ol>
+                    <li><strong>Install Flutter SDK</strong> (via `fvm` recommended for version control) 
+                        <pre><code>fvm install 3.16.9 &amp;&amp; fvm global 3.16.9</code></pre>
+                    </li>
+                    <li><strong>Create project</strong> 
+                        <pre><code>flutter create my_app --platforms=ios,android,web</code></pre>
+                    </li>
+                    <li><strong>Add essential dependencies</strong> (riverpod, go_router, dio, flutter_lints)</li>
+                    <li><strong>Set up folder structure:</strong> feature-first (not type-first)</li>
+                </ol>
+                <pre><code>lib/
+├── core/          # themes, constants, routing
+├── features/
+│   ├── auth/
+│   ├── home/
+│   └── profile/
+└── main.dart</code></pre>
+
+                <h2>Testing & Deployment</h2>
+                <p>Flutter 3.16 improves integration testing with `integration_test` package. Use Codemagic or GitHub Actions for CI/CD.</p>
+                <pre><code>flutter test --coverage
+genhtml coverage/lcov.info -o coverage/html</code></pre>
+
+                <h2>Debugging: beyond print</h2>
+                <p>DevTools suite – inspector, memory view, network profiler. Also: <code>debugPrint</code>, `debugDumpApp()`, `debugPaintSizeEnabled`.</p>
+
+                <!-- third ad placement -->
+                <div class="ad-container">
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-1911859184415905"
+                         data-ad-slot="9988776655"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+
+                <h2>Learning path – from zero to job-ready</h2>
+                <ul>
+                    <li>📘 Official docs & Flutter cookbook</li>
+                    <li>🎥 YouTube: Widget of the Week, Flutter Explained</li>
+                    <li>💻 Build clones: Netflix UI, WhatsApp, or a ChatGPT client</li>
+                    <li>📱 Publish one app to Play Store (even a simple one) – recruiters love it</li>
+                </ul>
+                
+                <h2>Flutter vs React Native vs Kotlin/Swift – 2024 verdict</h2>
+                <p><strong>Flutter wins:</strong> if you need custom UI, same codebase for iOS/Android, and you prefer Dart. <br/>
+                <strong>React Native</strong> still has larger library ecosystem. <br/>
+                <strong>Native</strong> when platform-specific features or maximum performance are non-negotiable. But with Flutter's Impeller and FFI, the gap is closing.</p>
+
+                <h2>Conclusion: The time to adopt Flutter is now</h2>
+                <p>With a single codebase that compiles to ARM64, JavaScript, x64, and Wasm, Flutter is the most future-proof cross-platform framework. The ecosystem is booming – from Supabase to Appwrite, all first-class support. Use this tutorial as your launchpad. Clone the starter, experiment with widgets, and join the Flutter community.</p>
+                <p><strong>Ready to build?</strong> Open your terminal and type <code>flutter create my_first_app</code>. See you on the other side.</p>
+                
+                <div class="tags">
+                    <strong>Tags:</strong>
+                    <span class="tag">#Flutter</span>
+                    <span class="tag">#Dart</span>
+                    <span class="tag">#MobileDevelopment</span>
+                    <span class="tag">#CrossPlatform</span>
+                    <span class="tag">#iOS</span>
+                    <span class="tag">#Android</span>
+                    <span class="tag">#Firebase</span>
+                    <span class="tag">#Riverpod</span>
+                </div>
+            </div> <!-- end .post-content -->
+            
+            <!-- Post navigation – keep consistent format, links to mobile and web dev -->
+            <div class="post-navigation">
+                <div class="prev-post">
+                    <strong>Previous:</strong>
+                    <a href="../mobile-development/react-native-2024.html">← React Native 2024: New Architecture Deep Dive</a>
+                </div>
+                <div class="next-post">
+                    <strong>Next:</strong>
+                    <a href="../web-development/sveltekit-guide.html">SvelteKit 2.0: Full-Stack Framework Guide →</a>
+                </div>
+            </div>
+        </article>
+        
+        <!-- SIDEBAR: identical to React post, but with mobile-related ads/links and consistent categories -->
+        <aside class="sidebar">
+            <div class="ad-container">
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-1911859184415905"
+                     data-ad-slot="1122334455"
+                     data-ad-format="auto"
+                     data-full-width-responsive="true"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+            </div>
+            
+            <div class="related-posts">
+                <h3>Related mobile deep dives</h3>
+                <ul>
+                    <li><a href="swiftui-ios17-guide.html">SwiftUI with iOS 17 – Essential Updates</a></li>
+                    <li><a href="kotlin-jetpack-compose.html">Jetpack Compose 2024: Android’s UI Toolkit</a></li>
+                    <li><a href="../mobile-development/flutter-vs-react-native-2024.html">Flutter vs React Native 2024 – Benchmarks</a></li>
+                    <li><a href="../ai-machine-learning/onnx-mobile-guide.html">ONNX Runtime: On-Device ML</a></li>
+                </ul>
+            </div>
+            
+            <div class="category-links">
+                <h3>Explore Categories</h3>
+                <ul>
+                    <li><a href="../web-development/index.html">Web Development</a></li>
+                    <li><a href="../ai-machine-learning/index.html">AI & Machine Learning</a></li>
+                    <li><a href="../cybersecurity/index.html">Cybersecurity</a></li>
+                    <li><a href="../cloud-computing/index.html">Cloud Computing</a></li>
+                </ul>
+            </div>
+            
+            <!-- extra ad unit per original -->
+            <div class="ad-container" style="margin-top:20px;">
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-1911859184415905"
+                     data-ad-slot="5544332211"
+                     data-ad-format="rectangle"
+                     data-full-width-responsive="true"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+            </div>
+        </aside>
+    </main>
+
+    <!-- FOOTER – exactly same as source, light mode, no dark colors -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 Rehan's Tech Blog. All rights reserved.</p>
+            <p>Contact: <a href="mailto:rehanjamadar914@gmail.com">rehanjamadar914@gmail.com</a> | +91 97671360</p>
+            <div class="social-links">
+                <a href="#">GitHub</a> | <a href="#">LinkedIn</a> | <a href="#">Twitter</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../../js/main.js"></script>
+    <!-- no dark mode or black styling; copy as is -->
+</body>
+</html>

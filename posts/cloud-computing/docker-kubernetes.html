@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Complete guide to Docker and Kubernetes: containerization, orchestration, CI/CD integration, and cloud-native best practices">
+    <title>Docker & Kubernetes: The Cloud-Native Duo - Cloud Computing - Rehan's Tech Blog</title>
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/theme.css">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1911859184415905" crossorigin="anonymous"></script>
+    <style>
+        /* preserve light mode, no dark/black – minimal adjustments for readability */
+        body { background-color: #f5f7fa; color: #1a2634; }
+        .header, .footer { background-color: #ffffff; border-bottom: 1px solid #e0e6ed; }
+        .footer { border-top: 1px solid #e0e6ed; border-bottom: none; }
+        .navbar a { color: #0a4b6e; }
+        .blog-post, .sidebar { background: #ffffff; border-radius: 12px; padding: 1.8rem; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
+        pre { background: #f2f5f9; border-left: 4px solid #0179a8; padding: 1rem; overflow-x: auto; border-radius: 0 8px 8px 0; }
+        code { font-family: 'Courier New', Courier, monospace; color: #0d3b4c; }
+        .tag { background: #e8f0fe; color: #0369a1; padding: 0.3rem 0.7rem; border-radius: 20px; }
+        .ad-container { margin: 2rem 0; background: #fafcff; border: 1px dashed #a0c8e0; border-radius: 10px; padding: 0.5rem; }
+        .breadcrumb a { color: #0277a0; }
+        h1, h2, h3, h4 { color: #0a4b5c; }
+        .post-meta span { background: #eef3f7; padding: 0.2rem 0.6rem; border-radius: 16px; }
+        .dropdown-menu { background: white; border: 1px solid #ccdbe8; }
+        .footer p, .footer a { color: #2c506a; }
+        a { color: #0077b6; }
+        .related-posts ul li a, .category-links ul li a { color: #005e80; }
+        .post-navigation a { color: #005e80; font-weight: 500; }
+        .sidebar h3 { border-bottom: 2px solid #b8d4e7; padding-bottom: 0.5rem; }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo">
+                    <h1><a href="../../index.html">Rehan's Tech Blog</a></h1>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="../../index.html">Home</a></li>
+                    <li class="dropdown">
+                        <a href="#">Categories</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="../web-development/index.html">Web Development</a></li>
+                            <li><a href="../ai-machine-learning/index.html">AI & Machine Learning</a></li>
+                            <li><a href="../cybersecurity/index.html">Cybersecurity</a></li>
+                            <li><a href="../mobile-development/index.html">Mobile Development</a></li>
+                            <li><a href="index.html">Cloud Computing</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="../../about.html">About</a></li>
+                    <li><a href="../../contact.html">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container" style="display: flex; gap: 2rem; margin-top: 2rem; flex-wrap: wrap;">
+        <article class="blog-post" style="flex: 2; min-width: 280px;">
+            <header class="post-header">
+                <nav class="breadcrumb">
+                    <a href="../../index.html">Home</a> &gt;
+                    <a href="index.html">Cloud Computing</a> &gt;
+                    <span>Docker + Kubernetes: The Cloud-Native Duo</span>
+                </nav>
+                <h1>Docker & Kubernetes: From Zero to Production-Grade Container Orchestration</h1>
+                <div class="post-meta">
+                    <span>By Rehan</span>
+                    <span>March 8, 2024</span>
+                    <span>14 min read</span>
+                </div>
+            </header>
+            
+            <div class="post-content">
+                <h2>⚡ Containers are the new standard</h2>
+                <p>In the cloud computing era, Docker and Kubernetes have become essential pillars for building, shipping, and running scalable applications. Whether you're deploying microservices or batch jobs, understanding this duo transforms infrastructure complexity into repeatable, automated pipelines. This guide covers everything from containerization fundamentals to production-grade Kubernetes workloads.</p>
+                
+                <div class="ad-container">
+                    <ins class="adsbygoogle"
+                         style="display:block; text-align:center;"
+                         data-ad-layout="in-article"
+                         data-ad-format="fluid"
+                         data-ad-client="ca-pub-1911859184415905"
+                         data-ad-slot="1234567890"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+
+                <h2>🐳 Docker: Containerization Deep Dive</h2>
+                <h3>Why Docker changes everything</h3>
+                <p>Docker packages software into standardized units (containers) that include everything needed to run: code, runtime, system tools, libraries. Works consistently across any Linux/Windows environment.</p>
+                
+                <h4>Essential Dockerfile patterns</h4>
+                <pre><code># Multi-stage build for minimal production image
+FROM node:18-alpine AS builder
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --only=production
+COPY . .
+RUN npm run build
+
+FROM node:18-alpine
+WORKDIR /app
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/node_modules ./node_modules
+USER node
+EXPOSE 3000
+CMD ["node", "dist/server.js"]</code></pre>
+
+                <h4>Must-know commands & optimizations</h4>
+                <ul>
+                    <li><strong>.dockerignore</strong> – reduce context size (node_modules, logs, .env)</li>
+                    <li><strong>Layer caching:</strong> order instructions from least to most frequently changing</li>
+                    <li><strong>Distroless / scratch:</strong> minimal attack surface for compiled languages</li>
+                </ul>
+
+                <h3>Docker Compose for local development</h3>
+                <pre><code>version: '3.8'
+services:
+  api:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - DB_URL=mongodb://db:27017/app
+  db:
+    image: mongo:7
+    volumes:
+      - mongo_data:/data/db
+volumes:
+  mongo_data:</code></pre>
+                
+                <div class="ad-container">
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-1911859184415905"
+                         data-ad-slot="0987654321"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+
+                <h2 style="margin-top: 2rem;">☸️ Kubernetes: Production Orchestration</h2>
+                <h3>Core concepts – Pods, Deployments, Services</h3>
+                <p>Kubernetes schedules and manages containers across clusters. Declarative YAML defines desired state, controllers reconcile.</p>
+                
+                <h4>Stateless Deployment + LoadBalancer</h4>
+                <pre><code>apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: react-frontend
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+      - name: frontend
+        image: rehanisongh/frontend:v2.1
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "100m"
+          limits:
+            memory: "128Mi"
+            cpu: "250m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-svc
+spec:
+  type: LoadBalancer
+  selector:
+    app: frontend
+  ports:
+  - port: 80
+    targetPort: 80</code></pre>
+
+                <h3>Stateful workloads & persistence</h3>
+                <p>StatefulSets + PersistentVolumeClaims for databases.</p>
+                <pre><code>apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgres-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+---
+apiVersion: apps/v1
+kind: StatefulSet
+...
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+    spec:
+      accessModes: ["ReadWriteOnce"]
+      resources:
+        requests:
+          storage: 10Gi</code></pre>
+
+                <div class="ad-container">
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-1911859184415905"
+                         data-ad-slot="1122334455"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+
+                <h2>🔄 CI/CD Integration: GitOps style</h2>
+                <p>Modern pipeline using GitHub Actions + ArgoCD or flux.</p>
+                <pre><code># .github/workflows/deploy.yml
+name: Build and Push
+on: push
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker build -t rehanisongh/app:${{ github.sha }} .
+      - run: docker push rehanisongh/app:${{ github.sha }}
+      # update k8s manifest with new image (commit to GitOps repo)</code></pre>
+                <p>ArgoCD syncs automatically from Git repository → cluster.</p>
+
+                <h2>📦 Advanced Kubernetes patterns</h2>
+                <h3>Horizontal Pod Autoscaling (HPA)</h3>
+                <pre><code>kubectl autoscale deployment frontend --cpu-percent=70 --min=3 --max=20</code></pre>
+                <h3>Ingress Controller (nginx)</h3>
+                <pre><code>apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: app-ingress
+spec:
+  rules:
+  - host: api.rehanisongh.io
+    http:
+      paths:
+      - path: /v1
+        pathType: Prefix
+        backend:
+          service:
+            name: backend-svc
+            port:
+              number: 8080</code></pre>
+
+                <h3>ConfigMaps & Secrets</h3>
+                <pre><code>apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+data:
+  APP_ENV: production
+  LOG_LEVEL: warn</code></pre>
+
+                <div class="ad-container">
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-1911859184415905"
+                         data-ad-slot="5566778899"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+
+                <h2>☁️ Cloud-native ecosystem: Service mesh & observability</h2>
+                <p>Istio for traffic management, mTLS, telemetry. Prometheus + Grafana stack.</p>
+                <pre><code>apiVersion: telemetry.istio.io/v1
+kind: Telemetry
+metadata:
+  name: mesh-default
+spec:
+  metrics:
+  - providers:
+    - name: prometheus</code></pre>
+
+                <h3>Cost optimization & resource rightsizing</h3>
+                <ul>
+                    <li>Kubernetes VPA (Vertical Pod Autoscaler) recommends requests/limits.</li>
+                    <li>Karpenter / cluster-autoscaler for dynamic node provisioning.</li>
+                </ul>
+
+                <h2>🧱 Infrastructure as Code (IaC)</h2>
+                <p>Terraform + AKS/EKS/GKE cluster provisioning.</p>
+                <pre><code>resource "azurerm_kubernetes_cluster" "aks" {
+  name                = "rehan-prod-aks"
+  location            = "eastus"
+  resource_group_name = "rg-cloud-native"
+  dns_prefix          = "rehan"
+  default_node_pool {
+    name       = "systempool"
+    node_count = 3
+    vm_size    = "Standard_D2s_v3"
+  }
+  identity {
+    type = "SystemAssigned"
+  }
+}</code></pre>
+
+                <h2>🔐 Security best practices (zero-trust)</h2>
+                <ul>
+                    <li>Non-root containers (USER 10001 in Dockerfile)</li>
+                    <li>Pod Security Standards (restricted profile)</li>
+                    <li>Image scanning (Trivy, Snyk) in CI</li>
+                    <li>Network policies (deny all ingress/egress by default)</li>
+                </ul>
+                <pre><code>apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: deny-all
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingress
+  - Egress</code></pre>
+
+                <h2>📊 Real-world migration: legacy → containers</h2>
+                <p>Fintech company reduced infrastructure costs by 47% after moving 200+ microservices to EKS with spot instances. Deployment time dropped from 20 minutes to 2 minutes.</p>
+                
+                <h3>Common pitfalls & how to avoid</h3>
+                <ol>
+                    <li><strong>Ephemeral storage</strong> – don't assume local disk persists</li>
+                    <li><strong>Heapster/ metrics-server</strong> – required for HPA</li>
+                    <li><strong>Pod disruption budgets</strong> for availability during updates</li>
+                </ol>
+
+                <h2>📘 Hands-on: Deploy your first app on Kubernetes</h2>
+                <p>Step-by-step (using minikube or kind):</p>
+                <pre><code>minikube start --cpus=4 --memory=8192
+kubectl create deployment nginx --image=nginx --port=80
+kubectl expose deployment nginx --type=NodePort
+minikube service nginx</code></pre>
+
+                <div class="ad-container">
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-1911859184415905"
+                         data-ad-slot="9988776655"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+
+                <h2>🔮 Future: Wasm, eBPF, and beyond</h2>
+                <p>Kubernetes can now run WebAssembly workloads (krustlet). eBPF replaces iptables for Cilium, giving massive performance boost.</p>
+                
+                <h2>🎯 Conclusion</h2>
+                <p>Docker and Kubernetes together form the backbone of modern cloud computing. By mastering containerization and orchestration, you can ship software faster, scale effortlessly, and build resilient systems. Start with small clusters, adopt GitOps, and always design for failure. The cloud-native landscape is evolving fast — but these fundamentals will stay relevant.</p>
+                <p><strong>Next steps:</strong> Get Kubernetes certified (CKA), contribute to CNCF projects, and explore platform engineering.</p>
+
+                <div class="tags">
+                    <strong>Tags:</strong>
+                    <span class="tag">#Docker</span>
+                    <span class="tag">#Kubernetes</span>
+                    <span class="tag">#CloudComputing</span>
+                    <span class="tag">#DevOps</span>
+                    <span class="tag">#Containers</span>
+                    <span class="tag">#GitOps</span>
+                    <span class="tag">#Istio</span>
+                </div>
+            </div>
+            
+            <div class="post-navigation" style="display: flex; justify-content: space-between; margin-top: 2rem;">
+                <div class="prev-post">
+                    <strong>Previous:</strong>
+                    <a href="../web-development/react19-features.html">← React 19: A Game-Changer for Modern Web Development</a>
+                </div>
+                <div class="next-post">
+                    <strong>Next:</strong>
+                    <a href="aws-lambda-guide.html">AWS Lambda: Serverless Patterns & Pitfalls →</a>
+                </div>
+            </div>
+        </article>
+        
+        <aside class="sidebar" style="flex: 1; min-width: 240px;">
+            <div class="ad-container">
+                <ins class="adsbygoogle"
+                     style="display:block;"
+                     data-ad-client="ca-pub-1911859184415905"
+                     data-ad-slot="1231231231"
+                     data-ad-format="rectangle"
+                     data-full-width-responsive="true"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+            </div>
+            
+            <div class="related-posts" style="margin-top: 2rem;">
+                <h3>📘 Cloud Computing deep dives</h3>
+                <ul>
+                    <li><a href="containers-guide.html">Containers Guide: App's Perfect Packaging</a></li>
+                    <li><a href="aws-lambda-guide.html">AWS Lambda: Serverless Patterns & Pitfalls</a></li>
+                    <li><a href="terraform-infrastructure-code.html">Terraform: IaC for Multi-Cloud</a></li>
+                    <li><a href="../web-development/nextjs-14-tutorial.html">Next.js 14 on Vercel Edge</a></li>
+                    <li><a href="../cybersecurity/zero-trust-kubernetes.html">Zero Trust for Kubernetes</a></li>
+                </ul>
+            </div>
+            
+            <div class="category-links" style="margin-top: 2rem;">
+                <h3>📂 Explore categories</h3>
+                <ul>
+                    <li><a href="../web-development/index.html">Web Development</a></li>
+                    <li><a href="../ai-machine-learning/index.html">AI & Machine Learning</a></li>
+                    <li><a href="../cybersecurity/index.html">Cybersecurity</a></li>
+                    <li><a href="../mobile-development/index.html">Mobile Dev (iOS/Android)</a></li>
+                    <li><a href="../cloud-computing/index.html">Cloud Computing</a></li>
+                </ul>
+            </div>
+
+            <div style="margin-top: 2rem; background: #f2f8ff; padding: 1.2rem; border-radius: 14px;">
+                <h4 style="margin-top: 0;">⚙️ Rehan's tool stack</h4>
+                <p style="font-size: 0.95rem;">Docker Desktop • kind • kubectl • Helm • K9s • Lens • Prometheus • Grafana • Cilium • ArgoCD</p>
+                <a href="../../contact.html" style="display: inline-block; margin-top: 0.5rem;">Request consulting →</a>
+            </div>
+
+            <div class="ad-container" style="margin-top: 2rem;">
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-1911859184415905"
+                     data-ad-slot="5556667777"
+                     data-ad-format="auto"
+                     data-full-width-responsive="true"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+            </div>
+        </aside>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 Rehan's Tech Blog. All rights reserved. Clean light design — no dark mode.</p>
+            <p>Contact: <a href="mailto:rehanjamadar914@gmail.com">rehanjamadar914@gmail.com</a> | +91 97671360</p>
+            <p>📍 Docker/K8s workshops available — reach out for corporate training.</p>
+            <div class="social-links">
+                <a href="#">GitHub</a> | <a href="#">LinkedIn</a> | <a href="#">Twitter</a> | <a href="#">CNCF Slack</a>
+            </div>
+            <p style="font-size: 0.85rem; margin-top: 0.8rem;">rehanisongh.github.io/cloud-computing/docker-kubernetes.html</p>
+        </div>
+    </footer>
+
+    <script src="../../js/main.js"></script>
+    <script>
+        // AdSense reload if needed
+        (function() { /* preserve existing flow */ })();
+    </script>
+</body>
+</html>

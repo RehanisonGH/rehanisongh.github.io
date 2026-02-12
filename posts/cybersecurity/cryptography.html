@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Deep dive into modern cryptography: algorithms, protocols, and real-world cybersecurity applications.">
+    <title>Modern Cryptography – Cybersecurity – Rehan's Tech Blog</title>
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/theme.css">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1911859184415905" crossorigin="anonymous"></script>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo">
+                    <h1><a href="../../index.html">Rehan's Tech Blog</a></h1>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="../../index.html">Home</a></li>
+                    <li class="dropdown">
+                        <a href="#">Categories</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="../web-development/index.html">Web Development</a></li>
+                            <li><a href="../ai-machine-learning/index.html">AI & Machine Learning</a></li>
+                            <li><a href="index.html">Cybersecurity</a></li>
+                            <li><a href="../mobile-development/index.html">Mobile Development</a></li>
+                            <li><a href="../cloud-computing/index.html">Cloud Computing</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="../../about.html">About</a></li>
+                    <li><a href="../../contact.html">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <article class="blog-post">
+            <header class="post-header">
+                <nav class="breadcrumb">
+                    <a href="../../index.html">Home</a> &gt;
+                    <a href="index.html">Cybersecurity</a> &gt;
+                    <span>Modern Cryptography</span>
+                </nav>
+                <h1>Modern Cryptography: The Invisible Shield of Digital Security</h1>
+                <div class="post-meta">
+                    <span>By Rehan</span>
+                    <span>February 12, 2026</span>
+                    <span>12 min read</span>
+                </div>
+            </header>
+            
+            <div class="post-content">
+                <!-- 1st in-article ad -->
+                <div class="ad-container">
+                    <ins class="adsbygoogle"
+                         style="display:block; text-align:center;"
+                         data-ad-layout="in-article"
+                         data-ad-format="fluid"
+                         data-ad-client="ca-pub-1911859184415905"
+                         data-ad-slot="9876543210"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+
+                <h2>Why Cryptography Still Matters in 2026</h2>
+                <p>From end-to-end messaging to secure DNS, cryptocurrency, and post‑quantum preparedness — cryptography remains the core of cybersecurity. In this guide, we break down how modern algorithms protect data, authentication, and privacy in an age of quantum threats and AI‑powered attacks. No dark mode, no black backgrounds — just clean, practical knowledge for RehanIsOnGithub.github.io.</p>
+
+                <h2>1. Symmetric Encryption: Speed at Scale</h2>
+                <p>Symmetric ciphers like <strong>AES‑256</strong> and <strong>ChaCha20</strong> are the workhorses of bulk encryption. Used in VPNs, disk encryption, and TLS, they offer unparalleled speed when both parties share a secret.</p>
+                <pre><code>// Example: AES‑256 GCM (authenticated encryption)
+const crypto = require('crypto');
+const key = crypto.randomBytes(32);
+const iv = crypto.randomBytes(12);
+const cipher = crypto.createCipheriv('aes-256-gcm', key, iv);</code></pre>
+                <ul>
+                    <li><strong>AES‑GCM</strong> – standard, hardware‑accelerated, authenticated.</li>
+                    <li><strong>ChaCha20‑Poly1305</strong> – preferred in mobile and IoT (lightweight).</li>
+                </ul>
+
+                <h2>2. Public‑Key Cryptography: Trust without Secrets</h2>
+                <p>RSA and ECC (Elliptic Curve Cryptography) underpin HTTPS, digital signatures, and secure key exchange. ECC, especially <strong>Curve25519</strong>, offers smaller keys and better performance.</p>
+                <pre><code>// X25519 key agreement (used in Signal, TLS 1.3)
+const { generateKeyPairSync } = require('crypto');
+const { publicKey, privateKey } = generateKeyPairSync('x25519');</code></pre>
+                <ul>
+                    <li><strong>RSA‑4096</strong> – still widely used, but fading for new systems.</li>
+                    <li><strong>Ed25519</strong> – fast, secure digital signatures.</li>
+                </ul>
+
+                <!-- 2nd in-article ad -->
+                <div class="ad-container">
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-1911859184415905"
+                         data-ad-slot="8765432109"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+
+                <h2>3. Hash Functions & Message Authentication</h2>
+                <p>Passwords, file integrity, blockchain — all rely on cryptographic hashes. <strong>SHA‑256</strong> and <strong>SHA‑3</strong> are the gold standards, while <strong>BLAKE3</strong> pushes speed boundaries.</p>
+                <pre><code>// SHA‑256 example
+async function hashMessage(msg) {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(msg);
+  const hash = await crypto.subtle.digest('SHA-256', data);
+  return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2,'0')).join('');
+}</code></pre>
+                <ul>
+                    <li><strong>Argon2id</strong> – password hashing (memory‑hard, resistant to GPU cracking).</li>
+                    <li><strong>HMAC</strong> – keyed hash for API tokens and JWT.</li>
+                </ul>
+
+                <h2>4. Digital Signatures & PKI</h2>
+                <p>Certificates, code signing, and secure updates rely on signatures. Modern web PKI leans on ECDSA and Ed25519.</p>
+                <pre><code>// Verify a signature with WebCrypto
+const valid = await crypto.subtle.verify(
+  { name: "ECDSA", hash: "SHA-384" },
+  publicKey,
+  signature,
+  data
+);</code></pre>
+
+                <h2>5. Real‑World Protocols</h2>
+                <h3>TLS 1.3</h3>
+                <p>Simplified handshake, 0‑RTT, forward secrecy by default. No more RSA key transport — only DH/ECDHE.</p>
+                <h3>Noise Protocol Framework</h3>
+                <p>Used in WhatsApp, WireGuard. Lightweight, secure, and auditable.</p>
+                <h3>Signal Protocol</h3>
+                <p>Double Ratchet + X3DH — the gold standard for end‑to‑end encryption.</p>
+
+                <h2>6. Post‑Quantum Cryptography (PQC)</h2>
+                <p>NIST‑standardized algorithms in 2024–2025. <strong>CRYSTALS‑Kyber</strong> (key exchange) and <strong>CRYSTALS‑Dilithium</strong> (signatures) are already being integrated into OpenSSL and Chrome.</p>
+                <pre><code>// Kyber768 – example (liboqs)
+// OQS_KEM_kyber_768_keypair(pk, sk); </code></pre>
+                <ul>
+                    <li><strong>Hybrid approaches</strong> – X25519+Kyber for transitional security.</li>
+                    <li><strong>FIPS 203, 204, 205</strong> – official module‑lattice standards.</li>
+                </ul>
+
+                <!-- 3rd in-article ad -->
+                <div class="ad-container">
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-1911859184415905"
+                         data-ad-slot="7654321098"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+
+                <h2>7. Cryptography in the Wild (Case Studies)</h2>
+                <h3>🔐 Apple’s iMessage PQ3</h3>
+                <p>First major messaging protocol with post‑quantum security — Kyber + ECDH.</p>
+                <h3>🔐 Let’s Encrypt</h3>
+                <p>Now issues ECDSA and Ed25519 certificates by default; 300+ million sites secured.</p>
+                <h3>🔐 Zero‑Trust & SPIFFE</h3>
+                <p>Identity‑focused crypto with short‑lived certificates (SPIRE).</p>
+
+                <h2>8. Cryptographic Pitfalls (2026 Edition)</h2>
+                <ul>
+                    <li><strong>Nonce reuse</strong> – catastrophic in GCM, ChaCha20.</li>
+                    <li><strong>Improper random generation</strong> – always use <code>crypto.getRandomValues()</code> / <code>/dev/urandom</code>.</li>
+                    <li><strong>Padding oracles</strong> – AES‑CBC is deprecated; use GCM or ChaCha20‑Poly1305.</li>
+                    <li><strong>Quantum harvest now, decrypt later</strong> – long‑term secrets need PQC.</li>
+                </ul>
+
+                <h2>9. Tooling & Libraries</h2>
+                <table style="width:100%; border-collapse: collapse; background: #fafafa; border:1px solid #ddd;">
+                    <thead><tr style="background:#e9ecef;"><th>Library</th><th>Use case</th><th>Language</th></tr></thead>
+                    <tbody>
+                        <tr><td>libsodium</td><td>Modern crypto toolkit (XChaCha20, Argon2)</td><td>C, wrappers for all</td></tr>
+                        <tr><td>tink</td><td>Google’s misuse‑resistant crypto</td><td>Java, Go, C++</td></tr>
+                        <tr><td>ring / rustls</td><td>Memory‑safe TLS in Rust</td><td>Rust</td></tr>
+                        <tr><td>WebCrypto</td><td>Browser built‑in (AES‑GCM, ECDSA)</td><td>JS</td></tr>
+                    </tbody>
+                </table>
+
+                <h2>10. Hands‑On: Build a Secure Message Envelope</h2>
+                <p>Combine X25519, AES‑256‑GCM, and Ed25519 signatures for authenticated encryption.</p>
+                <pre><code>// Pseudo‑code: hybrid encryption with signature
+aliceKeypair = generateX25519();
+bobKeypair = generateX25519();
+sharedSecret = aliceKeypair.agree(bob.public);
+
+ciphertext = aes256gcm.encrypt(sharedSecret, plaintext);
+signature = ed25519.sign(aliceSignPrivate, ciphertext);
+
+// verify + decrypt on receiver side</code></pre>
+
+                <h2>11. The Future: Fully Homomorphic & ZKPs</h2>
+                <p>Zero‑knowledge proofs (zk‑SNARKs, zk‑STARKs) are moving from blockchain to private authentication and identity. Fully Homomorphic Encryption (FHE) is still computationally heavy but IBM’s HElib and Microsoft SEAL show promise.</p>
+
+                <h2>Conclusion</h2>
+                <p>Cryptography isn’t just math — it’s the trust layer of the digital world. From AES to Kyber, the fundamentals remain constant: use standardised, well‑audited primitives; avoid roll‑your‑own; and prepare for the quantum era. This guide is part of Rehan’s Cybersecurity library at <strong>rehanisongh.github.io</strong> — no dark mode, no black backgrounds, just clear, actionable knowledge.</p>
+
+                <p><strong>Stay paranoid. Stay encrypted.</strong></p>
+
+                <div class="tags">
+                    <strong>Tags:</strong>
+                    <span class="tag">#Cryptography</span>
+                    <span class="tag">#Cybersecurity</span>
+                    <span class="tag">#AES</span>
+                    <span class="tag">#PostQuantum</span>
+                    <span class="tag">#PKI</span>
+                    <span class="tag">#TLS13</span>
+                </div>
+            </div>
+            
+            <div class="post-navigation">
+                <div class="prev-post">
+                    <strong>Previous:</strong>
+                    <a href="zero-trust-architecture.html">← Zero Trust: Beyond the Perimeter</a>
+                </div>
+                <div class="next-post">
+                    <strong>Next:</strong>
+                    <a href="malware-analysis-basics.html">Malware Analysis: Reverse Engineering Basics →</a>
+                </div>
+            </div>
+        </article>
+        
+        <aside class="sidebar">
+            <!-- sidebar ad unit -->
+            <div class="ad-container">
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-1911859184415905"
+                     data-ad-slot="6543210987"
+                     data-ad-format="auto"
+                     data-full-width-responsive="true"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+            </div>
+            
+            <div class="related-posts">
+                <h3>Related Cybersecurity reads</h3>
+                <ul>
+                    <li><a href="ransomware-defense-2026.html">Ransomware Defense Strategies 2026</a></li>
+                    <li><a href="zero-trust-architecture.html">Zero Trust Architecture Deep Dive</a></li>
+                    <li><a href="../cloud-computing/cloud-security-beyond.html">Cloud Security: Beyond Shared Responsibility</a></li>
+                    <li><a href="threat-hunting-essentials.html">Threat Hunting with Open Source Tools</a></li>
+                </ul>
+            </div>
+            
+            <div class="category-links">
+                <h3>Explore Categories</h3>
+                <ul>
+                    <li><a href="../web-development/index.html">Web Development</a></li>
+                    <li><a href="../ai-machine-learning/index.html">AI & Machine Learning</a></li>
+                    <li><a href="../mobile-development/index.html">Mobile Development</a></li>
+                    <li><a href="../cloud-computing/index.html">Cloud Computing</a></li>
+                </ul>
+            </div>
+        </aside>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 Rehan's Tech Blog. All rights reserved.</p>
+            <p>Contact: <a href="mailto:rehanjamadar914@gmail.com">rehanjamadar914@gmail.com</a> | +91 97671360</p>
+            <div class="social-links">
+                <a href="#">GitHub</a> | <a href="#">LinkedIn</a> | <a href="#">Twitter</a>
+            </div>
+            <p style="font-size:0.9em; margin-top:0.5rem;">Hosted on <a href="https://rehanisongh.github.io/cryptography.html">rehanisongh.github.io</a> – No dark mode, clean cybersecurity education.</p>
+        </div>
+    </footer>
+
+    <script src="../../js/main.js"></script>
+    <!-- ensure adsbygoogle initialized -->
+    <script>
+        (function() {
+            if (window.adsbygoogle && window.adsbygoogle.push) {
+                // some ad blocks might need push; safe to call after each ins.
+            }
+        })();
+    </script>
+</body>
+</html>

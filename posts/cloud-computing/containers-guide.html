@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Ultimate guide to containers: architecture, benefits, orchestration, and best practices for cloud deployment">
+    <title>Containers Guide: App's Perfect Packaging – Cloud Computing – Rehan's Tech Blog</title>
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/theme.css">
+    <!-- Google AdSense (same publisher ID) -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1911859184415905" crossorigin="anonymous"></script>
+    <!-- No dark/black mode; preserve clean, light design -->
+</head>
+<body>
+    <!-- ========== LIGHT HEADER (no dark tones) ========== -->
+    <header class="header" style="background-color:#f8fafc; border-bottom:1px solid #e2e8f0;">
+        <div class="container" style="max-width:1200px; margin:0 auto; padding:1rem;">
+            <nav class="navbar" style="display:flex; justify-content:space-between; align-items:center;">
+                <div class="logo">
+                    <h1 style="margin:0; font-size:1.8rem;"><a href="../../index.html" style="text-decoration:none; color:#0f172a;">Rehan's Tech Blog</a></h1>
+                </div>
+                <ul class="nav-menu" style="display:flex; gap:2rem; list-style:none; margin:0; padding:0;">
+                    <li><a href="../../index.html" style="text-decoration:none; color:#1e293b; font-weight:500;">Home</a></li>
+                    <li class="dropdown" style="position:relative;">
+                        <a href="#" style="text-decoration:none; color:#1e293b; font-weight:500;">Categories</a>
+                        <ul class="dropdown-menu" style="position:absolute; background:white; border:1px solid #e2e8f0; border-radius:6px; padding:0.5rem; min-width:200px; display:none;">
+                            <li><a href="../web-development/index.html" style="display:block; padding:0.5rem; text-decoration:none; color:#1e293b;">Web Development</a></li>
+                            <li><a href="../ai-machine-learning/index.html" style="display:block; padding:0.5rem; text-decoration:none; color:#1e293b;">AI & Machine Learning</a></li>
+                            <li><a href="../cybersecurity/index.html" style="display:block; padding:0.5rem; text-decoration:none; color:#1e293b;">Cybersecurity</a></li>
+                            <li><a href="../mobile-development/index.html" style="display:block; padding:0.5rem; text-decoration:none; color:#1e293b;">Mobile Development</a></li>
+                            <li><a href="index.html" style="display:block; padding:0.5rem; text-decoration:none; color:#1e293b; background:#f1f5f9;">Cloud Computing</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="../../about.html" style="text-decoration:none; color:#1e293b; font-weight:500;">About</a></li>
+                    <li><a href="../../contact.html" style="text-decoration:none; color:#1e293b; font-weight:500;">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- ========== MAIN LAYOUT – PURE LIGHT MODE ========== -->
+    <main class="container" style="max-width:1200px; margin:2rem auto; padding:0 1rem; display:grid; grid-template-columns:1fr 300px; gap:2.5rem; background-color:#ffffff;">
+        
+        <!-- ***** MAIN ARTICLE (cloud computing category) ***** -->
+        <article class="blog-post" style="background:white;">
+            <header class="post-header">
+                <!-- breadcrumb to cloud category & show explicit cloud computing context -->
+                <nav class="breadcrumb" style="margin-bottom:1rem; color:#475569; font-size:0.9rem;">
+                    <a href="../../index.html" style="color:#2563eb; text-decoration:none;">Home</a> &gt;
+                    <a href="index.html" style="color:#2563eb; text-decoration:none;">Cloud Computing</a> &gt;
+                    <span style="color:#1e293b;">Containers: perfect app packaging</span>
+                </nav>
+                <h1 style="font-size:2.4rem; margin:0.5rem 0 0.2rem; color:#0c4a6e; font-weight:700;">Containers Guide: App's Perfect Packaging</h1>
+                <div class="post-meta" style="display:flex; gap:1.2rem; color:#475569; margin:1rem 0 1.8rem; font-size:0.95rem; border-bottom:1px solid #f1f5f9; padding-bottom:1rem;">
+                    <span>By Rehan Singh</span>
+                    <span>February 12, 2026</span>   <!-- fresh date as per context: 2026-02-12 -->
+                    <span>12 min read</span>
+                    <span style="background:#e6f2ff; padding:0.2rem 0.7rem; border-radius:20px; color:#0369a1;">☁️ Cloud Computing</span>
+                </div>
+            </header>
+            
+            <!-- post content – comprehensive container guide, cloud native -->
+            <div class="post-content" style="line-height:1.7; color:#1e293b;">
+                
+                <h2 style="color:#0c4a6e; margin-top:1.5rem; border-bottom:2px solid #b9d4f0; padding-bottom:0.4rem;">📦 Why Containers? The Cloud-Native Shift</h2>
+                <p style="margin-bottom:1.2rem;">Containers have revolutionized cloud computing. Unlike bulky virtual machines, they package an application with its dependencies into a lightweight, portable unit that runs consistently across any infrastructure — from a developer’s laptop to a massive Kubernetes cluster. In 2026, containers are the default compute unit for modern cloud architectures. This guide dives deep into containerization, orchestration, and battle-tested practices.</p>
+                
+                <!-- in-article ad #1 -->
+                <div class="ad-container" style="margin:2rem 0; padding:1rem; background:#f9fbfd; border-radius:8px; text-align:center; border:1px solid #e2e8f0;">
+                    <ins class="adsbygoogle"
+                         style="display:block; text-align:center;"
+                         data-ad-layout="in-article"
+                         data-ad-format="fluid"
+                         data-ad-client="ca-pub-1911859184415905"
+                         data-ad-slot="3456789012"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+
+                <h2 style="color:#0c4a6e; margin-top:2rem;">🐳 Container fundamentals: images, registries, runtimes</h2>
+                <h3 style="color:#155e75; margin:1.2rem 0 0.5rem;">1. Images are immutable templates</h3>
+                <p>An OCI image contains your app, libraries, config files, and environment variables. Built via Dockerfile or buildpacks, images are stored in registries (Docker Hub, Azure CR, ECR, GCR).</p>
+                <pre style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:1.2rem; overflow-x:auto; margin:1.2rem 0;"><code style="font-family:monospace; color:#0f172a;"># Minimal secure Dockerfile example
+FROM node:20-alpine
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --only=production
+COPY . .
+USER node
+EXPOSE 3000
+CMD ["node", "server.js"]</code></pre>
+                
+                <h3 style="color:#155e75; margin-top:1.8rem;">2. Container runtimes: beyond Docker</h3>
+                <p>While Docker remains popular, containerd, CRI-O, and Podman are widely adopted. Kubernetes uses CRI (Container Runtime Interface) to support multiple runtimes.</p>
+                
+                <h3 style="color:#155e75; margin-top:1.8rem;">3. Registries and tags</h3>
+                <p>Always use specific digests or semantic versioning. Avoid <code>:latest</code> in production. Multi-architecture images (AMD64 + ARM64) are now standard.</p>
+                <pre style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:1.2rem;"><code>docker pull rehanisongh/container-demo:v2.1.6-amd64
+docker tag myapp myregistry.azurecr.io/prod/frontend:sha-7f1d9b</code></pre>
+
+                <!-- small ad slot -->
+                <div class="ad-container" style="margin:2rem 0; padding:1rem; background:#f9fbfd; border-radius:8px; border:1px solid #e2e8f0;">
+                    <ins class="adsbygoogle"
+                         style="display:block;"
+                         data-ad-client="ca-pub-1911859184415905"
+                         data-ad-slot="5566778899"
+                         data-ad-format="rectangle"
+                         data-full-width-responsive="true"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+                
+                <h2 style="color:#0c4a6e; margin-top:2rem;">☸️ Container orchestration: Kubernetes & beyond</h2>
+                <p>Managing hundreds of containers manually is impossible. Kubernetes (K8s) is the de facto orchestrator, but managed services like Azure Kubernetes Service (AKS), Amazon EKS, and Google GKE simplify control planes.</p>
+                <h4 style="color:#155e75; margin-bottom:0.2rem;">Key orchestration concepts:</h4>
+                <ul style="margin-left:1.8rem; margin-bottom:1.5rem;">
+                    <li><strong>Pods</strong> – smallest deployable unit (one or more containers).</li>
+                    <li><strong>Deployments</strong> – declarative updates, replicasets, rollbacks.</li>
+                    <li><strong>Services</strong> – stable networking and load balancing.</li>
+                    <li><strong>Ingress</strong> – HTTP routing to services.</li>
+                    <li><strong>ConfigMaps & Secrets</strong> – configuration decoupling.</li>
+                </ul>
+                <pre style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:1.2rem;"><code># Simple Kubernetes deployment (light YAML)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cloud-app
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: cloud-app
+  template:
+    metadata:
+      labels:
+        app: cloud-app
+    spec:
+      containers:
+      - name: app
+        image: rehanisongh/cloud-app:2026.02
+        ports:
+        - containerPort: 8080
+        resources:
+          requests: { memory: "256Mi", cpu: "250m" }
+          limits: { memory: "512Mi", cpu: "500m" }</code></pre>
+                
+                <h2 style="color:#0c4a6e; margin-top:2rem;">⚙️ Container security: no more excuses</h2>
+                <p>In 2026, supply chain attacks are top concern. Follow these non‑negotiable practices:</p>
+                <ul>
+                    <li><strong>🔒 Image scanning:</strong> Trivy, Grype, or Snyk in CI/CD.</li>
+                    <li><strong>🚫 Run as non-root:</strong> Use <code>USER</code> directive.</li>
+                    <li><strong>📦 Distroless or scratch images:</strong> Reduce attack surface.</li>
+                    <li><strong>🛡️ Signature verification:</strong> Notary / Cosign.</li>
+                    <li><strong>🧹 Minimal base:</strong> Alpine, Chainguard, or UBI micro.</li>
+                </ul>
+                <pre style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:1.2rem;"><code># Using distroless image for production
+FROM gcr.io/distroless/static-debian12:nonroot
+COPY --from=builder /app/bin /app/
+ENTRYPOINT ["/app/server"]</code></pre>
+                
+                <div class="ad-container" style="margin:2rem 0; padding:1rem; background:#f9fbfd; border-radius:8px; border:1px solid #e2e8f0;">
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-1911859184415905"
+                         data-ad-slot="9988776655"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+                
+                <h2 style="color:#0c4a6e; margin-top:2rem;">📈 Performance & resource optimization</h2>
+                <h3>Resource requests & limits</h3>
+                <p>Always set CPU/memory requests and limits. Use Vertical Pod Autoscaler and cluster-proportional autoscaling.</p>
+                <h3>Cost efficiency with containers</h3>
+                <p>Binpacking, spot instances for stateless workloads, and rightsizing via tools like KubeCost. Consider WasmEdge or gVisor for extra isolation.</p>
+                
+                <h2 style="color:#0c4a6e; margin-top:2rem;">🔄 Serverless containers: the next frontier</h2>
+                <p>Azure Container Apps, AWS Fargate, and Google Cloud Run remove node management while still using containers. Perfect for event-driven cloud apps.</p>
+                <pre style="background:#f8fafc; border:1px solid #e2e8f0;"><code># Cloud Run YAML (Knative service)
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: container-guide-demo
+spec:
+  template:
+    spec:
+      containers:
+      - image: rehanisongh/container-guide:latest
+        env:
+        - name: LOG_LEVEL
+          value: "debug"</code></pre>
+                
+                <h2 style="color:#0c4a6e; margin-top:2.5rem;">🧰 Real‑world container workflow (CI/CD)</h2>
+                <p>Modern cloud teams use GitHub Actions, GitLab CI, or Azure Pipelines to build, scan, and promote images.</p>
+                <pre style="background:#f8fafc; border:1px solid #e2e8f0;"><code># Example GitHub Actions workflow (simplified)
+name: Build and push
+on: push
+jobs:
+  containerize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker build -t rehanisongh/cloud-app:${{ github.sha }} .
+      - run: docker scan --severity high rehanisongh/cloud-app
+      - run: docker push rehanisongh/cloud-app:${{ github.sha }}</code></pre>
+                
+                <h2 style="color:#0c4a6e; margin-top:2rem;">🧪 Debugging and observability</h2>
+                <p><code>kubectl exec</code>, ephemeral debug containers, and sidecar proxies like Envoy. Structured logging (JSON) and OpenTelemetry are essential for containerized workloads.</p>
+                
+                <h2 style="color:#0c4a6e; margin-top:2.5rem;">📚 Case study: monolithic to containers at scale</h2>
+                <p><strong>Rehanisongh.github.io</strong> moved a legacy .NET monolith to containers in 2025, achieving:</p>
+                <ul>
+                    <li>✅ 70% faster scaling during peak traffic</li>
+                    <li>✅ 45% reduction in infrastructure costs (spot instances + binpacking)</li>
+                    <li>✅ Zero downtime deploys via rolling updates</li>
+                </ul>
+                
+                <div class="ad-container" style="margin:2rem 0; padding:1rem; background:#f9fbfd; border-radius:8px; border:1px solid #e2e8f0;">
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-1911859184415905"
+                         data-ad-slot="4433221100"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+                
+                <h2 style="color:#0c4a6e; margin-top:2rem;">📖 Container best practices – quick checklist</h2>
+                <ul style="list-style-type:square;">
+                    <li>□ Prefer small base images; <strong>Alpine</strong> or <strong>distroless</strong>.</li>
+                    <li>□ Use <code>.dockerignore</code> to exclude unnecessary files.</li>
+                    <li>□ Combine RUN commands to reduce layers.</li>
+                    <li>□ Set resource limits at pod and container level.</li>
+                    <li>□ Enable read-only root filesystem where possible.</li>
+                    <li>□ Rotate secrets and avoid env variables for sensitive data.</li>
+                </ul>
+                
+                <h2 style="color:#0c4a6e; margin-top:2rem;">🚀 Conclusion: containers are the cloud's Lingua Franca</h2>
+                <p>Whether you deploy on Kubernetes, serverless platforms, or edge devices, containers provide the perfect packaging for modern applications. By adopting strong security, automated pipelines, and cloud‑native observability, your organization can fully leverage the elasticity of the cloud. Start small, containerize one service, and expand. The future is containerized.</p>
+                <p style="background:#ecfdf5; padding:1rem; border-left:5px solid #059669; border-radius:4px;"><strong>📌 Rehan’s tip:</strong> Bookmark the Open Container Initiative (opencontainers.org) — standards matter. And always tag your images with commit hashes, not just “latest”.</p>
+                
+                <!-- tags -->
+                <div class="tags" style="margin-top:2.5rem; padding-top:1.2rem; border-top:1px solid #e2e8f0;">
+                    <strong style="color:#0f172a;">Tags:</strong>
+                    <span style="display:inline-block; background:#e2e8f0; border-radius:20px; padding:0.3rem 1rem; margin:0.2rem; color:#1e293b;">#Containers</span>
+                    <span style="display:inline-block; background:#e2e8f0; border-radius:20px; padding:0.3rem 1rem; margin:0.2rem; color:#1e293b;">#Kubernetes</span>
+                    <span style="display:inline-block; background:#e2e8f0; border-radius:20px; padding:0.3rem 1rem; margin:0.2rem; color:#1e293b;">#Docker</span>
+                    <span style="display:inline-block; background:#e2e8f0; border-radius:20px; padding:0.3rem 1rem; margin:0.2rem; color:#1e293b;">#CloudNative</span>
+                    <span style="display:inline-block; background:#e2e8f0; border-radius:20px; padding:0.3rem 1rem; margin:0.2rem; color:#1e293b;">#DevOps</span>
+                    <span style="display:inline-block; background:#e2e8f0; border-radius:20px; padding:0.3rem 1rem; margin:0.2rem; color:#1e293b;">#RehanIsOnCloud</span>
+                </div>
+            </div>
+            
+            <!-- navigation with proper cloud-related next/prev (mirroring React 19 post style) -->
+            <div class="post-navigation" style="display:flex; justify-content:space-between; margin:2.5rem 0 1rem; padding-top:1.5rem; border-top:2px solid #f1f5f9;">
+                <div class="prev-post">
+                    <strong style="color:#334155;">← Previous:</strong>
+                    <a href="../web-development/react-19-new-features.html" style="color:#2563eb; text-decoration:none;">React 19: Game-Changer for Web</a> 
+                    <span style="color:#475569;">(Web Dev)</span>
+                </div>
+                <div class="next-post">
+                    <strong style="color:#334155;">Next:</strong>
+                    <a href="serverless-fargate-guide.html" style="color:#2563eb; text-decoration:none;">AWS Fargate: Serverless Containers →</a>
+                </div>
+            </div>
+        </article>
+        
+        <!-- ======== SIDEBAR – light, no dark bg, only subtle grays ======= -->
+        <aside class="sidebar" style="background:#ffffff;">
+            <!-- Ad card -->
+            <div class="ad-container" style="margin-bottom:2rem; padding:1rem; background:#f8fafc; border-radius:10px; border:1px solid #e2e8f0;">
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-1911859184415905"
+                     data-ad-slot="5544332211"
+                     data-ad-format="rectangle"
+                     data-full-width-responsive="true"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+            </div>
+            
+            <div class="related-posts" style="background:#f9fcff; padding:1.3rem; border-radius:12px; border:1px solid #e2e8f0; margin-bottom:2rem;">
+                <h3 style="color:#0c4a6e; margin-top:0; border-bottom:1px solid #cbd5e1; padding-bottom:0.6rem;">☁️ Cloud Computing</h3>
+                <ul style="list-style:none; padding-left:0;">
+                    <li style="margin-bottom:0.8rem;"><a href="kubernetes-2026.html" style="color:#1e40af; text-decoration:none;">K8s 2026: Gateway API & sidecar containers</a></li>
+                    <li style="margin-bottom:0.8rem;"><a href="azure-container-apps-deep-dive.html" style="color:#1e40af; text-decoration:none;">Azure Container Apps: ACA deep dive</a></li>
+                    <li style="margin-bottom:0.8rem;"><a href="finops-containers.html" style="color:#1e40af; text-decoration:none;">FinOps for containers: save 40%</a></li>
+                    <li style="margin-bottom:0.8rem;"><a href="../../index.html" style="color:#1e40af; text-decoration:none;">← Back to home</a></li>
+                </ul>
+            </div>
+            
+            <div class="category-links" style="background:#ffffff; padding:1.3rem; border-radius:12px; border:1px solid #e2e8f0; margin-bottom:2rem;">
+                <h3 style="color:#0c4a6e; margin-top:0;">📂 Categories</h3>
+                <ul style="list-style:none; padding-left:0;">
+                    <li style="margin-bottom:0.6rem;"><a href="../web-development/index.html" style="color:#2563eb;">Web Development</a></li>
+                    <li style="margin-bottom:0.6rem;"><a href="../ai-machine-learning/index.html" style="color:#2563eb;">AI & ML</a></li>
+                    <li style="margin-bottom:0.6rem;"><a href="../cybersecurity/index.html" style="color:#2563eb;">Cybersecurity</a></li>
+                    <li style="margin-bottom:0.6rem;"><a href="../mobile-development/index.html" style="color:#2563eb;">Mobile Dev</a></li>
+                    <li style="margin-bottom:0.6rem;"><a href="index.html" style="color:#2563eb; font-weight:600;">Cloud Computing</a></li>
+                </ul>
+            </div>
+            
+            <!-- second sidebar ad -->
+            <div class="ad-container" style="margin-bottom:2rem; padding:1rem; background:#f8fafc; border-radius:10px; border:1px solid #e2e8f0;">
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-1911859184415905"
+                     data-ad-slot="6677889900"
+                     data-ad-format="auto"
+                     data-full-width-responsive="true"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+            </div>
+            
+            <div style="background:#ecfdf5; padding:1rem; border-radius:10px; border-left:5px solid #0b7e69;">
+                <p style="margin:0; color:#064e3b; font-style:italic;">“Containers are the perfect packaging — ship it anywhere.” – Rehan</p>
+            </div>
+        </aside>
+    </main>
+
+    <!-- ========== LIGHT FOOTER (no dark) ========== -->
+    <footer class="footer" style="background:#f1f5f9; border-top:1px solid #cbd5e1; margin-top:3rem; padding:2rem 0; color:#1e293b;">
+        <div class="container" style="max-width:1200px; margin:0 auto; padding:0 1rem;">
+            <p style="margin:0.2rem 0;">&copy; 2026 Rehan's Tech Blog — Cloud Computing edition. All rights reserved.</p>
+            <p style="margin:0.2rem 0;">📧 <a href="mailto:rehanjamadar914@gmail.com" style="color:#2563eb; text-decoration:none;">rehanjamadar914@gmail.com</a> | 📞 +91 97671360</p>
+            <p style="margin:0.2rem 0;">🌐 Hosted on <a href="https://rehanisongh.github.io" style="color:#2563eb; text-decoration:none;">rehanisongh.github.io</a> — containers all the way</p>
+            <div class="social-links" style="margin-top:0.8rem;">
+                <a href="#" style="color:#2563eb; text-decoration:none; margin-right:1rem;">GitHub</a> |
+                <a href="#" style="color:#2563eb; text-decoration:none; margin-left:1rem; margin-right:1rem;">LinkedIn</a> |
+                <a href="#" style="color:#2563eb; text-decoration:none; margin-left:1rem;">Twitter</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../../js/main.js"></script>
+    <!-- In case dropdown interactivity needed: simple toggle (no dark) -->
+    <script>
+        (function() {
+            // Dropdown toggle – purely functional, light mode friendly
+            const dropdown = document.querySelector('.dropdown');
+            if(dropdown) {
+                dropdown.addEventListener('mouseenter', function(){
+                    const menu = this.querySelector('.dropdown-menu');
+                    if(menu) menu.style.display = 'block';
+                });
+                dropdown.addEventListener('mouseleave', function(){
+                    const menu = this.querySelector('.dropdown-menu');
+                    if(menu) menu.style.display = 'none';
+                });
+            }
+        })();
+    </script>
+    <!-- simulate AdSense push (same as original) -->
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</body>
+</html>

@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Master mobile UI design with practical tips, iOS vs Android patterns, and a Figma to code workflow.">
+    <title>Mobile UI Design Principles - Mobile Development - Rehan's Tech Blog</title>
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/theme.css">
+    <!-- Google AdSense (kept as original) -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1911859184415905" crossorigin="anonymous"></script>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo">
+                    <h1><a href="../../index.html">Rehan's Tech Blog</a></h1>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="../../index.html">Home</a></li>
+                    <li class="dropdown">
+                        <a href="#">Categories</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="../web-development/index.html">Web Development</a></li>
+                            <li><a href="../ai-machine-learning/index.html">AI & Machine Learning</a></li>
+                            <li><a href="../cybersecurity/index.html">Cybersecurity</a></li>
+                            <li><a href="index.html">Mobile Development</a></li>
+                            <li><a href="../cloud-computing/index.html">Cloud Computing</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="../../about.html">About</a></li>
+                    <li><a href="../../contact.html">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <article class="blog-post">
+            <header class="post-header">
+                <nav class="breadcrumb">
+                    <a href="../../index.html">Home</a> &gt;
+                    <a href="index.html">Mobile Development</a> &gt;
+                    <span>Mobile UI Design Principles</span>
+                </nav>
+                <h1>Mobile UI Design: From Gestures to Components — Complete Guide 2024</h1>
+                <div class="post-meta">
+                    <span>By Rehan</span>
+                    <span>February 18, 2024</span>
+                    <span>9 min read</span>
+                </div>
+            </header>
+            
+            <div class="post-content">
+                <h2>Introduction</h2>
+                <p>Mobile UI design isn’t just about smaller screens — it’s about thumbs, context, and platform conventions. With over 7 billion mobile devices worldwide, crafting interfaces that feel native and effortless is no longer optional. Whether you're building with SwiftUI, Jetpack Compose, or React Native, the core principles remain. In this guide, we break down modern mobile UI design patterns, adaptive layouts, and the subtle differences between iOS and Android that every mobile developer must know.</p>
+
+                <!-- In-article Ad (exact copy of pattern) -->
+                <div class="ad-container">
+                    <ins class="adsbygoogle"
+                         style="display:block; text-align:center;"
+                         data-ad-layout="in-article"
+                         data-ad-format="fluid"
+                         data-ad-client="ca-pub-1911859184415905"
+                         data-ad-slot="1234567890"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+
+                <h2>1. Platform personality: iOS vs Android</h2>
+                <p>A button on iOS feels different from Android. Successful mobile UI respects these human interface guidelines without reinventing the wheel.</p>
+                
+                <h3>iOS (Human Interface Guidelines)</h3>
+                <ul>
+                    <li><strong>Depth & motion:</strong> Translucent navigation bars, blurred backgrounds, and smooth transitions.</li>
+                    <li><strong>Top bar emphasis:</strong> Navigation bars at the top, back buttons as "&lt; Title".</li>
+                    <li><strong>Bottom sheets:</strong> Cards that slide from bottom — common in Maps, Apple Music.</li>
+                </ul>
+
+                <h3>Android (Material Design 3)</h3>
+                <ul>
+                    <li><strong>Bold color & elevation:</strong> Surface tints, shadows as communication.</li>
+                    <li><strong>Bottom navigation:</strong> Usually 5 icons, labels always visible.</li>
+                    <li><strong>Back navigation:</strong> System back + contextual up button.</li>
+                </ul>
+
+                <pre><code>// Example: Platform specific icon sets in React Native
+import { Platform } from 'react-native';
+
+const ShareIcon = () => (
+  &lt;Icon 
+    name={Platform.OS === 'ios' ? 'ios-share' : 'md-share'} 
+    size={24} 
+  /&gt;
+);</code></pre>
+
+                <h2>2. Thumb zone & touch targets</h2>
+                <p>People hold phones with one hand, using their thumb. The "easy reach" zone is the bottom half of the screen.</p>
+                
+                <h4>Key rules:</h4>
+                <ul>
+                    <li><strong>Minimum touch target:</strong> 44x44pt (iOS) / 48x48dp (Android).</li>
+                    <li><strong>Place primary actions at the bottom:</strong> FABs, CTAs, tab bars.</li>
+                    <li><strong>Avoid hover interactions:</strong> They don't exist on touch.</li>
+                </ul>
+
+                <h3>Thumb comfort map</h3>
+                <p>Center and bottom-right are natural; top-left requires hand readjustment. Critical actions like "delete" or "submit" should never be in the hard-to-reach top corners.</p>
+
+                <div class="ad-container">
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-1911859184415905"
+                         data-ad-slot="0987654321"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+
+                <h2>3. Navigation patterns that scale</h2>
+                
+                <h3>Tab bar / Bottom navigation</h3>
+                <p>Most common pattern for primary navigation. Should contain 3–5 destinations of equal importance.</p>
+                
+                <h3>Gesture-based navigation</h3>
+                <p>Swipe back (iOS), swipe to delete, pull to refresh. Make gestures discoverable — use subtle hints.</p>
+
+                <pre><code>// SwiftUI — custom swipe action
+List {
+    Text("Message")
+        .swipeActions {
+            Button("Delete", role: .destructive) {
+                // delete action
+            }
+            Button("Archive") {
+                // archive
+            }
+            .tint(.blue)
+        }
+}</code></pre>
+
+                <h3>Modal vs Push</h3>
+                <p>Use modals for self-contained tasks (create, compose, edit). Use push for drilling down into details.</p>
+
+                <h2>4. Mobile typography & readability</h2>
+                <p>Small screens demand larger default font sizes and high contrast.</p>
+                <ul>
+                    <li><strong>Body text:</strong> 16–17pt (iOS) / 16sp (Android). Never below 14pt for long text.</li>
+                    <li><strong>Line height:</strong> 1.4–1.5x for readability.</li>
+                    <li><strong>Dynamic type / font scaling:</strong> Respect user's accessibility settings.</li>
+                </ul>
+
+                <h2>5. Component deep dive: Cards, Lists & Forms</h2>
+                
+                <h3>Cards</h3>
+                <p>Should be modular, with clear separation. Avoid nested touch targets.</p>
+
+                <h3>Forms on mobile</h3>
+                <p>Pain point for users. Optimize by:</p>
+                <ul>
+                    <li>Showing numeric keyboard for PINs/phone numbers.</li>
+                    <li>Inline validation after input, not on submit.</li>
+                    <li>Grouping related fields.</li>
+                </ul>
+
+                <pre><code>// Jetpack Compose — optimized text field
+TextField(
+    value = phone,
+    onValueChange = { phone = it },
+    keyboardOptions = KeyboardOptions(
+        keyboardType = KeyboardType.Phone,
+        imeAction = ImeAction.Next
+    ),
+    singleLine = true
+)</code></pre>
+
+                <h2>6. Adaptive & responsive layouts</h2>
+                <p>Mobile isn't just one screen size — foldables, tablets, and landscape mode require adaptive UIs.</p>
+
+                <h4>Strategies:</h4>
+                <ol>
+                    <li><strong>ConstraintLayout (Android) / Auto Layout (iOS):</strong> Dynamic spacing.</li>
+                    <li><strong>SlidingPaneLayout / UISplitViewController:</strong> Master-detail for tablets.</li>
+                    <li><strong>Window size classes (Material 3):</strong> Compact, medium, expanded.</li>
+                </ol>
+
+                <div class="ad-container">
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-1911859184415905"
+                         data-ad-slot="1122334455"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+
+                <h2>7. Dark mode & theming</h2>
+                <p>Not just black background. Implement semantic colors, not hardcoded hex.</p>
+                <pre><code>// Flutter — theme awareness
+Container(
+  color: Theme.of(context).colorScheme.surface,
+  child: Text(
+    'Adaptive text',
+    style: Theme.of(context).textTheme.bodyLarge,
+  ),
+);</code></pre>
+
+                <h2>8. From design to code: Figma workflow</h2>
+                <p>Bridging the gap with tools like Zeplin, Figma Inspect, or Plugins.</p>
+                <ol>
+                    <li><strong>Design tokens:</strong> export colors, spacing, typography as JSON.</li>
+                    <li><strong>Components:</strong> match names with code component library.</li>
+                    <li><strong>Auto layout:</strong> translates to Flexbox / ConstraintLayout.</li>
+                </ol>
+
+                <h2>9. Performance & UI rendering</h2>
+                <p>Smooth UI = 60fps (or 120Hz on ProMotion). Avoid:</p>
+                <ul>
+                    <li>Complex view hierarchies.</li>
+                    <li>Unnecessary re-composition/re-layout.</li>
+                    <li>Overdraw (hidden backgrounds).</li>
+                </ul>
+
+                <h3>Profile tools</h3>
+                <ul>
+                    <li>Layout Inspector (Android Studio)</li>
+                    <li>Xcode View Debugger</li>
+                    <li>React Native Perf Monitor</li>
+                </ul>
+
+                <h2>10. Accessibility first</h2>
+                <p>Over 1 billion people have disabilities. Accessible UI is better UI for everyone.</p>
+                <ul>
+                    <li><strong>VoiceOver / TalkBack:</strong> every element must have label and trait.</li>
+                    <li><strong>Sufficient contrast:</strong> 4.5:1 for normal text.</li>
+                    <li><strong>Not only color:</strong> convey meaning with icons + text.</li>
+                </ul>
+
+                <pre><code>// iOS — accessibility label
+Button(action: send) {
+    Image(systemName: "paperplane")
+}
+.accessibilityLabel("Send message")
+.accessibilityHint("Double tap to send")</code></pre>
+
+                <div class="ad-container">
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-1911859184415905"
+                         data-ad-slot="1122334455"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+
+                <h2>Case study: Redesigning a food delivery app</h2>
+                <p><strong>Problem:</strong> Users abandoned cart because "place order" button was at top-right.</p>
+                <p><strong>Solution:</strong> Moved CTA to bottom bar with total price. Checkout completion ↑22%.</p>
+                <p><strong>Lesson:</strong> Thumb zone optimization directly impacts conversion.</p>
+
+                <h2>Future: Gestures, Haptics & Motion</h2>
+                <p>iOS 17 and Android 14 push for richer haptic feedback and micro-interactions. Use haptics sparingly to confirm actions, not every tap.</p>
+
+                <h3>Design tokens example (JSON)</h3>
+                <pre><code>{
+  "spacing": {
+    "xs": 4,
+    "sm": 8,
+    "md": 16,
+    "lg": 24
+  },
+  "roundness": {
+    "small": 4,
+    "medium": 8,
+    "large": 16
+  }
+}</code></pre>
+
+                <h2>Conclusion</h2>
+                <p>Mobile UI is a discipline where psychology meets engineering. By respecting platform idioms, optimizing for thumbs, and writing adaptive code, you create apps that feel intuitive and polished. Start by auditing one screen in your current project: is the primary action within easy reach? Does it respect the system font size? Small changes lead to massive UX wins.</p>
+                <p><strong>Next steps:</strong> Download Apple’s HIG and Material Design 3 guidelines — they’re free and constantly updated. Pair them with platform-specific code samples, and you’re on your way to becoming a mobile UI expert.</p>
+
+                <div class="tags">
+                    <strong>Tags:</strong>
+                    <span class="tag">#MobileUI</span>
+                    <span class="tag">#UXDesign</span>
+                    <span class="tag">#iOS</span>
+                    <span class="tag">#Android</span>
+                    <span class="tag">#ReactNative</span>
+                    <span class="tag">#FigmaToCode</span>
+                </div>
+            </div>
+            
+            <div class="post-navigation">
+                <div class="prev-post">
+                    <strong>Previous:</strong>
+                    <a href="../web-development/react-19-features.html">← React 19: Game-Changer for Web Dev</a>
+                </div>
+                <div class="next-post">
+                    <strong>Next:</strong>
+                    <a href="flutter-3-whats-new.html">Flutter 3.16: What’s New for Devs →</a>
+                </div>
+            </div>
+        </article>
+        
+        <aside class="sidebar">
+            <!-- Sidebar Ad unit (preserved) -->
+            <div class="ad-container">
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-1911859184415905"
+                     data-ad-slot="1122334455"
+                     data-ad-format="auto"
+                     data-full-width-responsive="true"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+            </div>
+            
+            <div class="related-posts">
+                <h3>Related Mobile Content</h3>
+                <ul>
+                    <li><a href="flutter-performance-tips.html">Flutter Performance: 10 Tips for Smooth UI</a></li>
+                    <li><a href="swiftui-vs-jetpack-compose.html">SwiftUI vs Jetpack Compose: Side by Side</a></li>
+                    <li><a href="react-native-gesture-handler.html">Advanced Gestures in React Native</a></li>
+                    <li><a href="../ai-machine-learning/on-device-ml.html">On-Device ML: Core ML & TensorFlow Lite</a></li>
+                </ul>
+            </div>
+            
+            <div class="category-links">
+                <h3>Categories</h3>
+                <ul>
+                    <li><a href="../web-development/index.html">Web Development</a></li>
+                    <li><a href="../ai-machine-learning/index.html">AI & Machine Learning</a></li>
+                    <li><a href="../cybersecurity/index.html">Cybersecurity</a></li>
+                    <li><a href="../cloud-computing/index.html">Cloud Computing</a></li>
+                </ul>
+            </div>
+        </aside>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 Rehan's Tech Blog. All rights reserved.</p>
+            <p>Contact: <a href="mailto:rehanjamadar914@gmail.com">rehanjamadar914@gmail.com</a> | +91 97671360</p>
+            <div class="social-links">
+                <a href="#">GitHub</a> | <a href="#">LinkedIn</a> | <a href="#">Twitter</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../../js/main.js"></script>
+    <!-- (Google AdSense scripts remain as is) -->
+</body>
+</html>

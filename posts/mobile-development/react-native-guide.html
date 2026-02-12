@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Complete guide to React Native for building cross-platform mobile apps – from setup to advanced patterns">
+    <title>React Native Guide: Build Cross‑Platform Apps – Mobile Development – Rehan's Tech Blog</title>
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/theme.css">
+    <!-- Light mode only – no dark/black background forced -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1911859184415905" crossorigin="anonymous"></script>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo">
+                    <h1><a href="../../index.html">Rehan's Tech Blog</a></h1>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="../../index.html">Home</a></li>
+                    <li class="dropdown">
+                        <a href="#">Categories</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="../web-development/index.html">Web Development</a></li>
+                            <li><a href="../ai-machine-learning/index.html">AI & Machine Learning</a></li>
+                            <li><a href="../cybersecurity/index.html">Cybersecurity</a></li>
+                            <li><a href="index.html">Mobile Development</a></li>
+                            <li><a href="../cloud-computing/index.html">Cloud Computing</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="../../about.html">About</a></li>
+                    <li><a href="../../contact.html">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <article class="blog-post">
+            <header class="post-header">
+                <nav class="breadcrumb">
+                    <a href="../../index.html">Home</a> &gt;
+                    <a href="index.html">Mobile Development</a> &gt;
+                    <span>React Native Guide</span>
+                </nav>
+                <h1>React Native: Build Production‑Ready Cross‑Platform Apps</h1>
+                <div class="post-meta">
+                    <span>By Rehan</span>
+                    <span>February 8, 2025</span>
+                    <span>12 min read</span>
+                </div>
+            </header>
+            
+            <div class="post-content">
+                <!-- INTRO SECTION – mobile development focus, React Native deep dive -->
+                <h2>Why React Native in 2025?</h2>
+                <p>React Native remains the leading framework for building native mobile apps using JavaScript and React. With the latest architecture (Fabric & TurboModules) and Hermes engine optimizations, React Native delivers near-native performance while preserving developer velocity. In this guide, you'll master everything from environment setup to advanced patterns used by top‑tier apps like Shopify, Coinbase, and Microsoft.</p>
+                
+                <div class="ad-container">
+                    <ins class="adsbygoogle"
+                         style="display:block; text-align:center;"
+                         data-ad-layout="in-article"
+                         data-ad-format="fluid"
+                         data-ad-client="ca-pub-1911859184415905"
+                         data-ad-slot="1234567890"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+
+                <h2>1. Setting Up a Bulletproof Environment</h2>
+                <p>Forget <code>expo init</code> alone — we'll create a production foundation with monorepo support, absolute imports, and Hermes enabled.</p>
+                <h3>Expo vs React Native CLI</h3>
+                <p><strong>Expo Application Services (EAS)</strong> is now the industry standard. We'll use Expo with development builds for full native control without eject pain.</p>
+                
+                <pre><code># Create a new Expo project with TypeScript and absolute imports
+npx create-expo-app ReactNativeWorkshop --template expo-template-blank-typescript
+cd ReactNativeWorkshop
+npx expo install react-dom react-native-web @types/react @types/react-native
+npm install --save-dev babel-plugin-module-resolver</code></pre>
+
+                <pre><code>// babel.config.js – clean import aliases
+module.exports = function(api) {
+  api.cache(true);
+  return {
+    presets: ['babel-preset-expo'],
+    plugins: [
+      ['module-resolver', {
+        alias: {
+          '@components': './src/components',
+          '@screens': './src/screens',
+          '@utils': './src/utils',
+          '@assets': './assets'
+        }
+      }]
+    ]
+  };
+};</code></pre>
+
+                <h2>2. New Architecture Essentials (Fabric & TurboModules)</h2>
+                <p>React Native 0.76+ enables the new architecture by default. Understand these breakthroughs:</p>
+                <ul>
+                    <li><strong>Fabric:</strong> re‑implemented render layer – synchronous layout, better interoperability, less bridge overhead.</li>
+                    <li><strong>TurboModules:</strong> lazy native module loading, dramatically reducing startup time.</li>
+                    <li><strong>Codegen:</strong> static type safety between JS and native.</li>
+                </ul>
+                <p>Enable it in <code>app.json</code> for new projects; most third‑party libraries are now compatible.</p>
+                
+                <pre><code>// app.json (expo)
+{
+  "expo": {
+    "jsEngine": "hermes",
+    "newArchEnabled": true
+  }
+}</code></pre>
+
+                <div class="ad-container">
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-1911859184415905"
+                         data-ad-slot="0987654321"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+
+                <h2>3. Modern Styling & Layouts</h2>
+                <p>Say goodbye to <code>StyleSheet.create</code> boilerplate. Use <strong>Restyle</strong> or <strong>NativeWind</strong> (Tailwind for RN).</p>
+                <h3>NativeWind example:</h3>
+                <pre><code>import { View, Text } from 'react-native';
+
+export default function Card() {
+  return (
+    &lt;View className="flex-1 bg-white p-4 rounded-lg shadow-md"&gt;
+      &lt;Text className="text-lg font-bold text-gray-800"&gt;Modern card&lt;/Text&gt;
+    &lt;/View&gt;
+  );
+}</code></pre>
+                <p>Setup: <code>npm install nativewind tailwindcss</code> and configure <code>tailwind.config.js</code>. Works perfectly with new architecture.</p>
+
+                <h2>4. Navigation & Deep Linking</h2>
+                <p>Expo Router (file‑based routing) is now the go‑to solution. It supports typed routes, deep linking, and gesture handling out of the box.</p>
+                <pre><code>// app/index.tsx – automatically becomes the home screen
+import { Link } from 'expo-router';
+import { View, Text } from 'react-native';
+
+export default function Home() {
+  return (
+    &lt;View&gt;
+      &lt;Text&gt;Welcome&lt;/Text&gt;
+      &lt;Link href="/profile"&gt;Go to profile&lt;/Link&gt;
+    &lt;/View&gt;
+  );
+}</code></pre>
+
+                <h2>5. State Management That Scales</h2>
+                <p>Server state: <strong>TanStack Query (React Query)</strong> with offline persistence. Client state: <strong>Zustand</strong> – simpler than Redux, perfect for RN.</p>
+                <pre><code>import { create } from 'zustand';
+import { persist, createJSONStorage } from 'zustand/middleware';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+interface CartStore {
+  items: string[];
+  addItem: (id: string) =&gt; void;
+}
+
+export const useCartStore = create&lt;CartStore&gt;()(
+  persist(
+    (set) =&gt; ({
+      items: [],
+      addItem: (id) =&gt; set((state) =&gt; ({ items: [...state.items, id] })),
+    }),
+    {
+      name: 'cart-storage',
+      storage: createJSONStorage(() =&gt; AsyncStorage),
+    }
+  )
+);</code></pre>
+
+                <h2>6. Performance Auditing & Optimization</h2>
+                <p>Use <strong>Flipper</strong> with RN plugins. Monitor JS thread blocking, large images, and re‑renders.</p>
+                <h3>Key recipes:</h3>
+                <ul>
+                    <li><code>React.memo</code> + <code>useMemo</code> for expensive components</li>
+                    <li>FlashList instead of FlatList (by Shopify)</li>
+                    <li>Hermes engine: <code>npx expo start --clear</code> to enable</li>
+                    <li>Pre‑loading assets with <code>Asset.loadAsync</code> and <code>Font.loadAsync</code></li>
+                </ul>
+                <pre><code>// Using FlashList for 1000+ items
+import { FlashList } from '@shopify/flash-list';
+&lt;FlashList
+  data={DATA}
+  renderItem={renderItem}
+  estimatedItemSize={100}
+/&gt;</code></pre>
+
+                <div class="ad-container">
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-1911859184415905"
+                         data-ad-slot="1122334455"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+
+                <h2>7. Native Modules Made Easy</h2>
+                <p>Need custom native code? Use <strong>Expo Modules API</strong> (Kotlin/Swift) – less boilerplate than classic TurboModules.</p>
+                <pre><code>// Example: native battery module
+npx expo init custom-battery-module
+// implement in kotlin, then use in RN:
+import { requireNativeModule } from 'expo-modules-core';
+const BatteryModule = requireNativeModule('Battery');
+const level = await BatteryModule.getBatteryLevel();</code></pre>
+
+                <h2>8. Testing & CI/CD</h2>
+                <p>Integrate detox for E2E, Jest for unit. Automate with EAS Build + GitHub Actions.</p>
+                <pre><code># eas.json profile
+{
+  "build": {
+    "production": {
+      "android": {
+        "buildType": "apk"
+      },
+      "env": {
+        "API_URL": "https://api.prod.com"
+      }
+    }
+  }
+}</code></pre>
+
+                <h2>9. Over‑the‑Air Updates (CodePush alternative)</h2>
+                <p>Expo's <strong>EAS Update</strong> delivers JS/asset updates instantly without app store reviews. Critical for hotfixes.</p>
+                <pre><code>eas update --branch preview --message "fix critical crash"</code></pre>
+
+                <h2>10. Production‑Ready Patterns</h2>
+                <h3>Secure storage</h3>
+                <pre><code>import * as SecureStore from 'expo-secure-store';
+await SecureStore.setItemAsync('auth_token', token);</code></pre>
+                <h3>Biometric authentication</h3>
+                <pre><code>import * as LocalAuthentication from 'expo-local-authentication';
+const compatible = await LocalAuthentication.hasHardwareAsync();</code></pre>
+                <h3>Offline queues</h3>
+                <p>Combine <code>react-native-encrypted-storage</code> + <code>react-native-background-fetch</code> for resilient sync.</p>
+
+                <h2>Real‑world case study: Twitter clone performance</h2>
+                <ul>
+                    <li>Startup time reduced 45% (Hermes + TurboModules)</li>
+                    <li>List scroll 60fps (FlashList, useCallback)</li>
+                    <li>Bundle size: 32% smaller via lazy loading + EAS Bundle analyzer</li>
+                </ul>
+
+                <h2>Migration from older versions</h2>
+                <ol>
+                    <li><strong>Upgrade helper:</strong> <a href="https://react-native-community.github.io/upgrade-helper/">official tool</a></li>
+                    <li>Switch to Hermes, enable new architecture step‑by‑step</li>
+                    <li>Replace deprecated libraries (e.g. WebView, AsyncStorage stable)</li>
+                </ol>
+
+                <h2>Conclusion & next steps</h2>
+                <p>React Native 2025 is faster, more stable, and a pleasure to develop. By adopting the new architecture, modern styling, and solid state management, you can ship cross‑platform apps that users love. Start with a well‑structured boilerplate, benchmark early, and continuously integrate.</p>
+                <p><strong>Ready to build your next app?</strong> Clone the example repository at <code>github.com/rehanisongh/rn-workshop</code> and run <code>npm install</code>. The future of mobile development is declarative, native, and JavaScript‑powered.</p>
+
+                <div class="tags">
+                    <strong>Tags:</strong>
+                    <span class="tag">#ReactNative</span>
+                    <span class="tag">#MobileDevelopment</span>
+                    <span class="tag">#Expo</span>
+                    <span class="tag">#TypeScript</span>
+                    <span class="tag">#iOS</span>
+                    <span class="tag">#Android</span>
+                </div>
+            </div>
+            
+            <!-- Post navigation – consistent with blog style, links to next/prev within mobile category -->
+            <div class="post-navigation">
+                <div class="prev-post">
+                    <strong>Previous:</strong>
+                    <a href="flutter-vs-rn-2025.html">← Flutter vs React Native 2025: In‑depth comparison</a>
+                </div>
+                <div class="next-post">
+                    <strong>Next:</strong>
+                    <a href="kotlin-multiplatform-guide.html">Kotlin Multiplatform for iOS devs →</a>
+                </div>
+            </div>
+        </article>
+        
+        <!-- SIDEBAR: ads, related mobile dev posts, category links – no dark mode -->
+        <aside class="sidebar">
+            <div class="ad-container">
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-1911859184415905"
+                     data-ad-slot="1122334455"
+                     data-ad-format="auto"
+                     data-full-width-responsive="true"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+            </div>
+            
+            <div class="related-posts">
+                <h3>📱 More in Mobile</h3>
+                <ul>
+                    <li><a href="flutter-vs-rn-2025.html">Flutter vs React Native 2025</a></li>
+                    <li><a href="kotlin-multiplatform-guide.html">Kotlin Multiplatform: shared logic for iOS/Android</a></li>
+                    <li><a href="swiftui-ios17-crash-course.html">SwiftUI with iOS 17 – essentials</a></li>
+                    <li><a href="../web-development/pwa-offline-first.html">PWA vs native – when to choose hybrid?</a></li>
+                </ul>
+            </div>
+            
+            <div class="category-links">
+                <h3>Explore Categories</h3>
+                <ul>
+                    <li><a href="../web-development/index.html">Web Development</a></li>
+                    <li><a href="../ai-machine-learning/index.html">AI & Machine Learning</a></li>
+                    <li><a href="../cybersecurity/index.html">Cybersecurity</a></li>
+                    <li><a href="../cloud-computing/index.html">Cloud Computing</a></li>
+                </ul>
+            </div>
+        </aside>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 Rehan's Tech Blog. All rights reserved.</p>
+            <p>Contact: <a href="mailto:rehanjamadar914@gmail.com">rehanjamadar914@gmail.com</a> | +91 97671360</p>
+            <div class="social-links">
+                <a href="https://github.com/rehanisongh">GitHub</a> | <a href="#">LinkedIn</a> | <a href="#">Twitter</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../../js/main.js"></script>
+    <!-- Ensure adsbygoogle initialize if present -->
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</body>
+</html>

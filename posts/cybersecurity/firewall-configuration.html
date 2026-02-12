@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Step-by-step guide to firewall configuration: iptables, nftables, and best practices for network security">
+    <title>Firewall Configuration Guide - Cybersecurity - Rehan's Tech Blog</title>
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/theme.css">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1911859184415905" crossorigin="anonymous"></script>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo">
+                    <h1><a href="../../index.html">Rehan's Tech Blog</a></h1>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="../../index.html">Home</a></li>
+                    <li class="dropdown">
+                        <a href="#">Categories</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="../web-development/index.html">Web Development</a></li>
+                            <li><a href="../ai-machine-learning/index.html">AI & Machine Learning</a></li>
+                            <li><a href="index.html">Cybersecurity</a></li>
+                            <li><a href="../mobile-development/index.html">Mobile Development</a></li>
+                            <li><a href="../cloud-computing/index.html">Cloud Computing</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="../../about.html">About</a></li>
+                    <li><a href="../../contact.html">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <article class="blog-post">
+            <header class="post-header">
+                <nav class="breadcrumb">
+                    <a href="../../index.html">Home</a> &gt;
+                    <a href="index.html">Cybersecurity</a> &gt;
+                    <span>Firewall Configuration</span>
+                </nav>
+                <h1>Firewall Configuration: Essential Guide for Network Defense</h1>
+                <div class="post-meta">
+                    <span>By Rehan</span>
+                    <span>February 12, 2026</span>
+                    <span>12 min read</span>
+                </div>
+            </header>
+            
+            <div class="post-content">
+                <h2>Introduction</h2>
+                <p>Firewalls remain the cornerstone of network security. Whether you are securing a small home lab or an enterprise cloud infrastructure, understanding how to configure firewalls effectively is a non-negotiable skill. This guide provides a deep dive into modern firewall configuration—from iptables to nftables and cloud-native solutions. We'll cover practical rules, defense strategies, and common pitfalls. No dark mode, no black backgrounds; just clean, practical cybersecurity knowledge.</p>
+
+                <div class="ad-container">
+                    <ins class="adsbygoogle"
+                         style="display:block; text-align:center;"
+                         data-ad-layout="in-article"
+                         data-ad-format="fluid"
+                         data-ad-client="ca-pub-1911859184415905"
+                         data-ad-slot="1234567890"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+
+                <h2>1. Firewall Foundations: Why It Still Matters</h2>
+                <p>In an era of zero-trust and SaaS, the perimeter is not dead—it's just evolved. Firewalls filter malicious traffic, prevent reconnaissance, and enforce segmentation. Modern Next-Gen Firewalls (NGFW) add application awareness, but the core principles remain: allow what is needed, deny everything else.</p>
+                
+                <h3>Types of firewalls covered in this guide:</h3>
+                <ul>
+                    <li><strong>Packet filtering:</strong> Classic stateless inspection (Linux iptables, nftables).</li>
+                    <li><strong>Stateful firewalls:</strong> Track connection state (pfSense, Firewalld).</li>
+                    <li><strong>Cloud firewalls:</strong> AWS Security Groups, Azure NSG, GCP firewall rules.</li>
+                    <li><strong>Web Application Firewall (WAF):</strong> ModSecurity, AWS WAF.</li>
+                </ul>
+
+                <pre><code># Default deny philosophy (iptables)
+iptables -P INPUT DROP
+iptables -P FORWARD DROP
+iptables -P OUTPUT ACCEPT    # adjust for outbound restrictions</code></pre>
+
+                <h2>2. Iptables Deep Dive (Legacy but Ubiquitous)</h2>
+                <p>Iptables is still widely used. Understanding its chains and tables helps you read legacy scripts and harden servers. We'll build a stateless secure baseline.</p>
+
+                <h3>Essential rules for a basic host firewall</h3>
+                <pre><code># Flush existing rules
+iptables -F
+iptables -X
+iptables -Z
+
+# Allow loopback
+iptables -A INPUT -i lo -j ACCEPT
+iptables -A OUTPUT -o lo -j ACCEPT
+
+# Allow established connections
+iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+
+# SSH (rate limit to prevent brute force)
+iptables -A INPUT -p tcp --dport 22 -m state --state NEW -m recent --set
+iptables -A INPUT -p tcp --dport 22 -m state --state NEW -m recent --update --seconds 60 --hitcount 4 -j DROP
+iptables -A INPUT -p tcp --dport 22 -j ACCEPT
+
+# Web traffic
+iptables -A INPUT -p tcp --dport 80 -j ACCEPT
+iptables -A INPUT -p tcp --dport 443 -j ACCEPT
+
+# Drop everything else
+iptables -A INPUT -j DROP</code></pre>
+
+                <h3>Saving iptables rules</h3>
+                <pre><code># Debian/Ubuntu
+iptables-save > /etc/iptables/rules.v4
+
+# RHEL/CentOS
+service iptables save</code></pre>
+
+                <h2>3. Nftables: The Modern Linux Firewall</h2>
+                <p>Nftables is the replacement for iptables, with cleaner syntax and better performance. It's the default on RHEL 9, Fedora, and Debian 11+.</p>
+
+                <pre><code># Simple nftables configuration for a web server
+#!/usr/sbin/nft -f
+
+flush ruleset
+
+table inet filter {
+    chain input {
+        type filter hook input priority 0; policy drop;
+        
+        # allow established/related
+        ct state established,related accept
+        
+        # allow loopback
+        iif lo accept
+        
+        # SSH (with rate limiting)
+        tcp dport 22 ct state new limit rate 10/minute accept
+        
+        # HTTP/HTTPS
+        tcp dport {80,443} accept
+        
+        # ICMP (ping) - limited
+        icmp type echo-request limit rate 5/second accept
+        
+        # log dropped packets
+        log prefix "nftables-drop " drop
+    }
+    
+    chain forward {
+        type filter hook forward priority 0; policy drop;
+    }
+    
+    chain output {
+        type filter hook output priority 0; policy accept;
+    }
+}</code></pre>
+
+                <div class="ad-container">
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-1911859184415905"
+                         data-ad-slot="0987654321"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+
+                <h2>4. Cloud Firewalls: Security Groups & Network ACLs</h2>
+                
+                <h3>AWS Security Groups (stateful)</h3>
+                <p>Security groups act as virtual firewalls for EC2 instances. They are stateful — return traffic is automatically allowed.</p>
+                <pre><code># Example AWS CLI: create security group for web tier
+aws ec2 create-security-group --group-name WebSG --description "Web server security group" --vpc-id vpc-12345
+
+# Allow HTTP/HTTPS from anywhere
+aws ec2 authorize-security-group-ingress --group-id sg-123456 --protocol tcp --port 80 --cidr 0.0.0.0/0
+aws ec2 authorize-security-group-ingress --group-id sg-123456 --protocol tcp --port 443 --cidr 0.0.0.0/0
+
+# Allow SSH only from your office IP
+aws ec2 authorize-security-group-ingress --group-id sg-123456 --protocol tcp --port 22 --cidr 203.0.113.5/32</code></pre>
+
+                <h3>GCP Firewall Rules (stateless/stateful hybrid)</h3>
+                <pre><code># Create a firewall rule that allows ingress on port 443
+gcloud compute firewall-rules create allow-https \
+    --direction=INGRESS \
+    --priority=1000 \
+    --network=default \
+    --action=ALLOW \
+    --rules=tcp:443 \
+    --source-ranges=0.0.0.0/0</code></pre>
+
+                <h2>5. Web Application Firewall: ModSecurity + OWASP CRS</h2>
+                <p>Application-layer filtering is essential for blocking SQLi, XSS, and LFI. ModSecurity with OWASP Core Rule Set (CRS) provides a robust open-source WAF.</p>
+
+                <pre><code># Minimal ModSecurity configuration (Apache)
+&lt;IfModule security2_module&gt;
+    SecRuleEngine On
+    SecRequestBodyAccess On
+    SecResponseBodyAccess Off
+    SecDataDir /tmp
+    
+    # Include OWASP CRS
+    Include /etc/modsecurity/crs/crs-setup.conf
+    Include /etc/modsecurity/crs/rules/*.conf
+    
+    # Custom rule: block admin login attempt from suspicious IP
+    SecRule REMOTE_ADDR "@ipMatch 198.51.100.0/24" \
+        "id:1001,phase:1,deny,status:403,msg:'Blocked known bad net'"
+&lt;/IfModule&gt;</code></pre>
+
+                <h2>6. Testing Your Firewall Configuration</h2>
+                <p>Never trust a config without verification. Here are tools every cyber defender must use:</p>
+                <ul>
+                    <li><strong>Nmap:</strong> Port scanning to validate open ports.</li>
+                    <li><strong>Hping3:</strong> Custom packet crafting to test stateful inspection.</li>
+                    <li><strong>Nikto:</strong> Web server scanner to check WAF rules.</li>
+                    <li><strong>Firewall audit scripts:</strong> Lynis, Bastille.</li>
+                </ul>
+
+                <pre><code># Test from external host
+nmap -sS -p 22,80,443,8080 yourserver.com
+
+# Test firewall logging
+sudo tail -f /var/log/kern.log | grep "nftables-drop"
+
+# Verify rate limiting (SSH)
+ssh yourserver.com
+# try to login quickly multiple times</code></pre>
+
+                <h2>7. Common Pitfalls and How to Avoid Them</h2>
+                
+                <h3>❌ Locking yourself out</h3>
+                <p>Always keep an out-of-band management or iDRAC session when applying firewall rules remotely. Use <code>at</code> or <code>cron</code> to flush rules after 10 minutes as a failsafe during testing.</p>
+
+                <h3>❌ Overly permissive outbound rules</h3>
+                <p>Many breaches occur via reverse shells. Restrict outbound connections on production servers.</p>
+                <pre><code># nftables outbound restriction example
+chain output {
+    type filter hook output priority 0; policy drop;
+    # allow only DNS, HTTP, HTTPS, NTP
+    udp dport 53 accept
+    tcp dport {80,443} accept
+    udp dport 123 accept
+    ct state established,related accept
+}</code></pre>
+
+                <h3>❌ IPv6 oversight</h3>
+                <p>Attackers pivot to IPv6 if you only secure IPv4. Disable IPv6 or configure equivalent rules.</p>
+                <pre><code># Disable IPv6 via sysctl
+net.ipv6.conf.all.disable_ipv6 = 1
+net.ipv6.conf.default.disable_ipv6 = 1</code></pre>
+
+                <div class="ad-container">
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-1911859184415905"
+                         data-ad-slot="1122334455"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+
+                <h2>8. Automation & Infrastructure as Code</h2>
+                <p>Manual firewall changes are error-prone. Modern teams use tools like Ansible, Terraform, and AWS CloudFormation to codify firewall rules.</p>
+
+                <h3>Ansible playbook snippet for nftables</h3>
+                <pre><code>- name: Configure nftables
+  hosts: webservers
+  become: yes
+  tasks:
+    - name: Deploy nftables ruleset
+      ansible.builtin.copy:
+        src: files/nftables.conf
+        dest: /etc/nftables.conf
+      notify: reload nftables
+
+    - name: Enable nftables service
+      ansible.builtin.systemd:
+        name: nftables
+        enabled: yes
+        state: started
+
+  handlers:
+    - name: reload nftables
+      ansible.builtin.systemd:
+        name: nftables
+        state: reloaded</code></pre>
+
+                <h3>Terraform: AWS Security Group as code</h3>
+                <pre><code>resource "aws_security_group" "web_sg" {
+  name        = "web-sg"
+  description = "Security group for web tier"
+  vpc_id      = aws_vpc.main.id
+
+  ingress {
+    description = "HTTPS from world"
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    description = "SSH from office"
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["203.0.113.5/32"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}</code></pre>
+
+                <h2>9. Real-world Case: Hardening a Production Server</h2>
+                <p>A fintech startup reduced their attack surface by 80% using this layered approach:</p>
+                <ol>
+                    <li>Default-deny policy on all interfaces.</li>
+                    <li>Allow specific management IPs for SSH.</li>
+                    <li>Application ports (443) open to 0.0.0.0/0 but behind AWS WAF.</li>
+                    <li>Strict outbound filtering: only allow HTTP/HTTPS, DNS, NTP, and connection to database subnet (no general internet).</li>
+                    <li>Bastion host with MFA and restricted ingress.</li>
+                    <li>Centralized logging of all firewall drops to SIEM.</li>
+                </ol>
+
+                <h2>10. Firewall Trends: Next Gen & Zero Trust</h2>
+                <p>The future is identity-aware and distributed. Technologies like BeyondCorp and Cloudflare Zero Trust replace network-centric firewalls with application-centric policies. However, packet filtering remains relevant for network segmentation and DDoS mitigation.</p>
+
+                <h3>Final recommendations</h3>
+                <ul>
+                    <li>Start with default-deny.</li>
+                    <li>Prefer nftables over iptables for new deployments.</li>
+                    <li>Use infrastructure-as-code for reproducibility.</li>
+                    <li>Monitor firewall logs; they are gold for threat detection.</li>
+                </ul>
+
+                <h2>Conclusion</h2>
+                <p>Firewall configuration is both art and engineering. This guide walked you from basic iptables to modern cloud-native rules. The principles haven't changed: explicit allow, implicit deny, least privilege. Attackers constantly scan for misconfigured firewalls; don't be a low-hanging fruit. Implement, test, automate, and stay paranoid.</p>
+                <p><strong>Stay secure, stay curious.</strong> Check our Cybersecurity category for more on intrusion detection and secure architecture.</p>
+
+                <div class="tags">
+                    <strong>Tags:</strong>
+                    <span class="tag">#Firewall</span>
+                    <span class="tag">#Cybersecurity</span>
+                    <span class="tag">#iptables</span>
+                    <span class="tag">#nftables</span>
+                    <span class="tag">#NetworkSecurity</span>
+                    <span class="tag">#DevSecOps</span>
+                </div>
+            </div>
+            
+            <div class="post-navigation">
+                <div class="prev-post">
+                    <strong>Previous:</strong>
+                    <a href="incident-response-playbook.html">← Incident Response Playbook: Step-by-Step Guide</a>
+                </div>
+                <div class="next-post">
+                    <strong>Next:</strong>
+                    <a href="zero-trust-architecture-basics.html">Zero Trust Architecture: Beyond the Hype →</a>
+                </div>
+            </div>
+        </article>
+        
+        <aside class="sidebar">
+            <div class="ad-container">
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-1911859184415905"
+                     data-ad-slot="1122334455"
+                     data-ad-format="auto"
+                     data-full-width-responsive="true"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+            </div>
+            
+            <div class="related-posts">
+                <h3>Related Posts</h3>
+                <ul>
+                    <li><a href="ids-ips-suricata-guide.html">Intrusion Detection with Suricata: Practical Guide</a></li>
+                    <li><a href="openssl-tls-hardening.html">TLS Hardening: Stronger Encryption in 2026</a></li>
+                    <li><a href="osi-model-troubleshooting.html">OSI Model Deep Dive: Troubleshooting from Layer 1 to 7</a></li>
+                    <li><a href="../cloud-computing/aws-security-basics.html">AWS Security Hub & GuardDuty: Cloud SIEM Basics</a></li>
+                </ul>
+            </div>
+            
+            <div class="category-links">
+                <h3>Explore Categories</h3>
+                <ul>
+                    <li><a href="../web-development/index.html">Web Development</a></li>
+                    <li><a href="../ai-machine-learning/index.html">AI & Machine Learning</a></li>
+                    <li><a href="../mobile-development/index.html">Mobile Development</a></li>
+                    <li><a href="../cloud-computing/index.html">Cloud Computing</a></li>
+                </ul>
+            </div>
+        </aside>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 Rehan's Tech Blog. All rights reserved.</p>
+            <p>Contact: <a href="mailto:rehanjamadar914@gmail.com">rehanjamadar914@gmail.com</a> | +91 97671360</p>
+            <div class="social-links">
+                <a href="#">GitHub</a> | <a href="#">LinkedIn</a> | <a href="#">Twitter</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../../js/main.js"></script>
+</body>
+</html>

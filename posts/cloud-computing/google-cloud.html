@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Complete Google Cloud guide: compute, storage, networking, and serverless – learn cloud computing with practical GCP examples">
+    <title>Google Cloud Platform Guide - Cloud Computing - Rehan's Tech Blog</title>
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/theme.css">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1911859184415905" crossorigin="anonymous"></script>
+    <!-- No dark mode, light/neutral theme as per spec -->
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo">
+                    <h1><a href="../../index.html">Rehan's Tech Blog</a></h1>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="../../index.html">Home</a></li>
+                    <li class="dropdown">
+                        <a href="#">Categories</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="../web-development/index.html">Web Development</a></li>
+                            <li><a href="../ai-machine-learning/index.html">AI & Machine Learning</a></li>
+                            <li><a href="../cybersecurity/index.html">Cybersecurity</a></li>
+                            <li><a href="../mobile-development/index.html">Mobile Development</a></li>
+                            <li><a href="index.html">Cloud Computing</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="../../about.html">About</a></li>
+                    <li><a href="../../contact.html">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <article class="blog-post">
+            <header class="post-header">
+                <nav class="breadcrumb">
+                    <a href="../../index.html">Home</a> &gt;
+                    <a href="index.html">Cloud Computing</a> &gt;
+                    <span>Google Cloud Platform: complete guide</span>
+                </nav>
+                <h1>Google Cloud Platform (GCP): infrastructure, serverless & data analytics</h1>
+                <div class="post-meta">
+                    <span>By Rehan</span>
+                    <span>February 12, 2026</span>
+                    <span>13 min read</span>
+                </div>
+            </header>
+            
+            <div class="post-content">
+                <!-- Introduction -->
+                <h2>Why Google Cloud?</h2>
+                <p>Cloud computing has become the backbone of modern technology, and Google Cloud Platform (GCP) stands out with its clean data architecture, global fiber network, and innovative AI/ML offerings. From startups to enterprises like Spotify, Twitter, and PayPal, GCP powers critical workloads. In this guide, we break down core GCP services, real-world use cases, and cost optimization – all under the cloud computing category.</p>
+                
+                <!-- In-article Ad -->
+                <div class="ad-container">
+                    <ins class="adsbygoogle"
+                         style="display:block; text-align:center;"
+                         data-ad-layout="in-article"
+                         data-ad-format="fluid"
+                         data-ad-client="ca-pub-1911859184415905"
+                         data-ad-slot="1234567890"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+
+                <h2>1. Compute: VMs, containers & serverless</h2>
+                
+                <h3>Compute Engine (IaaS)</h3>
+                <p>Virtual machines on Google’s infrastructure. Custom machine types, sole-tenant nodes, and confidential VMs. Preemptible VMs save 60-80% for batch jobs.</p>
+                <pre><code># Create a VM with gcloud
+gcloud compute instances create "rehan-instance" \
+    --zone=us-central1-a \
+    --machine-type=n2-standard-2 \
+    --image-family=ubuntu-2204-lts \
+    --image-project=ubuntu-os-cloud \
+    --boot-disk-size=50GB</code></pre>
+
+                <h3>Google Kubernetes Engine (GKE)</h3>
+                <p>Managed Kubernetes with auto-pilot, multi-cluster ingress, and GPU support. Industry-leading for container orchestration.</p>
+                <pre><code># Standard cluster with latest GKE
+gcloud container clusters create rehan-cluster \
+    --num-nodes=3 \
+    --region=us-central1 \
+    --enable-autoscaling \
+    --min-nodes=1 --max-nodes=6 \
+    --release-channel=stable</code></pre>
+
+                <h3>Cloud Run (serverless container)</h3>
+                <p>Run stateless containers in a fully managed environment. Pay per request, no infra management. Perfect for APIs and microservices.</p>
+                <pre><code># Deploy a container to Cloud Run
+gcloud run deploy rehan-service \
+    --image gcr.io/my-project/my-app:latest \
+    --platform managed \
+    --region us-central1 \
+    --allow-unauthenticated \
+    --memory 2Gi</code></pre>
+
+                <h3>Cloud Functions (FaaS)</h3>
+                <p>Event-driven, single-purpose functions. Integrated with Pub/Sub, Storage, Firestore.</p>
+                <pre><code>// Node.js 20 example
+exports.processImage = (event, context) => {
+  const file = event.name;
+  console.log(`New image uploaded: ${file}`);
+  // image processing logic
+};</code></pre>
+
+                <!-- Another ad unit -->
+                <div class="ad-container">
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-1911859184415905"
+                         data-ad-slot="0987654321"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+
+                <h2>2. Storage & Databases</h2>
+                <h3>Cloud Storage (GCS)</h3>
+                <p>Object storage with strong consistency, multi-regional buckets, and lifecycle policies. Standard, Nearline, Coldline, Archive classes.</p>
+                <pre><code># Upload with gsutil
+gsutil mb gs://rehan-blog-data/
+gsutil cp report.csv gs://rehan-blog-data/</code></pre>
+
+                <h3>Cloud SQL & AlloyDB</h3>
+                <p>Managed MySQL, PostgreSQL, SQL Server. AlloyDB for PostgreSQL – 4x faster than standard, ideal for demanding workloads.</p>
+
+                <h3>Firestore & Bigtable</h3>
+                <p>Firestore: serverless, scalable NoSQL document DB for mobile/web apps. Bigtable: petabyte-scale, low-latency NoSQL (HBase compatible).</p>
+
+                <h2>3. Networking – built on the edge</h2>
+                <h3>VPC, Cloud CDN, Cloud Load Balancing</h3>
+                <p>Global VPC, Cloud CDN (cache at Google’s 1400+ edges), multi-region load balancing. Private Google Access for internal communication.</p>
+                <pre><code># Create firewall rule
+gcloud compute firewall-rules create allow-http \
+    --network default \
+    --allow tcp:80,tcp:443 \
+    --source-ranges 0.0.0.0/0</code></pre>
+
+                <h3>Cloud Interconnect & Service Directory</h3>
+                <p>Dedicated connectivity from on-prem to GCP. Service Directory – service discovery for microservices.</p>
+
+                <div class="ad-container">
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-1911859184415905"
+                         data-ad-slot="1122334455"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+
+                <h2>4. Data analytics & AI</h2>
+                <h3>BigQuery – serverless data warehouse</h3>
+                <p>Analyze petabytes with SQL, built-in machine learning (BigQuery ML). No ops, fast, and separates storage/compute.</p>
+                <pre><code>-- Example: top 10 customers
+SELECT customer_id, SUM(amount) as total
+FROM `my-project.sales.transactions`
+WHERE date >= '2026-01-01'
+GROUP BY customer_id
+ORDER BY total DESC
+LIMIT 10;</code></pre>
+
+                <h3>Dataflow & Dataproc</h3>
+                <p>Stream/batch processing with Apache Beam (Dataflow) and managed Spark/Hadoop (Dataproc).</p>
+
+                <h3>Vertex AI</h3>
+                <p>Unified ML platform: AutoML, custom training, feature store, and model monitoring. Deploy models with one click.</p>
+                <pre><code># Deploy model to endpoint
+gcloud ai endpoints deploy-model 123456 \
+    --region=us-central1 \
+    --model=projects/rehan-blog/models/recommender \
+    --display-name=prod-v2</code></pre>
+
+                <h2>5. DevOps & developer tools</h2>
+                <h3>Cloud Build & Artifact Registry</h3>
+                <p>CI/CD fully managed. Artifact Registry: next-gen container/dependency storage.</p>
+                <pre><code># Build and push with Cloud Build
+gcloud builds submit --tag us-central1-docker.pkg.dev/my-project/repo/image:tag</code></pre>
+
+                <h3>Cloud Deploy, Source Repositories, and Logging</h3>
+                <p>Git hosting, SRE tools. Cloud Monitoring and Error Reporting. Operations Suite (formerly Stackdriver).</p>
+
+                <h2>6. Practical: cost governance & best practices</h2>
+                <ul>
+                    <li><strong>Labels & Budget alerts:</strong> assign labels (e.g., environment, cost-center). Set budget thresholds and alerts.</li>
+                    <li><strong>Committed use discounts & Spot VMs:</strong> save 30-70% for steady-state or fault-tolerant workloads.</li>
+                    <li><strong>IAM & organization policies:</strong> principle of least privilege. Use custom roles, deny policies.</li>
+                    <li><strong>Security:</strong> VPC Service Controls, Shielded VMs, CMEK for encryption.</li>
+                </ul>
+                <pre><code># Label a project
+gcloud compute instances create demo --labels=team=rehan,env=staging,app=blog</code></pre>
+
+                <h2>7. Real-world case: migration to GKE and Cloud Run</h2>
+                <p>A SaaS company migrated from monolithic VMs to GKE (stateful) + Cloud Run (stateless). Results: <br>
+                → 45% infra cost reduction <br>
+                → 5x faster deploys <br>
+                → autoscaling from 0 during idle hours (Cloud Run).</p>
+
+                <!-- Ad before final -->
+                <div class="ad-container">
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-1911859184415905"
+                         data-ad-slot="5566778899"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+
+                <h2>8. Next steps: certification & hands-on</h2>
+                <p>Google Cloud certifications (Associate Cloud Engineer, Professional Cloud Architect) validate skills. Use free tier – always free products: Cloud Build, BigQuery 1TB/month, Cloud Run 2M requests. Follow labs on <a href="https://google.qwiklabs.com" target="_blank" rel="noopener">Google Cloud Skills Boost</a>.</p>
+
+                <h2>Conclusion: why GCP fits modern cloud strategy</h2>
+                <p>Google Cloud provides a consistent, open, and sustainable platform. Its strengths lie in data, machine learning, and serverless. For developers, startups, and enterprises, GCP simplifies operations while scaling with demand. As part of Rehan's Tech Blog, we’ll continue publishing deep dives – next: <strong>Multi-cloud with Anthos and Istio</strong>.</p>
+                <p><strong>Start your Google Cloud journey today</strong> – spin up a VM, try BigQuery, or deploy a container on Cloud Run.</p>
+                
+                <div class="tags">
+                    <strong>Tags:</strong>
+                    <span class="tag">#GoogleCloud</span>
+                    <span class="tag">#GCP</span>
+                    <span class="tag">#CloudComputing</span>
+                    <span class="tag">#BigQuery</span>
+                    <span class="tag">#GKE</span>
+                    <span class="tag">#Serverless</span>
+                    <span class="tag">#DevOps</span>
+                </div>
+            </div> <!-- end post-content -->
+
+            <!-- Post navigation matching React post pattern, pointing to cloud & web dev posts -->
+            <div class="post-navigation">
+                <div class="prev-post">
+                    <strong>Previous:</strong>
+                    <a href="../web-development/react19-features.html">← React 19: A Game-Changer for Modern Web Development</a>
+                </div>
+                <div class="next-post">
+                    <strong>Next:</strong>
+                    <a href="aws-ec2-vs-lambda.html">AWS EC2 vs Lambda: choosing the right compute →</a>
+                </div>
+            </div>
+        </article>
+        
+        <!-- Sidebar with ads and related posts (exactly as original pattern) -->
+        <aside class="sidebar">
+            <div class="ad-container">
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-1911859184415905"
+                     data-ad-slot="9988776655"
+                     data-ad-format="auto"
+                     data-full-width-responsive="true"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+            </div>
+            
+            <div class="related-posts">
+                <h3>Related cloud posts</h3>
+                <ul>
+                    <li><a href="containers-guide.html">Containers Guide: App's Perfect Packaging</a></li>
+                    <li><a href="serverless-basics.html">Serverless 101: Functions, Run, tools</a></li>
+                    <li><a href="../ai-machine-learning/chatgpt-api-guide.html">ChatGPT API + Cloud functions</a></li>
+                    <li><a href="kubernetes-production.html">K8s on GKE: production patterns</a></li>
+                    <li><a href="../cybersecurity/cloud-security.html">Cloud security best practices</a></li>
+                </ul>
+            </div>
+            
+            <div class="category-links">
+                <h3>More categories</h3>
+                <ul>
+                    <li><a href="../web-development/index.html">Web Development</a></li>
+                    <li><a href="../ai-machine-learning/index.html">AI & Machine Learning</a></li>
+                    <li><a href="../cybersecurity/index.html">Cybersecurity</a></li>
+                    <li><a href="../mobile-development/index.html">Mobile Development</a></li>
+                </ul>
+            </div>
+            
+            <!-- second sidebar ad -->
+            <div class="ad-container" style="margin-top:20px;">
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-1911859184415905"
+                     data-ad-slot="5544332211"
+                     data-ad-format="rectangle"
+                     data-full-width-responsive="true"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+            </div>
+        </aside>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 Rehan's Tech Blog. All rights reserved. </p>
+            <p>Contact: <a href="mailto:rehanjamadar914@gmail.com">rehanjamadar914@gmail.com</a> | +91 97671360</p>
+            <div class="social-links">
+                <a href="https://github.com/rehanisongh">GitHub</a> | 
+                <a href="#">LinkedIn</a> | 
+                <a href="#">Twitter</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../../js/main.js"></script>
+    <!-- Google AdSense snippet already loaded in head, async -->
+    <script>
+        // Re-run ads if needed; safe to call push after page load
+        (function() {
+            try {
+                if (window.adsbygoogle) {
+                    // Push any ads that were not automatically rendered 
+                    // (some ad blocks have already been pushed inline)
+                }
+            } catch(e) {}
+        })();
+    </script>
+</body>
+</html>

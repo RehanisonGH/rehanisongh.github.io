@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Complete TensorFlow tutorial for beginners – build, train, and deploy machine learning models with practical examples">
+    <title>TensorFlow Tutorial for Beginners - AI & Machine Learning - Rehan's Tech Blog</title>
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/theme.css">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1911859184415905" crossorigin="anonymous"></script>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo">
+                    <h1><a href="../../index.html">Rehan's Tech Blog</a></h1>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="../../index.html">Home</a></li>
+                    <li class="dropdown">
+                        <a href="#">Categories</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="../web-development/index.html">Web Development</a></li>
+                            <li><a href="index.html">AI & Machine Learning</a></li>
+                            <li><a href="../cybersecurity/index.html">Cybersecurity</a></li>
+                            <li><a href="../mobile-development/index.html">Mobile Development</a></li>
+                            <li><a href="../cloud-computing/index.html">Cloud Computing</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="../../about.html">About</a></li>
+                    <li><a href="../../contact.html">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <article class="blog-post">
+            <header class="post-header">
+                <nav class="breadcrumb">
+                    <a href="../../index.html">Home</a> &gt;
+                    <a href="index.html">AI & Machine Learning</a> &gt;
+                    <span>TensorFlow Tutorial for Beginners</span>
+                </nav>
+                <h1>TensorFlow 2.x: Complete Hands-On Tutorial for Beginners</h1>
+                <div class="post-meta">
+                    <span>By Rehan</span>
+                    <span>February 8, 2024</span>
+                    <span>12 min read</span>
+                </div>
+            </header>
+            
+            <div class="post-content">
+                <h2>Introduction</h2>
+                <p>TensorFlow has established itself as the leading deep learning framework, powering cutting-edge AI applications from Google Search to OpenAI. Whether you're a student stepping into machine learning or a developer aiming to productionize models, TensorFlow 2.x offers an intuitive, Keras-powered workflow. In this no‑fluff tutorial, you'll build, train, and deploy your first neural networks — no PhD required.</p>
+
+                <div class="ad-container">
+                    <ins class="adsbygoogle"
+                         style="display:block; text-align:center;"
+                         data-ad-layout="in-article"
+                         data-ad-format="fluid"
+                         data-ad-client="ca-pub-1911859184415905"
+                         data-ad-slot="1234567890"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+
+                <h2>What You'll Learn</h2>
+                <ul>
+                    <li>TensorFlow basics: tensors, operations, and graphs</li>
+                    <li>Build Sequential and Functional API models</li>
+                    <li>Image classification with Convolutional Neural Networks</li>
+                    <li>Text sentiment analysis using RNN/LSTM</li>
+                    <li>Model export, deployment, and TF Lite</li>
+                </ul>
+
+                <h3>1. Installation & Setup</h3>
+                <p>TensorFlow 2.x integrates seamlessly with Python. Start a fresh environment and install:</p>
+                <pre><code># Create virtual environment (recommended)
+python -m venv tf_env
+source tf_env/bin/activate   # or `tf_env\Scripts\activate` on Windows
+
+# Install TensorFlow
+pip install tensorflow
+
+# Verify installation
+python -c "import tensorflow as tf; print(tf.__version__)"</code></pre>
+                <p>You should see <code>2.13.0</code> or higher. We'll also use <code>numpy</code> and <code>matplotlib</code> for data handling and visualization.</p>
+
+                <h3>2. TensorFlow in a Nutshell: Tensors & Operations</h3>
+                <p>Tensors are multi-dimensional arrays (like NumPy ndarrays) that run on GPU. Let's create them:</p>
+                <pre><code>import tensorflow as tf
+
+# Constant tensors
+scalar = tf.constant(42)
+vector = tf.constant([1, 2, 3, 4])
+matrix = tf.constant([[1, 2], [3, 4]])
+
+# Operations are intuitive
+a = tf.constant([[1, 2], [3, 4]])
+b = tf.constant([[5, 6], [7, 8]])
+c = tf.matmul(a, b)  # matrix multiplication
+print(c.numpy())     # eager execution: [[19 22], [43 50]]</code></pre>
+                <p>Notice <code>.numpy()</code> – TensorFlow runs eagerly, so you can debug like plain Python.</p>
+
+                <div class="ad-container">
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-1911859184415905"
+                         data-ad-slot="0987654321"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+
+                <h3>3. Your First Neural Network: MNIST Classification</h3>
+                <p>The "Hello World" of deep learning. We'll build a simple dense network to classify handwritten digits.</p>
+                <pre><code># Load dataset
+mnist = tf.keras.datasets.mnist
+(x_train, y_train), (x_test, y_test) = mnist.load_data()
+x_train, x_test = x_train / 255.0, x_test / 255.0  # normalize
+
+# Build Sequential model
+model = tf.keras.models.Sequential([
+    tf.keras.layers.Flatten(input_shape=(28, 28)),
+    tf.keras.layers.Dense(128, activation='relu'),
+    tf.keras.layers.Dropout(0.2),
+    tf.keras.layers.Dense(10, activation='softmax')
+])
+
+# Compile
+model.compile(optimizer='adam',
+              loss='sparse_categorical_crossentropy',
+              metrics=['accuracy'])
+
+# Train
+model.fit(x_train, y_train, epochs=5)
+
+# Evaluate
+model.evaluate(x_test, y_test, verbose=2)</code></pre>
+                <p><strong>Result:</strong> You'll achieve ~98% accuracy in under a minute. Not bad for 12 lines of training code.</p>
+
+                <h3>4. Convolutional Neural Networks (CNN) for Images</h3>
+                <p>Dense layers ignore spatial structure. CNNs excel at images. Let's upgrade to CIFAR-10.</p>
+                <pre><code>cifar = tf.keras.datasets.cifar10
+(x_train, y_train), (x_test, y_test) = cifar.load_data()
+x_train, x_test = x_train / 255.0, x_test / 255.0
+
+cnn_model = tf.keras.models.Sequential([
+    tf.keras.layers.Conv2D(32, (3,3), activation='relu', input_shape=(32,32,3)),
+    tf.keras.layers.MaxPooling2D((2,2)),
+    tf.keras.layers.Conv2D(64, (3,3), activation='relu'),
+    tf.keras.layers.MaxPooling2D((2,2)),
+    tf.keras.layers.Conv2D(64, (3,3), activation='relu'),
+    tf.keras.layers.Flatten(),
+    tf.keras.layers.Dense(64, activation='relu'),
+    tf.keras.layers.Dense(10, activation='softmax')
+])
+
+cnn_model.compile(optimizer='adam',
+                  loss='sparse_categorical_crossentropy',
+                  metrics=['accuracy'])
+cnn_model.fit(x_train, y_train, epochs=10, validation_data=(x_test, y_test))</code></pre>
+                <p>CNNs learn edges and textures, achieving ~70% accuracy on CIFAR-10 (with more tuning, you can push beyond 85%).</p>
+
+                <div class="ad-container">
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-1911859184415905"
+                         data-ad-slot="1122334455"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+
+                <h3>5. Natural Language Processing: Sentiment Analysis</h3>
+                <p>TensorFlow also dominates NLP. Here's an LSTM for IMDB movie reviews:</p>
+                <pre><code>from tensorflow.keras.preprocessing import sequence
+from tensorflow.keras.datasets import imdb
+
+# Load data, keep top 5000 words
+vocab_size = 5000
+(x_train, y_train), (x_test, y_test) = imdb.load_data(num_words=vocab_size)
+
+# Pad sequences to same length
+max_len = 500
+x_train = sequence.pad_sequences(x_train, maxlen=max_len)
+x_test = sequence.pad_sequences(x_test, maxlen=max_len)
+
+# Build model
+lstm_model = tf.keras.Sequential([
+    tf.keras.layers.Embedding(vocab_size, 32),
+    tf.keras.layers.LSTM(64, dropout=0.2, recurrent_dropout=0.2),
+    tf.keras.layers.Dense(1, activation='sigmoid')
+])
+
+lstm_model.compile(loss='binary_crossentropy',
+                   optimizer='adam',
+                   metrics=['accuracy'])
+
+lstm_model.fit(x_train, y_train, epochs=3, batch_size=128, validation_split=0.2)</code></pre>
+                <p>The embedding layer learns word vectors; LSTM captures sequential context. Expect ~85% validation accuracy.</p>
+
+                <h3>6. Save, Load, and Deploy Models</h3>
+                <p>Production ready in two lines:</p>
+                <pre><code># Save entire model
+model.save('mnist_classifier.keras')
+
+# Load it back
+loaded_model = tf.keras.models.load_model('mnist_classifier.keras')
+
+# Make predictions
+predictions = loaded_model.predict(x_test[:5])</code></pre>
+                <p>For mobile/edge devices, convert to TensorFlow Lite:</p>
+                <pre><code>converter = tf.lite.TFLiteConverter.from_saved_model('mnist_classifier.keras')
+tflite_model = converter.convert()
+with open('model.tflite', 'wb') as f:
+    f.write(tflite_model)</code></pre>
+                <p>You can now run this on Android/iOS or Raspberry Pi.</p>
+
+                <h3>7. Accelerated Training with GPU</h3>
+                <p>TensorFlow automatically detects CUDA-enabled GPUs. Check availability:</p>
+                <pre><code>print("GPU Available:", tf.config.list_physical_devices('GPU'))</code></pre>
+                <p>For distributed training, use <code>tf.distribute.MirroredStrategy</code>:</p>
+                <pre><code>strategy = tf.distribute.MirroredStrategy()
+with strategy.scope():
+    model = create_model()  # your model building function
+    model.compile(...)</code></pre>
+
+                <h2>Common Pitfalls & Tips</h2>
+                <ul>
+                    <li><strong>Data normalization:</strong> Always scale pixel values to [0,1] or standardize.</li>
+                    <li><strong>Overfitting:</strong> Use dropout, data augmentation, or early stopping.</li>
+                    <li><strong>Learning rate:</strong> Start with 1e-3 (Adam default) and use ReduceLROnPlateau callback.</li>
+                    <li><strong>Shape mismatches:</strong> Debug with <code>model.summary()</code>.</li>
+                </ul>
+
+                <div class="ad-container">
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-1911859184415905"
+                         data-ad-slot="5566778899"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+
+                <h2>What's Next? Advanced Topics</h2>
+                <ul>
+                    <li><strong>Custom training loops:</strong> Use <code>tf.GradientTape</code> for full control.</li>
+                    <li><strong>Transfer learning:</strong> Fine‑tune MobileNet, BERT with TensorFlow Hub.</li>
+                    <li><strong>TFX:</strong> Production pipelines for model validation and serving.</li>
+                    <li><strong>JAX & Flax:</strong> Emerging ecosystem, but TensorFlow remains the enterprise standard.</li>
+                </ul>
+
+                <h2>Conclusion</h2>
+                <p>You've just completed a whirlwind tour of TensorFlow 2.x — from tensor basics to CNNs, RNNs, and deployment. The framework's tight Keras integration makes experimentation fast, while its production tooling (TF Serving, Lite, JS) ensures you can ship anywhere. Start small, iterate, and gradually incorporate advanced techniques.</p>
+                <p><strong>Your turn:</strong> Modify the CNN to classify your own custom image dataset. Use <code>tf.keras.preprocessing.image_dataset_from_directory</code> – you'll have a custom classifier in 20 lines.</p>
+                <p>Stay curious and keep training!</p>
+
+                <div class="tags">
+                    <strong>Tags:</strong>
+                    <span class="tag">#TensorFlow</span>
+                    <span class="tag">#MachineLearning</span>
+                    <span class="tag">#DeepLearning</span>
+                    <span class="tag">#Python</span>
+                    <span class="tag">#AI</span>
+                </div>
+            </div>
+            
+            <div class="post-navigation">
+                <div class="prev-post">
+                    <strong>Previous:</strong>
+                    <a href="../web-development/nextjs-14-tutorial.html">← Next.js 14 Tutorial: Building Modern Blogs</a>
+                </div>
+                <div class="next-post">
+                    <strong>Next:</strong>
+                    <a href="pytorch-vs-tensorflow.html">PyTorch vs TensorFlow: 2024 Comparison →</a>
+                </div>
+            </div>
+        </article>
+        
+        <aside class="sidebar">
+            <div class="ad-container">
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-1911859184415905"
+                     data-ad-slot="9988776655"
+                     data-ad-format="auto"
+                     data-full-width-responsive="true"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+            </div>
+            
+            <div class="related-posts">
+                <h3>Related Posts</h3>
+                <ul>
+                    <li><a href="chatgpt-api-guide.html">ChatGPT API Guide for AI Projects</a></li>
+                    <li><a href="scikit-learn-crash-course.html">Scikit‑Learn Crash Course: ML in Python</a></li>
+                    <li><a href="../web-development/typescript-beginners.html">TypeScript for Beginners: Web Development Guide</a></li>
+                    <li><a href="keras-tutorial.html">Keras 3.0: High‑Level Deep Learning</a></li>
+                </ul>
+            </div>
+            
+            <div class="category-links">
+                <h3>Explore Categories</h3>
+                <ul>
+                    <li><a href="../web-development/index.html">Web Development</a></li>
+                    <li><a href="../cybersecurity/index.html">Cybersecurity</a></li>
+                    <li><a href="../mobile-development/index.html">Mobile Development</a></li>
+                    <li><a href="../cloud-computing/index.html">Cloud Computing</a></li>
+                </ul>
+            </div>
+        </aside>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 Rehan's Tech Blog. All rights reserved.</p>
+            <p>Contact: <a href="mailto:rehanjamadar914@gmail.com">rehanjamadar914@gmail.com</a> | +91 97671360</p>
+            <div class="social-links">
+                <a href="#">GitHub</a> | <a href="#">LinkedIn</a> | <a href="#">Twitter</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../../js/main.js"></script>
+    <script>
+        // Reinitialize ads if required (for AdSense)
+        (adsbygoogle = window.adsbygoogle || []).forEach(function() {
+            // Some ad blockers interfere — silent catch
+        });
+    </script>
+</body>
+</html>

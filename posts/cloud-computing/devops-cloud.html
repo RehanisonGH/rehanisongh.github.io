@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Complete guide to DevOps and cloud computing: CI/CD, infrastructure as code, containers, and best practices for modern cloud engineering">
+    <title>DevOps & Cloud Engineering - Cloud Computing - Rehan's Tech Blog</title>
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/theme.css">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1911859184415905" crossorigin="anonymous"></script>
+    <!-- NO DARK MODE, LIGHT THEME ONLY -->
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo">
+                    <h1><a href="../../index.html">Rehan's Tech Blog</a></h1>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="../../index.html">Home</a></li>
+                    <li class="dropdown">
+                        <a href="#">Categories</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="../web-development/index.html">Web Development</a></li>
+                            <li><a href="../ai-machine-learning/index.html">AI & Machine Learning</a></li>
+                            <li><a href="../cybersecurity/index.html">Cybersecurity</a></li>
+                            <li><a href="../mobile-development/index.html">Mobile Development</a></li>
+                            <li><a href="index.html">Cloud Computing</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="../../about.html">About</a></li>
+                    <li><a href="../../contact.html">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <article class="blog-post">
+            <header class="post-header">
+                <nav class="breadcrumb">
+                    <a href="../../index.html">Home</a> &gt;
+                    <a href="index.html">Cloud Computing</a> &gt;
+                    <span>DevOps & Cloud Engineering</span>
+                </nav>
+                <h1>DevOps & Cloud Engineering: The Ultimate Guide to Modern Infrastructure</h1>
+                <div class="post-meta">
+                    <span>By Rehan</span>
+                    <span>February 12, 2025</span>
+                    <span>14 min read</span>
+                </div>
+            </header>
+            
+            <div class="post-content">
+                <!-- INTRODUCTION -->
+                <h2>Introduction</h2>
+                <p>Cloud computing and DevOps have fundamentally transformed how organizations build, deploy, and scale applications. No longer are infrastructure teams managing physical servers in basements; today, infrastructure is code, deployments are automated, and systems are designed for resilience from day one. In this guide, we'll dive deep into the intersection of DevOps practices and cloud-native architectures — with practical examples, real-world patterns, and strategies used at companies like Netflix, Spotify, and Etsy.</p>
+
+                <!-- Ad block 1 -->
+                <div class="ad-container">
+                    <ins class="adsbygoogle"
+                         style="display:block; text-align:center;"
+                         data-ad-layout="in-article"
+                         data-ad-format="fluid"
+                         data-ad-client="ca-pub-1911859184415905"
+                         data-ad-slot="1234567890"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+
+                <h2>The Pillars of Cloud-Native DevOps</h2>
+                
+                <h3>1. Infrastructure as Code (IaC)</h3>
+                <p>Infrastructure as Code is the practice of managing infrastructure through machine-readable definition files, rather than manual processes. With IaC, you can version control your servers, load balancers, and databases just like application code.</p>
+                <h4>Key Tools:</h4>
+                <ul>
+                    <li><strong>Terraform:</strong> Declarative, multi-cloud provisioning</li>
+                    <li><strong>AWS CloudFormation / CDK:</strong> AWS-native infrastructure definitions</li>
+                    <li><strong>Pulumi:</strong> IaC with general-purpose programming languages</li>
+                    <li><strong>Ansible:</strong> Configuration management and provisioning</li>
+                </ul>
+
+                <pre><code># Example Terraform: AWS EC2 instance with security group
+resource "aws_instance" "web_server" {
+  ami           = "ami-0c55b159cbfafe1f0"
+  instance_type = "t3.micro"
+  
+  tags = {
+    Name = "devops-demo-server"
+  }
+}
+
+resource "aws_security_group" "web_sg" {
+  name        = "allow_http_ssh"
+  
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = var.office_ip
+  }
+}</code></pre>
+
+                <h3>2. Continuous Integration & Continuous Delivery (CI/CD)</h3>
+                <p>CI/CD automates the software delivery process — from code commit to production deployment. Modern pipelines are fast, reliable, and provide immediate feedback to developers.</p>
+                <h4>Components of a Mature Pipeline:</h4>
+                <ul>
+                    <li><strong>Source stage:</strong> GitHub, GitLab, Bitbucket</li>
+                    <li><strong>Build & test:</strong> Jenkins, GitHub Actions, GitLab CI, CircleCI</li>
+                    <li><strong>Artifact repository:</strong> Docker Hub, Amazon ECR, JFrog</li>
+                    <li><strong>Deployment strategies:</strong> Rolling, blue/green, canary</li>
+                </ul>
+
+                <pre><code># Example GitHub Actions workflow
+name: Deploy to Kubernetes
+on:
+  push:
+    branches: [main]
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Login to DockerHub
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+      - name: Build and push
+        run: |
+          docker build -t myapp:${{ github.sha }} .
+          docker push myapp:${{ github.sha }}
+      - name: Deploy to EKS
+        run: |
+          kubectl set image deployment/myapp myapp=myapp:${{ github.sha }}
+</code></pre>
+
+                <!-- Ad block 2 -->
+                <div class="ad-container">
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-1911859184415905"
+                         data-ad-slot="0987654321"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+
+                <h3>3. Containerization & Orchestration</h3>
+                <p>Containers package software into standardized units for development, shipment, and deployment. Kubernetes has emerged as the de facto orchestrator for containerized workloads.</p>
+                
+                <h4>Docker best practices:</h4>
+                <pre><code># Multi-stage Dockerfile for security and small size
+FROM node:20-alpine AS builder
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --only=production
+COPY . .
+RUN npm run build
+
+FROM nginx:alpine
+COPY --from=builder /app/dist /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]</code></pre>
+
+                <h4>Kubernetes manifests (declarative approach):</h4>
+                <pre><code># deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+      - name: frontend
+        image: nginx:1.25-alpine
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "250m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-service
+spec:
+  selector:
+    app: frontend
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  type: LoadBalancer</code></pre>
+
+                <h2>Cloud Platforms: AWS, Azure, GCP</h2>
+                <p>While concepts transfer across clouds, each provider has unique services and idioms.</p>
+                
+                <h3>AWS (Amazon Web Services) — market leader</h3>
+                <ul>
+                    <li><strong>Compute:</strong> EC2, Lambda, ECS, EKS</li>
+                    <li><strong>Storage:</strong> S3, EBS, EFS, Glacier</li>
+                    <li><strong>Database:</strong> RDS, DynamoDB, Aurora</li>
+                    <li><strong>Networking:</strong> VPC, Route53, CloudFront</li>
+                </ul>
+                
+                <h3>Azure — enterprise integration</h3>
+                <ul>
+                    <li><strong>Compute:</strong> VMs, AKS, Azure Functions</li>
+                    <li><strong>Active Directory:</strong> seamless hybrid identity</li>
+                    <li><strong>DevOps:</strong> Azure Boards, Pipelines, Artifacts</li>
+                </ul>
+
+                <h3>GCP — data and analytics</h3>
+                <ul>
+                    <li><strong>Kubernetes:</strong> GKE (managed k8s origin)</li>
+                    <li><strong>BigQuery:</strong> serverless data warehouse</li>
+                    <li><strong>Cloud Run:</strong> fully managed container platform</li>
+                </ul>
+
+                <h2>Monitoring, Observability, and SRE</h2>
+                <p>You can't improve what you don't measure. Site Reliability Engineering (SRE) applies software engineering to operations problems.</p>
+                <h3>Three Pillars of Observability:</h3>
+                <ol>
+                    <li><strong>Metrics:</strong> Prometheus, CloudWatch, Datadog</li>
+                    <li><strong>Logs:</strong> ELK stack, Loki, Cloud Logging</li>
+                    <li><strong>Traces:</strong> Jaeger, Zipkin, X-Ray</li>
+                </ol>
+
+                <pre><code># Sample Prometheus metric definition (counter)
+# HELP http_requests_total Total HTTP requests
+# TYPE http_requests_total counter
+http_requests_total{method="GET",path="/api/users"} 1238
+
+# Grafana dashboard query (PromQL)
+sum(rate(http_requests_total[5m])) by (status_code)</code></pre>
+
+                <!-- Ad block 3 -->
+                <div class="ad-container">
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-1911859184415905"
+                         data-ad-slot="1122334455"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+
+                <h2>DevOps Culture & Collaboration</h2>
+                <p>DevOps is as much about people and processes as it is about tools.</p>
+                <ul>
+                    <li><strong>Blameless postmortems:</strong> Learn from failures without fear.</li>
+                    <li><strong>Shared ownership:</strong> "You build it, you run it."</li>
+                    <li><strong>Gradual automation:</strong> Automate repetitive tasks, but not everything at once.</li>
+                    <li><strong>Cross-functional teams:</strong> Dev, Ops, QA, and security working together.</li>
+                </ul>
+
+                <h2>Advanced Patterns in Cloud DevOps</h2>
+                
+                <h3>GitOps</h3>
+                <p>Using Git as the single source of truth for declarative infrastructure and applications. Tools: ArgoCD, Flux.</p>
+                <pre><code># ArgoCD Application manifest
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: myapp-production
+spec:
+  destination:
+    namespace: production
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    path: k8s/overlays/production
+    repoURL: https://github.com/example/gitops-config
+    targetRevision: HEAD
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true</code></pre>
+
+                <h3>Serverless and FaaS</h3>
+                <p>AWS Lambda, Cloud Functions, Azure Functions – run code without provisioning servers.</p>
+                <pre><code># Serverless Framework (AWS Lambda)
+service: image-processor
+provider:
+  name: aws
+  runtime: nodejs20.x
+  region: us-east-1
+functions:
+  resize:
+    handler: handler.resize
+    events:
+      - s3:
+          bucket: upload-bucket
+          event: s3:ObjectCreated:*</code></pre>
+
+                <h3>Policy as Code</h3>
+                <p>Define and enforce compliance rules using code. Open Policy Agent (OPA) / Kyverno.</p>
+                <pre><code># OPA: require all containers to have resource limits
+package kubernetes.admission
+
+deny[msg] {
+  input.request.kind.kind == "Pod"
+  container := input.request.object.spec.containers[_]
+  not container.resources.limits
+  msg := sprintf("Container %v must specify resource limits", [container.name])
+}</code></pre>
+
+                <h2>Real-World Case Study: E-commerce Migration to EKS</h2>
+                <p>A mid-sized retailer migrated from self-managed EC2 instances to Amazon EKS. Results after 6 months:</p>
+                <ul>
+                    <li>✅ 35% lower infrastructure costs (right-sizing + spot instances)</li>
+                    <li>✅ 90% reduction in deployment time (20 min → 2 min)</li>
+                    <li>✅ Zero downtime during peak holiday traffic (auto-scaling)</li>
+                    <li>✅ Developer self-service via internal platform</li>
+                </ul>
+                <p>Key takeaway: cloud-native architecture requires both technical and cultural shift.</p>
+
+                <h2>Getting Certified: Roadmap</h2>
+                <p>Industry-recognized certifications validate your cloud DevOps skills:</p>
+                <ol>
+                    <li><strong>AWS Certified DevOps Engineer – Professional</strong> or Azure DevOps Engineer Expert</li>
+                    <li><strong>Certified Kubernetes Administrator (CKA)</strong></li>
+                    <li><strong>HashiCorp Certified: Terraform Associate</strong></li>
+                    <li><strong>Prometheus Certified Associate (PCA)</strong></li>
+                </ol>
+                <p>Hands-on practice is essential — use free tiers and personal projects.</p>
+
+                <!-- Ad block 4 -->
+                <div class="ad-container">
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-1911859184415905"
+                         data-ad-slot="5566778899"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+
+                <h2>Future Trends</h2>
+                <ul>
+                    <li><strong>Platform Engineering:</strong> building internal developer platforms (IDPs) with backstage, crossplane.</li>
+                    <li><strong>WebAssembly (Wasm):</strong> lightweight, fast sandbox for non-HTTP workloads.</li>
+                    <li><strong>eBPF:</strong> deep kernel observability and networking (Cilium, Falco).</li>
+                    <li><strong>FinOps:</strong> cloud cost optimization as discipline.</li>
+                </ul>
+
+                <h2>Conclusion</h2>
+                <p>DevOps and cloud computing are inseparable in modern tech organizations. Mastering infrastructure as code, container orchestration, CI/CD, and observability will position you as a high-impact engineer. Start small: automate one manual task, containerize a legacy app, or deploy a personal project on Kubernetes. The cloud is your laboratory — experiment fearlessly.</p>
+                <p><strong>Next steps:</strong> explore our <a href="../web-development/index.html">Web Development</a> section for frontend + cloud integration patterns, or deep dive into <a href="../cybersecurity/index.html">Cloud Security</a>.</p>
+                
+                <div class="tags">
+                    <strong>Tags:</strong>
+                    <span class="tag">#DevOps</span>
+                    <span class="tag">#CloudComputing</span>
+                    <span class="tag">#Kubernetes</span>
+                    <span class="tag">#Terraform</span>
+                    <span class="tag">#CI/CD</span>
+                    <span class="tag">#AWS</span>
+                    <span class="tag">#Azure</span>
+                    <span class="tag">#InfrastructureAsCode</span>
+                </div>
+            </div> <!-- /.post-content -->
+            
+            <div class="post-navigation">
+                <div class="prev-post">
+                    <strong>Previous:</strong>
+                    <a href="multi-cloud-strategy.html">← Multi-Cloud Strategy: Pros, Cons, and Patterns</a>
+                </div>
+                <div class="next-post">
+                    <strong>Next:</strong>
+                    <a href="../web-development/react-19-features.html">React 19: Game-Changer for Web Dev →</a>
+                </div>
+            </div>
+        </article>
+        
+        <aside class="sidebar">
+            <div class="ad-container">
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-1911859184415905"
+                     data-ad-slot="9988776655"
+                     data-ad-format="auto"
+                     data-full-width-responsive="true"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+            </div>
+            
+            <div class="related-posts">
+                <h3>Related Posts</h3>
+                <ul>
+                    <li><a href="kubernetes-production-guide.html">Kubernetes in Production: 10 Essential Best Practices</a></li>
+                    <li><a href="terraform-modules.html">Terraform Modules: Reusable Infrastructure</a></li>
+                    <li><a href="aws-vpc-networking.html">AWS VPC and Networking: Deep Dive</a></li>
+                    <li><a href="../cybersecurity/cloud-security-owasp.html">Cloud Security: OWASP Top 10 for Cloud</a></li>
+                    <li><a href="serverless-framework-tutorial.html">Serverless Framework: Complete Tutorial</a></li>
+                </ul>
+            </div>
+            
+            <div class="category-links">
+                <h3>Explore Categories</h3>
+                <ul>
+                    <li><a href="../web-development/index.html">Web Development</a></li>
+                    <li><a href="../ai-machine-learning/index.html">AI & Machine Learning</a></li>
+                    <li><a href="../cybersecurity/index.html">Cybersecurity</a></li>
+                    <li><a href="../mobile-development/index.html">Mobile Development</a></li>
+                </ul>
+            </div>
+            
+            <!-- Sidebar ad -->
+            <div class="ad-container" style="margin-top: 30px;">
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-1911859184415905"
+                     data-ad-slot="3322114400"
+                     data-ad-format="rectangle"
+                     data-full-width-responsive="true"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+            </div>
+        </aside>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 Rehan's Tech Blog. All rights reserved.</p>
+            <p>Contact: <a href="mailto:rehanjamadar914@gmail.com">rehanjamadar914@gmail.com</a> | +91 97671360</p>
+            <div class="social-links">
+                <a href="#">GitHub</a> | <a href="#">LinkedIn</a> | <a href="#">Twitter</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../../js/main.js"></script>
+    <!-- No dark mode, pure light theme -->
+</body>
+</html>

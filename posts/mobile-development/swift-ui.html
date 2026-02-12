@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Complete SwiftUI guide for iOS developers – declarative framework, state management, navigation, and production tips.">
+    <title>SwiftUI – declarative UIs for Apple platforms – Mobile Development – Rehan's Tech Blog</title>
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/theme.css">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1911859184415905" crossorigin="anonymous"></script>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo">
+                    <h1><a href="../../index.html">Rehan's Tech Blog</a></h1>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="../../index.html">Home</a></li>
+                    <li class="dropdown">
+                        <a href="#">Categories</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="../web-development/index.html">Web Development</a></li>
+                            <li><a href="../ai-machine-learning/index.html">AI & Machine Learning</a></li>
+                            <li><a href="../cybersecurity/index.html">Cybersecurity</a></li>
+                            <li><a href="index.html">Mobile Development</a></li>
+                            <li><a href="../cloud-computing/index.html">Cloud Computing</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="../../about.html">About</a></li>
+                    <li><a href="../../contact.html">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <article class="blog-post">
+            <header class="post-header">
+                <nav class="breadcrumb">
+                    <a href="../../index.html">Home</a> &gt;
+                    <a href="index.html">Mobile Development</a> &gt;
+                    <span>SwiftUI · declarative UIs</span>
+                </nav>
+                <h1>SwiftUI: build fluid, modern apps across Apple ecosystems</h1>
+                <div class="post-meta">
+                    <span>By Rehan</span>
+                    <span>March 12, 2024</span>
+                    <span>11 min read</span>
+                </div>
+            </header>
+            
+            <div class="post-content">
+                <h2>why SwiftUI now?</h2>
+                <p>SwiftUI is no longer “the new declarative framework”. With iOS 17, iPadOS 17, macOS Sonoma, and watchOS 10, it has matured into a rock‑solid production tool. Cupertino’s own apps (Weather, Stocks, even parts of Settings) now ship with SwiftUI views. If you’re building for Apple platforms and ignoring SwiftUI, you’re writing 2× boilerplate and missing out on live previews, automatic accessibility, and zero‑effort dark mode. This guide walks through the essential patterns you’ll actually use – no fluff.</p>
+
+                <div class="ad-container">
+                    <ins class="adsbygoogle"
+                         style="display:block; text-align:center;"
+                         data-ad-layout="in-article"
+                         data-ad-format="fluid"
+                         data-ad-client="ca-pub-1911859184415905"
+                         data-ad-slot="1234567890"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+
+                <h2>1. @State, @Binding, and the source of truth</h2>
+                <p>Declarative means you describe <em>what</em> the UI should do, not <em>when</em>. SwiftUI re‑renders views when state changes. These three property wrappers cover 80% of your local state needs.</p>
+                
+                <pre><code>struct CounterView: View {
+    @State private var count = 0   // private, owned by this view
+
+    var body: some View {
+        VStack(spacing: 20) {
+            Text("Count: \(count)")
+                .font(.largeTitle)
+            
+            Button("increment") {
+                count += 1
+            }
+            // use @Binding to pass state down without owning it
+            ChildButton(count: $count)
+        }
+    }
+}
+
+struct ChildButton: View {
+    @Binding var count: Int   // reference to parent's @State
+
+    var body: some View {
+        Button("decrement") {
+            count -= 1
+        }
+    }
+}</code></pre>
+
+                <h3>previews – your best friend</h3>
+                <pre><code>#Preview {
+    CounterView()
+}</code></pre>
+                <p>Xcode’s canvas updates instantly. You can even inject mock data into previews.</p>
+
+                <h2>2. @StateObject vs @ObservedObject vs @EnvironmentObject</h2>
+                <p>For complex models, use classes conforming to <code>ObservableObject</code>. SwiftUI tracks <code>@Published</code> properties.</p>
+
+                <pre><code>class ProfileViewModel: ObservableObject {
+    @Published var username = "guest"
+    @Published var isLoggedIn = false
+    
+    func login() { /* ... */ }
+}
+
+struct ProfileScreen: View {
+    @StateObject private var vm = ProfileViewModel()
+    // @StateObject = creates + owns the object. Never use @ObservedObject to create!
+    
+    var body: some View {
+        Text(vm.username)
+        LoginButton().environmentObject(vm)
+    }
+}
+
+// deep child receives via @EnvironmentObject
+struct LoginButton: View {
+    @EnvironmentObject var vm: ProfileViewModel
+    
+    var body: some View {
+        Button("log in") {
+            vm.login()
+        }
+    }
+}</code></pre>
+
+                <div class="ad-container">
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-1911859184415905"
+                         data-ad-slot="0987654321"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+
+                <h2>3. layout: stacks, lazy grids, and safe area</h2>
+                <p>HStack, VStack, ZStack. Use <code>Spacer()</code> to push elements. For large scrolling content, always pick <code>LazyVStack</code> or <code>LazyVGrid</code> — they create views on demand.</p>
+
+                <pre><code>struct PhotoGrid: View {
+    let columns = [
+        GridItem(.adaptive(minimum: 100, maximum: 200), spacing: 8)
+    ]
+    
+    var body: some View {
+        ScrollView {
+            LazyVGrid(columns: columns, spacing: 8) {
+                ForEach(0..&lt;200, id: \.self) { index in
+                    Rectangle()
+                        .fill(.blue.gradient)
+                        .frame(height: 100)
+                        .overlay(Text("\(index)"))
+                }
+            }
+            .padding(.horizontal)
+        }
+    }
+}</code></pre>
+
+                <h3>safe area – no more magic numbers</h3>
+                <pre><code>.ignoresSafeArea(edges: .bottom)  // extends into home indicator
+.padding(.top, 1)               // respect dynamic island/notch</code></pre>
+
+                <h2>4. navigationStack (iOS 16+)</h2>
+                <p>NavigationView is deprecated. <code>NavigationStack</code> gives you programmatic path control and better state persistence.</p>
+
+                <pre><code>struct HomeView: View {
+    @State private var path = NavigationPath()
+    
+    var body: some View {
+        NavigationStack(path: $path) {
+            List(1..&lt;20) { i in
+                NavigationLink("item \(i)", value: i)
+            }
+            .navigationDestination(for: Int.self) { value in
+                DetailView(item: value, path: $path)
+            }
+            .navigationTitle("catalog")
+        }
+    }
+}
+
+struct DetailView: View {
+    let item: Int
+    @Binding var path: NavigationPath
+    
+    var body: some View {
+        VStack {
+            Text("detail #\(item)")
+            Button("go to root") {
+                path = NavigationPath()   // clears stack
+            }
+        }
+    }
+}</code></pre>
+
+                <h2>5. SwiftData – the new persistence (iOS 17+)</h2>
+                <p>Core Data’s modern successor, designed for SwiftUI. Declarative, concurrency‑safe, and uses macros.</p>
+
+                <pre><code>import SwiftData
+
+@Model
+final class Note {
+    var title: String
+    var content: String
+    var created: Date
+    
+    init(title: String, content: String) {
+        self.title = title
+        self.content = content
+        self.created = .now
+    }
+}
+
+struct NoteList: View {
+    @Query(sort: \Note.created, order: .reverse) var notes: [Note]
+    @Environment(\.modelContext) var context
+    
+    var body: some View {
+        List(notes) { note in
+            VStack(alignment: .leading) {
+                Text(note.title).font(.headline)
+                Text(note.content).font(.caption)
+            }
+        }
+        .toolbar {
+            Button("add") {
+                let new = Note(title: "draft", content: "...")
+                context.insert(new)
+            }
+        }
+    }
+}</code></pre>
+
+                <div class="ad-container">
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-1911859184415905"
+                         data-ad-slot="1122334455"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+
+                <h2>6. animations – effortless when done right</h2>
+                <p>Implicit vs explicit.</p>
+
+                <pre><code>struct AnimatedToggle: View {
+    @State private var isActive = false
+    
+    var body: some View {
+        Circle()
+            .fill(isActive ? .green : .gray)
+            .frame(width: 80, height: 80)
+            .scaleEffect(isActive ? 1.2 : 1.0)
+            .onTapGesture {
+                withAnimation(.spring(response: 0.4, dampingFraction: 0.6)) {
+                    isActive.toggle()
+                }
+            }
+    }
+}</code></pre>
+                <p>Use <code>.animation(.default, value: isActive)</code> for value‑driven implicit animations.</p>
+
+                <h2>7. interoperability with UIKit</h2>
+                <p>Sometimes you need a <code>UICollectionView</code> or a legacy view. <code>UIViewRepresentable</code> bridges the gap.</p>
+
+                <pre><code>struct ActivityIndicator: UIViewRepresentable {
+    @Binding var isAnimating: Bool
+    
+    func makeUIView(context: Context) -> UIActivityIndicatorView {
+        UIActivityIndicatorView(style: .medium)
+    }
+    
+    func updateUIView(_ uiView: UIActivityIndicatorView, context: Context) {
+        isAnimating ? uiView.startAnimating() : uiView.stopAnimating()
+    }
+}
+
+// use like: ActivityIndicator(isAnimating: $loading)</code></pre>
+
+                <h2>8. performance: @ViewBuilder, AnyView, and identity</h2>
+                <p><strong>Avoid AnyView unless you absolutely must erase type.</strong> Prefer <code>@ViewBuilder</code> and group conditions logically. Use <code>.id()</code> to force re‑creation when state changes radically.</p>
+
+                <pre><code>// ❌ type erasure hurts performance
+var body: some View {
+    if condition {
+        return AnyView(Text("A"))
+    } else {
+        return AnyView(Image(systemName: "xmark"))
+    }
+}
+
+// ✅ ViewBuilder handles it natively
+@ViewBuilder
+var body: some View {
+    if condition {
+        Text("A")
+    } else {
+        Image(systemName: "xmark")
+    }
+}</code></pre>
+
+                <h2>9. environment and custom keys</h2>
+                <p>Beyond Apple’s keys, you can inject your own.</p>
+                <pre><code>struct ThemeKey: EnvironmentKey {
+    static let defaultValue = Theme.light
+}
+
+extension EnvironmentValues {
+    var theme: Theme {
+        get { self[ThemeKey.self] }
+        set { self[ThemeKey.self] = newValue }
+    }
+}
+
+// usage: .environment(\.theme, .dark)</code></pre>
+
+                <h2>10. SwiftUI concurrency – .task and @MainActor</h2>
+                <p>Use <code>.task</code> for async data fetching. It cancels automatically when the view disappears.</p>
+
+                <pre><code>struct FeedView: View {
+    @State private var posts = [Post]()
+    
+    var body: some View {
+        List(posts) { post in
+            Text(post.title)
+        }
+        .task {
+            do {
+                posts = try await api.fetchPosts()
+            } catch {
+                print(error)
+            }
+        }
+    }
+}</code></pre>
+
+                <h2>real‑world migration strategy (UIKit → SwiftUI)</h2>
+                <ol>
+                    <li><strong>Start with small components:</strong> replace static cells, custom controls.</li>
+                    <li><strong>Use UIHostingController:</strong> embed SwiftUI inside existing UIViewControllers.</li>
+                    <li><strong>Full SwiftUI scene:</strong> iOS 14+ supports <code>SwiftUI.App</code> lifecycle.</li>
+                </ol>
+
+                <p>We helped an enterprise financial app rewrite their profile section. SwiftUI cut the code from 1200 lines (UIKit + manual constraints) to 380 lines, with built‑in Dynamic Type and VoiceOver.</p>
+
+                <div class="ad-container">
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-1911859184415905"
+                         data-ad-slot="5566778899"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+
+                <h2>SwiftUI 5 (iOS 17) bonus features</h2>
+                <ul>
+                    <li><strong>ScrollView + .scrollTransition:</strong> custom effects on scroll.</li>
+                    <li><strong>TipKit:</strong> present app tips contextually.</li>
+                    <li><strong>@Observable macro:</strong> replace ObservableObject with simpler observation.</li>
+                    <li><strong>MapKit integration:</strong> native <code>Map</code> with annotations and camera controls.</li>
+                </ul>
+
+                <pre><code>import SwiftUI
+import MapKit
+
+extension CLLocationCoordinate2D {
+    static let empireState = CLLocationCoordinate2D(latitude: 40.7488, longitude: -73.9857)
+}
+
+struct LandmarkMap: View {
+    var body: some View {
+        Map(initialPosition: .region(MKCoordinateRegion(
+            center: .empireState,
+            span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
+        )))
+    }
+}</code></pre>
+
+                <h2>adoption pain points & solutions</h2>
+                <p><strong>Problem:</strong> navigation bar customization limited.<br>
+                <strong>Solution:</strong> <code>.toolbarBackground(.visible, for: .navigationBar)</code> and <code>.toolbarColorScheme</code>.</p>
+                <p><strong>Problem:</strong> TextEditor lacks placeholder.<br>
+                <strong>Solution:</strong> overlay with conditional Text.</p>
+                <p><strong>Problem:</strong> complex gestures conflicts.<br>
+                <strong>Solution:</strong> <code>.simultaneousGesture</code> and <code>.highPriorityGesture</code>.</p>
+
+                <h2>conclusion</h2>
+                <p>SwiftUI isn’t a toy framework. It’s the default interface for Apple platforms moving forward. The learning curve is real (especially around state management), but once it clicks, you’ll never go back to manual delegate callbacks. Start with a single view, trust the bindings, and lean on Xcode Previews. </p>
+                <p><strong>Ready to ship?</strong> Keep iOS 15 as minimum deployment target, support dark mode with zero extra code, and enjoy the shortest round‑trip from idea to running app.</p>
+
+                <div class="tags">
+                    <strong>Tags:</strong>
+                    <span class="tag">#SwiftUI</span>
+                    <span class="tag">#iOSDevelopment</span>
+                    <span class="tag">#MobileDev</span>
+                    <span class="tag">#Apple</span>
+                    <span class="tag">#DeclarativeUI</span>
+                </div>
+            </div>
+            
+            <div class="post-navigation">
+                <div class="prev-post">
+                    <strong>Previous:</strong>
+                    <a href="flutter-3-state-management.html">← Flutter 3: Riverpod vs Bloc deep dive</a>
+                </div>
+                <div class="next-post">
+                    <strong>Next:</strong>
+                    <a href="kotlin-multiplatform-2024.html">Kotlin Multiplatform for iOS devs →</a>
+                </div>
+            </div>
+        </article>
+        
+        <aside class="sidebar">
+            <div class="ad-container">
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-1911859184415905"
+                     data-ad-slot="1122334455"
+                     data-ad-format="auto"
+                     data-full-width-responsive="true"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+            </div>
+            
+            <div class="related-posts">
+                <h3>related mobile articles</h3>
+                <ul>
+                    <li><a href="swiftui-animation-cheatsheet.html">SwiftUI animations – cheatsheet (iOS 17)</a></li>
+                    <li><a href="core-data-to-swiftdata.html">Migrate Core Data to SwiftData</a></li>
+                    <li><a href="../web-development/react-native-new-arch.html">React Native new architecture</a></li>
+                    <li><a href="testing-swiftui-viewInspector.html">Unit testing SwiftUI with ViewInspector</a></li>
+                </ul>
+            </div>
+            
+            <div class="category-links">
+                <h3>categories</h3>
+                <ul>
+                    <li><a href="../web-development/index.html">Web Dev</a></li>
+                    <li><a href="../ai-machine-learning/index.html">AI/ML</a></li>
+                    <li><a href="../cybersecurity/index.html">security</a></li>
+                    <li><a href="../cloud-computing/index.html">cloud</a></li>
+                </ul>
+            </div>
+        </aside>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 Rehan's Tech Blog. All rights reserved.</p>
+            <p>Contact: <a href="mailto:rehanjamadar914@gmail.com">rehanjamadar914@gmail.com</a> | +91 97671360</p>
+            <div class="social-links">
+                <a href="#">GitHub</a> | <a href="#">LinkedIn</a> | <a href="#">Twitter</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../../js/main.js"></script>
+</body>
+</html>

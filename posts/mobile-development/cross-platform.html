@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Complete guide to cross-platform mobile development with React Native, Flutter, and .NET MAUI – choose the right framework for your next app">
+    <title>Cross‑Platform Mobile Development – Rehan Ison Singh's Tech Blog</title>
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/theme.css">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1911859184415905" crossorigin="anonymous"></script>
+</head>
+<body>
+    <!-- standard header – exactly as inherited, light mode only, no dark/black -->
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo">
+                    <h1><a href="../../index.html">Rehan's Tech Blog</a></h1>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="../../index.html">Home</a></li>
+                    <li class="dropdown">
+                        <a href="#">Categories</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="../web-development/index.html">Web Development</a></li>
+                            <li><a href="../ai-machine-learning/index.html">AI & Machine Learning</a></li>
+                            <li><a href="../cybersecurity/index.html">Cybersecurity</a></li>
+                            <li><a href="index.html">Mobile Development</a></li>
+                            <li><a href="../cloud-computing/index.html">Cloud Computing</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="../../about.html">About</a></li>
+                    <li><a href="../../contact.html">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <article class="blog-post">
+            <header class="post-header">
+                <!-- breadcrumb: category = mobile development -->
+                <nav class="breadcrumb">
+                    <a href="../../index.html">Home</a> &gt;
+                    <a href="index.html">Mobile Development</a> &gt;
+                    <span>Cross‑Platform Frameworks 2024</span>
+                </nav>
+                <h1>Cross‑Platform Mobile Development: React Native vs. Flutter vs. .NET MAUI</h1>
+                <div class="post-meta">
+                    <span>By Rehan Ison Singh</span>
+                    <span>March 18, 2024</span>
+                    <span>12 min read</span>
+                </div>
+            </header>
+
+            <div class="post-content">
+                <!-- INTRO – fully aligned with mobile dev category -->
+                <h2>The Cross‑Platform Imperative</h2>
+                <p>Building native apps for both iOS and Android traditionally means maintaining two codebases, doubling effort and cost. Cross‑platform frameworks promise “write once, run anywhere” — but the reality is more nuanced. In 2024, three contenders dominate: <strong>React Native</strong> (Meta), <strong>Flutter</strong> (Google), and <strong>.NET MAUI</strong> (Microsoft). This guide dissects each framework, compares performance, developer experience, and helps you choose based on project needs — not hype.</p>
+
+                <!-- inline ad 1 – same pattern as original article -->
+                <div class="ad-container">
+                    <ins class="adsbygoogle"
+                         style="display:block; text-align:center;"
+                         data-ad-layout="in-article"
+                         data-ad-format="fluid"
+                         data-ad-client="ca-pub-1911859184415905"
+                         data-ad-slot="1234567890"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+
+                <h2>1. React Native — The JavaScript Powerhouse</h2>
+                <p>React Native (RN) lets you build mobile apps using React and JavaScript. It compiles to native UI components, not webviews. With the new <strong>New Architecture</strong> (Fabric & TurboModules) rolling out, RN closes the performance gap with pure native.</p>
+                
+                <h4>✅ Strengths</h4>
+                <ul>
+                    <li><strong>Massive ecosystem</strong> – npm, Expo, and mature libraries.</li>
+                    <li><strong>Hot reloading</strong> – instant feedback during development.</li>
+                    <li><strong>Shared knowledge</strong> – if you know React, you already know 80%.</li>
+                    <li><strong>Skia support</strong> via React Native Skia for advanced 2D graphics.</li>
+                </ul>
+                <h4>⚠️ Trade‑offs</h4>
+                <ul>
+                    <li>Bridge architecture (legacy) can cause performance bottlenecks; New Architecture fixes this but adoption is gradual.</li>
+                    <li>Debugging native modules requires Android Studio/Xcode.</li>
+                </ul>
+                <pre><code>// React Native component – feels like web
+import { View, Text, StyleSheet } from 'react-native';
+
+const Greeting = ({ name }) => (
+  &lt;View style={styles.container}&gt;
+    &lt;Text&gt;Hello, {name}!&lt;/Text&gt;
+  &lt;/View&gt;
+);
+
+const styles = StyleSheet.create({
+  container: { padding: 16, backgroundColor: '#f0f0f0' }
+});</code></pre>
+
+                <h2>2. Flutter — UI Consistency Perfected</h2>
+                <p>Flutter renders everything via its own high‑performance Skia engine. No JavaScript bridge; it compiles to ARM code. The result: pixel‑perfect UI that looks identical on iOS and Android (and even desktop/web).</p>
+                <h4>✅ Strengths</h4>
+                <ul>
+                    <li><strong>Excellent documentation</strong> and “widgets catalog”.</li>
+                    <li><strong>Stateful Hot Reload</strong> – preserves state during reload.</li>
+                    <li><strong>Own rendering engine</strong> – no OEM widgets, so fewer platform inconsistencies.</li>
+                    <li><strong>Growing popularity</strong> in fintech and startups.</li>
+                </ul>
+                <h4>⚠️ Trade‑offs</h4>
+                <ul>
+                    <li>Dart language: learning curve if coming from JS/TS.</li>
+                    <li>App size larger than native/RN (approx 6–10 MB minimal).</li>
+                    <li>Platform‑specific look & feel requires extra effort (Material vs Cupertino).</li>
+                </ul>
+                <pre><code>// Flutter widget – Dart syntax
+import 'package:flutter/material.dart';
+
+class Greeting extends StatelessWidget {
+  final String name;
+  Greeting(this.name);
+  
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.all(16),
+      color: Colors.grey[200],
+      child: Text('Hello, $name'),
+    );
+  }
+}</code></pre>
+
+                <div class="ad-container">
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-1911859184415905"
+                         data-ad-slot="0987654321"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+
+                <h2>3. .NET MAUI — C# & XAML for Enterprise</h2>
+                <p>.NET Multi‑platform App UI (.NET MAUI) is the evolution of Xamarin.Forms. It uses C# and XAML, targets Android, iOS, macOS, and Windows from a single codebase. Deep integration with Visual Studio and Azure makes it a favourite for enterprise shops.</p>
+                <h4>✅ Strengths</h4>
+                <ul>
+                    <li><strong>Single project</strong> – multi‑targeting simplified.</li>
+                    <li><strong>Performance</strong> – compiled to native with fast startup times.</li>
+                    <li><strong>Enterprise‑grade</strong> – mature ecosystem, MVVM support, DevExpress/Telerik components.</li>
+                    <li><strong>.NET ecosystem</strong> – reuse existing C# business logic, libraries.</li>
+                </ul>
+                <h4>⚠️ Trade‑offs</h4>
+                <ul>
+                    <li>Smaller community than RN/Flutter; less third‑party UI kits.</li>
+                    <li>Windows/macOS development requires Visual Studio (Windows) or VS for Mac (legacy) / VS Code with extensions.</li>
+                    <li>XAML can be verbose compared to declarative JSX or Dart.</li>
+                </ul>
+                <pre><code>&lt;!-- .NET MAUI XAML example --&gt;
+&lt;ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MauiApp.GreetingPage"&gt;
+    &lt;VerticalStackLayout Padding="16" BackgroundColor="#F0F0F0"&gt;
+        &lt;Label Text="Hello, {Binding Name}" /&gt;
+    &lt;/VerticalStackLayout&gt;
+&lt;/ContentPage&gt;</code></pre>
+
+                <h2>📊 Side‑by‑side comparison</h2>
+                <table style="width:100%; border-collapse: collapse; margin: 20px 0;">
+                    <thead style="background: #e6f2ff;">
+                        <tr><th style="padding: 10px; border:1px solid #ccc;">Framework</th><th style="padding: 10px; border:1px solid #ccc;">Language</th><th style="padding: 10px; border:1px solid #ccc;">UI approach</th><th style="padding: 10px; border:1px solid #ccc;">Bundle size (min)</th><th style="padding: 10px; border:1px solid #ccc;">Learning curve</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td style="padding: 8px; border:1px solid #ccc;">React Native</td><td style="padding: 8px; border:1px solid #ccc;">JavaScript/TS</td><td style="padding: 8px; border:1px solid #ccc;">Native components</td><td style="padding: 8px; border:1px solid #ccc;">~7 MB</td><td style="padding: 8px; border:1px solid #ccc;">Low (React devs)</td></tr>
+                        <tr><td style="padding: 8px; border:1px solid #ccc;">Flutter</td><td style="padding: 8px; border:1px solid #ccc;">Dart</td><td style="padding: 8px; border:1px solid #ccc;">Skia canvas</td><td style="padding: 8px; border:1px solid #ccc;">~10 MB</td><td style="padding: 8px; border:1px solid #ccc;">Medium</td></tr>
+                        <tr><td style="padding: 8px; border:1px solid #ccc;">.NET MAUI</td><td style="padding: 8px; border:1px solid #ccc;">C#</td><td style="padding: 8px; border:1px solid #ccc;">Native renderers</td><td style="padding: 8px; border:1px solid #ccc;">~15 MB</td><td style="padding: 8px; border:1px solid #ccc;">Medium (C# devs)</td></tr>
+                    </tbody>
+                </table>
+                
+                <h2>Performance & Developer Velocity</h2>
+                <p><strong>Flutter</strong> leads in consistent 60/120 fps, especially for animations. <strong>React Native</strong> with the New Architecture now rivals it for most UIs. <strong>.NET MAUI</strong> is fast enough for LOB apps but may lag with complex gestures. Developer velocity: <em>React Native + Expo</em> is unmatched for rapid prototyping; Flutter’s hot reload is similarly snappy; .NET MAUI’s compile‑time is heavier but offers robust refactoring.</p>
+
+                <h2>When to choose which?</h2>
+                <h3>✅ React Native is ideal when:</h3>
+                <ul>
+                    <li>You already have a React web app and want to reuse logic.</li>
+                    <li>Community libraries are essential (e.g., Stripe, Firebase).</li>
+                    <li>You need over‑the‑air updates (CodePush style).</li>
+                </ul>
+                <h3>✅ Flutter shines for:</h3>
+                <ul>
+                    <li>Brand‑first, custom designs with rich motion.</li>
+                    <li>Startups that can commit to Dart and want one codebase for mobile + desktop + web.</li>
+                    <li>Projects where platform‑specific UI is less important.</li>
+                </ul>
+                <h3>✅ .NET MAUI wins when:</h3>
+                <ul>
+                    <li>Your team is proficient in C# and Visual Studio.</li>
+                    <li>You target Windows alongside iOS/Android.</li>
+                    <li>You need tight integration with Microsoft ecosystems (Azure, Active Directory).</li>
+                </ul>
+
+                <div class="ad-container">
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-1911859184415905"
+                         data-ad-slot="1122334455"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+
+                <h2>Real‑world migration stories</h2>
+                <p>An e‑commerce startup cut development time by 50% after switching from two native teams to <strong>React Native</strong>. A fintech firm rebuilt their customer app with <strong>Flutter</strong> and saw crash‑free sessions rise to 99.8%. A manufacturing company migrated legacy Xamarin to <strong>.NET MAUI</strong> and unified their inventory apps across handhelds and desktops.</p>
+
+                <h2>Future trends (2024–2025)</h2>
+                <ul>
+                    <li><strong>React Native:</strong> Fabric enabled by default, static Hermes, and gradual migration from bridge.</li>
+                    <li><strong>Flutter:</strong> Dart macros, Impeller (iOS) rendering engine, and deeper web assembly support.</li>
+                    <li><strong>.NET MAUI:</strong> Native AOT, more Blazor Hybrid adoption.</li>
+                </ul>
+                <p>Cross‑platform no longer means sacrificing quality. Each framework is production‑ready — your choice hinges on team skills and product requirements.</p>
+
+                <h2>Getting started – quick commands</h2>
+                <pre><code>// React Native with Expo
+npx create-expo-app MyApp
+cd MyApp
+npm start
+
+// Flutter
+flutter create my_app
+cd my_app
+flutter run
+
+// .NET MAUI
+dotnet new maui -n MyMauiApp
+cd MyMauiApp
+dotnet build -t:Run -f net8.0-android</code></pre>
+
+                <h2>Conclusion</h2>
+                <p>The cross‑platform landscape is healthier than ever. <strong>React Native</strong> offers JavaScript flexibility and a massive talent pool. <strong>Flutter</strong> delivers unparalleled UI consistency and performance. <strong>.NET MAUI</strong> provides enterprise stability and Microsoft integration. Evaluate your use‑case, build a prototype, and ship with confidence. Remember: the best framework is the one your team can maintain and iterate fast.</p>
+                <p><strong>Which path will you take?</strong> Share your experience or ask questions in the comments below.</p>
+
+                <!-- tags: mobile dev specific -->
+                <div class="tags">
+                    <strong>Tags:</strong>
+                    <span class="tag">#MobileDev</span>
+                    <span class="tag">#CrossPlatform</span>
+                    <span class="tag">#ReactNative</span>
+                    <span class="tag">#Flutter</span>
+                    <span class="tag">#DotNetMAUI</span>
+                    <span class="tag">#iOS</span>
+                    <span class="tag">#Android</span>
+                </div>
+            </div> <!-- /.post-content -->
+
+            <!-- post navigation – adapted to maintain mobile dev category context -->
+            <div class="post-navigation">
+                <div class="prev-post">
+                    <strong>Previous:</strong>
+                    <a href="swiftui-ios17.html">← SwiftUI with iOS 17: Declarative Patterns</a>
+                </div>
+                <div class="next-post">
+                    <strong>Next:</strong>
+                    <a href="kotlin-multiplatform.html">Kotlin Multiplatform Mobile – Native UI, shared logic →</a>
+                </div>
+            </div>
+        </article>
+
+        <!-- SIDEBAR – exactly same structure as original, but adapted to mobile dev -->
+        <aside class="sidebar">
+            <div class="ad-container">
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-1911859184415905"
+                     data-ad-slot="1122334455"
+                     data-ad-format="auto"
+                     data-full-width-responsive="true"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+            </div>
+            
+            <div class="related-posts">
+                <h3>Related mobile dev articles</h3>
+                <ul>
+                    <li><a href="swiftui-ios17.html">SwiftUI with iOS 17: Complete Walkthrough</a></li>
+                    <li><a href="kotlin-multiplatform.html">KMM: The best of native & cross‑platform</a></li>
+                    <li><a href="expo-tutorial-2024.html">Expo Application Services – ship faster</a></li>
+                    <li><a href="../ai-machine-learning/onnx-mobile.html">ONNX Runtime: AI on‑device</a></li>
+                </ul>
+            </div>
+            
+            <div class="category-links">
+                <h3>Explore categories</h3>
+                <ul>
+                    <li><a href="../web-development/index.html">Web Development</a></li>
+                    <li><a href="../ai-machine-learning/index.html">AI & Machine Learning</a></li>
+                    <li><a href="../cybersecurity/index.html">Cybersecurity</a></li>
+                    <li><a href="../cloud-computing/index.html">Cloud Computing</a></li>
+                </ul>
+            </div>
+        </aside>
+    </main>
+
+    <!-- FOOTER – same as original, light theme, email & phone as given -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 Rehan Ison Singh's Tech Blog. All rights reserved.</p>
+            <p>Contact: <a href="mailto:rehanjamadar914@gmail.com">rehanjamadar914@gmail.com</a> | +91 97671360</p>
+            <div class="social-links">
+                <a href="#">GitHub</a> | <a href="#">LinkedIn</a> | <a href="#">Twitter</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../../js/main.js"></script>
+    <!-- no dark mode, no black – only default light styling -->
+</body>
+</html>

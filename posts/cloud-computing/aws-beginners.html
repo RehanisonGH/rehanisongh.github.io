@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="AWS for beginners: Core cloud concepts, EC2, S3, and free tier. Your first step into cloud computing.">
+    <title>AWS for Beginners: Complete Cloud Guide - Cloud Computing - Rehan's Tech Blog</title>
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/theme.css">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1911859184415905" crossorigin="anonymous"></script>
+    <!-- preserve no dark mode, keep theme as default light -->
+</head>
+<body>
+    <!-- standard header - exactly as category style, no dark mode -->
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo">
+                    <h1><a href="../../index.html">Rehan's Tech Blog</a></h1>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="../../index.html">Home</a></li>
+                    <li class="dropdown">
+                        <a href="#">Categories</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="../web-development/index.html">Web Development</a></li>
+                            <li><a href="../ai-machine-learning/index.html">AI & Machine Learning</a></li>
+                            <li><a href="../cybersecurity/index.html">Cybersecurity</a></li>
+                            <li><a href="../mobile-development/index.html">Mobile Development</a></li>
+                            <li><a href="index.html">Cloud Computing</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="../../about.html">About</a></li>
+                    <li><a href="../../contact.html">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <article class="blog-post">
+            <header class="post-header">
+                <!-- breadcrumb to reflect cloud computing category -->
+                <nav class="breadcrumb">
+                    <a href="../../index.html">Home</a> &gt;
+                    <a href="index.html">Cloud Computing</a> &gt;
+                    <span>AWS for Beginners: Complete Guide</span>
+                </nav>
+                <h1>AWS for Beginners: Your Complete Guide to Cloud Computing with Amazon Web Services</h1>
+                <div class="post-meta">
+                    <span>By Rehan</span>
+                    <span>February 10, 2024</span>
+                    <span>12 min read</span>
+                </div>
+            </header>
+            
+            <div class="post-content">
+                <!-- intro section -->
+                <h2>Introduction</h2>
+                <p>Amazon Web Services (AWS) is the world’s most comprehensive and broadly adopted cloud platform, offering over 200 fully featured services from data centers globally. For beginners, the AWS ecosystem can feel overwhelming. This guide strips away the complexity and gives you a clear path to understanding core services, the free tier, and your first cloud deployment. Whether you are a developer, system admin, or just cloud-curious, this is your launchpad.</p>
+                
+                <!-- standard ad container, same pattern -->
+                <div class="ad-container">
+                    <ins class="adsbygoogle"
+                         style="display:block; text-align:center;"
+                         data-ad-layout="in-article"
+                         data-ad-format="fluid"
+                         data-ad-client="ca-pub-1911859184415905"
+                         data-ad-slot="1234567890"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+
+                <h2>Why AWS? The Cloud Computing Leader</h2>
+                <p>AWS holds the largest market share in cloud infrastructure. With pay-as-you-go pricing, global reach, and enterprise-grade security, it’s the go‑to platform for startups to Fortune 500s. Understanding AWS fundamentals is now a must‑have skill in tech.</p>
+                
+                <h3>Key AWS Concepts for Absolute Beginners</h3>
+                <ul>
+                    <li><strong>Region:</strong> Geographical area with multiple Availability Zones (e.g., us-east-1).</li>
+                    <li><strong>Availability Zone (AZ):</strong> Isolated data center within a region.</li>
+                    <li><strong>Edge Location:</strong> Content delivery endpoints for low‑latency access.</li>
+                    <li><strong>IAM (Identity and Access Management):</strong> Securely manage users and permissions – always start here!</li>
+                    <li><strong>Free Tier:</strong> 12 months of free usage for eligible services + always free offers.</li>
+                </ul>
+
+                <h2>1. IAM – Your First Stop</h2>
+                <p>Before touching any service, lock down your account. IAM lets you create users, groups, and roles with fine‑grained permissions. <strong>Never use the root user for daily tasks.</strong></p>
+                <pre><code>// IAM best practice snippet – create admin group
+aws iam create-group --group-name Administrators
+aws iam attach-group-policy --group-name Administrators \
+  --policy-arn arn:aws:iam::aws:policy/AdministratorAccess
+aws iam create-user --user-name RehanAdmin
+aws iam add-user-to-group --user-name RehanAdmin --group-name Administrators
+aws iam create-access-key --user-name RehanAdmin</code></pre>
+                
+                <div class="ad-container">
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-1911859184415905"
+                         data-ad-slot="0987654321"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+
+                <h2>2. EC2 – Virtual Servers in the Cloud</h2>
+                <p>Elastic Compute Cloud (EC2) is the backbone of AWS. You can launch a virtual machine in minutes. With the free tier, you get 750 hours/month of t2.micro (or t3.micro) instances for 12 months.</p>
+                <h4>Launch Your First EC2 Instance (Free Tier Eligible):</h4>
+                <ol>
+                    <li>Choose Amazon Linux 2 or Ubuntu Server.</li>
+                    <li>Select t2.micro (1 vCPU, 1 GiB RAM).</li>
+                    <li>Configure security group – allow SSH (port 22) and HTTP (port 80).</li>
+                    <li>Launch and download the key pair (.pem file).</li>
+                    <li>Connect via SSH: <code>ssh -i your-key.pem ec2-user@public-ip</code></li>
+                </ol>
+                <pre><code># After SSH into EC2 – setup a simple web server
+sudo yum update -y
+sudo yum install -y httpd
+sudo systemctl start httpd
+sudo systemctl enable httpd
+echo "&lt;h1&gt;Hello from Rehan's AWS EC2!&lt;/h1&gt;" | sudo tee /var/www/html/index.html</code></pre>
+                <p>Your website is now live! Access via the public IPv4 address.</p>
+
+                <h2>3. S3 – Scalable Storage in the Cloud</h2>
+                <p>Amazon S3 (Simple Storage Service) is an object storage service offering industry-leading durability. Use it to host static websites, store images, backup data, and more. The free tier includes 5 GB of standard storage, 20,000 GET requests, and 2,000 PUT requests monthly.</p>
+                <pre><code># Create bucket and upload file via AWS CLI
+aws s3 mb s3://rehan-beginners-bucket --region us-east-1
+echo "AWS for beginners" > sample.txt
+aws s3 cp sample.txt s3://rehan-beginners-bucket/
+aws s3 ls s3://rehan-beginners-bucket/</code></pre>
+                <p><strong>Static website hosting on S3:</strong> Enable the property, upload an index.html, and make the bucket public (or use CloudFront for SSL).</p>
+
+                <h2>4. AWS Lambda – Serverless Computing</h2>
+                <p>Lambda lets you run code without provisioning servers. You pay only for compute time – free tier includes 1 million requests and 3.2 million seconds of compute time per month.</p>
+                <pre><code>// Simple Lambda function (Node.js 18)
+exports.handler = async (event) =&gt; {
+    console.log('Cloud computing is fun!');
+    return {
+        statusCode: 200,
+        body: JSON.stringify('Hello from Lambda on AWS!'),
+    };
+};</code></pre>
+
+                <div class="ad-container">
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-1911859184415905"
+                         data-ad-slot="1122334455"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+
+                <h2>5. Amazon RDS – Managed Relational Databases</h2>
+                <p>Set up, operate, and scale a relational database in the cloud. Free tier offers 750 hours of db.t2.micro (or db.t3.micro) for MySQL, PostgreSQL, MariaDB.</p>
+                <h4>Quick RDS Creation (Free Tier):</h4>
+                <ul>
+                    <li>Engine: MySQL</li>
+                    <li>Template: Free tier</li>
+                    <li>DB instance class: db.t2.micro</li>
+                    <li>Storage: 20 GiB gp2</li>
+                    <li>Set master username/password</li>
+                </ul>
+                <p>Connect using any MySQL client: <code>mysql -h your-db-endpoint -u admin -p</code></p>
+
+                <h2>6. CloudFront – Global Content Delivery</h2>
+                <p>Deliver your website, APIs, or media with low latency via AWS’s global network of edge locations. Free tier includes 1 TB of data transfer out per month for the first 12 months.</p>
+                <pre><code>// Create CloudFront distribution for S3 bucket
+aws cloudfront create-distribution \
+    --origin-domain-name rehan-beginners-bucket.s3.amazonaws.com \
+    --default-root-object index.html</code></pre>
+
+                <h2>7. AWS Free Tier Deep Dive – What’s Really Free?</h2>
+                <p>The AWS Free Tier comprises three types: <strong>12 months free</strong> (e.g., EC2, S3, RDS), <strong>always free</strong> (e.g., Lambda 1M req/month, DynamoDB 25 GB), and <strong>trials</strong> (short-term). Always check the <a href="https://aws.amazon.com/free/" target="_blank">official free tier page</a> and set up billing alerts to avoid surprises.</p>
+                <h4>Pro Tip: Budgets and Alarms</h4>
+                <p>Use AWS Budgets to get email alerts when you exceed a threshold (e.g., $1). This is crucial for beginners.</p>
+                <pre><code># Create billing alarm (via AWS CLI – requires enabling billing metrics)
+aws cloudwatch put-metric-alarm --alarm-name "BillingAlert" \
+  --metric-name EstimatedCharges --namespace AWS/Billing \
+  --statistic Maximum --period 21600 --evaluation-periods 1 \
+  --threshold 5 --comparison-operator GreaterThanThreshold \
+  --actions-enabled --alarm-actions arn:aws:sns:... </code></pre>
+
+                <h2>8. Real-World Beginner Project: Serverless Image Gallery</h2>
+                <p><strong>Combine core services:</strong> S3 (storage) + Lambda (resize) + DynamoDB (metadata) + API Gateway (REST). This project teaches the heart of modern cloud architecture. The cost? Often pennies — mostly free tier eligible.</p>
+                <ol>
+                    <li>Create S3 bucket for uploads, another for processed images.</li>
+                    <li>Lambda triggered on upload, resizes image, stores in processed bucket.</li>
+                    <li>DynamoDB table records image names and S3 keys.</li>
+                    <li>API Gateway exposes endpoints to retrieve images.</li>
+                </ol>
+                <p>This mirrors how production apps are built.</p>
+
+                <h2>9. AWS Certification Path – Next Steps</h2>
+                <p>After mastering basics, consider the <strong>AWS Certified Cloud Practitioner</strong> (foundational) or <strong>Solutions Architect – Associate</strong> (industry‑standard). These certifications validate your cloud knowledge and boost your career.</p>
+                <table style="width:100%; border-collapse:collapse;" border="1">
+                    <thead>
+                        <tr>
+                            <th>Certification</th>
+                            <th>Target</th>
+                            <th>Typical Study Time</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Cloud Practitioner</td>
+                            <td>Non-technical / sales / beginners</td>
+                            <td>20-30 hours</td>
+                        </tr>
+                        <tr>
+                            <td>Solutions Architect - Associate</td>
+                            <td>Technical / architects / developers</td>
+                            <td>80-120 hours</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h2>10. Common Mistakes Beginners Should Avoid</h2>
+                <ul>
+                    <li><strong>Leaving resources running:</strong> Stop/terminate EC2 instances if not in use; delete unused Elastic IPs.</li>
+                    <li><strong>Root account usage:</strong> Enable MFA and lock it away.</li>
+                    <li><strong>Public S3 buckets:</strong> Accidentally making sensitive data public. Block public access by default.</li>
+                    <li><strong>No IAM password policy:</strong> Enforce strong passwords and rotation.</li>
+                    <li><strong>Ignoring CloudWatch alarms:</strong> Set billing and utilization alarms.</li>
+                </ul>
+
+                <div class="ad-container">
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-1911859184415905"
+                         data-ad-slot="5566778899"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+
+                <h2>Conclusion – Start Your Cloud Journey Today</h2>
+                <p>AWS might seem vast, but every expert started exactly where you are now. Begin with IAM, launch an EC2 instance, store files in S3. These hands-on steps build confidence. The cloud is transforming industries – and with AWS skills, you’re positioning yourself at the forefront. Rehan's Tech Blog will continue to bring you practical cloud guides, so stay tuned and keep experimenting!</p>
+                <p><strong>Remember:</strong> Use the free tier, set budgets, and destroy resources after learning. Happy cloud computing!</p>
+
+                <!-- tags with cloud computing flavor -->
+                <div class="tags">
+                    <strong>Tags:</strong>
+                    <span class="tag">#AWS</span>
+                    <span class="tag">#CloudComputing</span>
+                    <span class="tag">#BeginnersGuide</span>
+                    <span class="tag">#EC2</span>
+                    <span class="tag">#S3</span>
+                    <span class="tag">#FreeTier</span>
+                    <span class="tag">#Lambda</span>
+                    <span class="tag">#RehanTechBlog</span>
+                </div>
+            </div>
+            
+            <!-- post navigation exactly as pattern, but adapted to cloud computing -->
+            <div class="post-navigation">
+                <div class="prev-post">
+                    <strong>Previous:</strong>
+                    <a href="docker-kubernetes-fundamentals.html">← Docker & Kubernetes: App's Perfect Packaging</a>
+                </div>
+                <div class="next-post">
+                    <strong>Next:</strong>
+                    <a href="azure-fundamentals.html">Azure Fundamentals: Microsoft Cloud Guide →</a>
+                </div>
+            </div>
+        </article>
+        
+        <!-- sidebar same as original pattern, but cloud focused -->
+        <aside class="sidebar">
+            <div class="ad-container">
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-1911859184415905"
+                     data-ad-slot="1122334455"
+                     data-ad-format="auto"
+                     data-full-width-responsive="true"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+            </div>
+            
+            <div class="related-posts">
+                <h3>Related Cloud Posts</h3>
+                <ul>
+                    <li><a href="docker-kubernetes-fundamentals.html">Docker & Kubernetes: Packaging Apps Like a Pro</a></li>
+                    <li><a href="azure-fundamentals.html">Azure Fundamentals: Start with Microsoft Cloud</a></li>
+                    <li><a href="serverless-guide.html">Serverless 101: Lambda, Functions, and Beyond</a></li>
+                    <li><a href="../cybersecurity/cloud-security-basics.html">Cloud Security Basics: IAM, Encryption & More</a></li>
+                </ul>
+            </div>
+            
+            <div class="category-links">
+                <h3>Explore Categories</h3>
+                <ul>
+                    <li><a href="../web-development/index.html">Web Development</a></li>
+                    <li><a href="../ai-machine-learning/index.html">AI & Machine Learning</a></li>
+                    <li><a href="../cybersecurity/index.html">Cybersecurity</a></li>
+                    <li><a href="../mobile-development/index.html">Mobile Development</a></li>
+                </ul>
+            </div>
+        </aside>
+    </main>
+
+    <!-- footer exactly as original, with same email and phone -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 Rehan's Tech Blog. All rights reserved.</p>
+            <p>Contact: <a href="mailto:rehanjamadar914@gmail.com">rehanjamadar914@gmail.com</a> | +91 97671360</p>
+            <div class="social-links">
+                <a href="#">GitHub</a> | <a href="#">LinkedIn</a> | <a href="#">Twitter</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../../js/main.js"></script>
+</body>
+</html>

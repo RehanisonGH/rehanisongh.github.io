@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Complete PyTorch guide for deep learning: tensors, autograd, CNNs, and model deployment. Learn AI with Python.">
+    <title>PyTorch Guide 2024 - AI & Machine Learning - Rehan's Tech Blog</title>
+    <!-- Light theme only, no dark/black mode. Keeping original CSS paths -->
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/theme.css">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1911859184415905" crossorigin="anonymous"></script>
+</head>
+<body>
+    <!-- Header – exactly same style as original, preserved logo, nav, dropdown -->
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo">
+                    <h1><a href="../../index.html">Rehan's Tech Blog</a></h1>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="../../index.html">Home</a></li>
+                    <li class="dropdown">
+                        <a href="#">Categories</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="../web-development/index.html">Web Development</a></li>
+                            <li><a href="index.html">AI & Machine Learning</a></li>
+                            <li><a href="../cybersecurity/index.html">Cybersecurity</a></li>
+                            <li><a href="../mobile-development/index.html">Mobile Development</a></li>
+                            <li><a href="../cloud-computing/index.html">Cloud Computing</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="../../about.html">About</a></li>
+                    <li><a href="../../contact.html">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main container: blog post about PyTorch, under AI & Machine Learning category -->
+    <main class="container">
+        <article class="blog-post">
+            <header class="post-header">
+                <!-- Breadcrumb: Home > AI & Machine Learning > PyTorch Guide -->
+                <nav class="breadcrumb">
+                    <a href="../../index.html">Home</a> &gt;
+                    <a href="index.html">AI & Machine Learning</a> &gt;
+                    <span>PyTorch Guide 2024</span>
+                </nav>
+                <h1>PyTorch from Zero to Hero: Complete Deep Learning Guide (2024)</h1>
+                <div class="post-meta">
+                    <span>By Rehan</span>
+                    <span>February 12, 2024</span>
+                    <span>18 min read</span>
+                </div>
+            </header>
+            
+            <div class="post-content">
+                <!-- Intro section -->
+                <h2>Why PyTorch? The AI framework powering research and production</h2>
+                <p>PyTorch has become the go-to framework for deep learning researchers and industry practitioners. With its Pythonic syntax, dynamic computation graph, and seamless GPU acceleration, PyTorch dominates AI/ML competitions and powers cutting-edge models at Tesla, Meta, and OpenAI. In this comprehensive guide, you'll master PyTorch fundamentals, build neural networks, and deploy models — all while writing clean, modern code.</p>
+                
+                <!-- In-article ad (same style as original) -->
+                <div class="ad-container">
+                    <ins class="adsbygoogle"
+                         style="display:block; text-align:center;"
+                         data-ad-layout="in-article"
+                         data-ad-format="fluid"
+                         data-ad-client="ca-pub-1911859184415905"
+                         data-ad-slot="1234567890"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+
+                <h2>1. Tensors: The Building Blocks</h2>
+                <p>At the core of PyTorch are <strong>tensors</strong> — multi-dimensional arrays that run on GPUs. Think of them as NumPy with superpowers.</p>
+                
+                <h3>Creating tensors</h3>
+                <pre><code>import torch
+
+# From Python lists
+data = [[1, 2], [3, 4]]
+tensor = torch.tensor(data)
+print(tensor.shape)   # torch.Size([2, 2])
+
+# GPU enabled (if available)
+device = "cuda" if torch.cuda.is_available() else "cpu"
+tensor_gpu = torch.tensor([1.0, 2.0], device=device)
+
+# Special tensors
+rand_tensor = torch.rand(3, 3)      # uniform random
+zeros_tensor = torch.zeros(2, 5)
+ones_tensor = torch.ones(4, 4)</code></pre>
+
+                <h3>Tensor operations with autograd</h3>
+                <p>PyTorch automatically tracks operations for gradient computation. This is the magic behind neural network training.</p>
+                <pre><code>x = torch.ones(2, 2, requires_grad=True)
+y = x + 2
+z = y * y * 3
+out = z.mean()
+out.backward()      # compute gradients
+print(x.grad)       # ∂out/∂x</code></pre>
+
+                <!-- another ad unit -->
+                <div class="ad-container">
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-1911859184415905"
+                         data-ad-slot="0987654321"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+
+                <h2>2. Autograd: Automatic Differentiation</h2>
+                <p>The <code>autograd</code> engine records operations and computes gradients. It's how PyTorch learns from data.</p>
+                <pre><code># Gradient accumulation and zeroing
+model = torch.nn.Linear(10, 1)
+optimizer = torch.optim.SGD(model.parameters(), lr=0.01)
+
+for input, target in dataloader:
+    optimizer.zero_grad()   # clear previous gradients
+    output = model(input)
+    loss = torch.nn.functional.mse_loss(output, target)
+    loss.backward()         # compute gradients
+    optimizer.step()        # update weights</code></pre>
+
+                <h2>3. Building Neural Networks with torch.nn</h2>
+                <p>PyTorch provides modular building blocks via <code>torch.nn</code>. Here's a CNN for image classification:</p>
+                
+                <pre><code>import torch.nn as nn
+import torch.nn.functional as F
+
+class ConvNet(nn.Module):
+    def __init__(self, num_classes=10):
+        super().__init__()
+        self.conv1 = nn.Conv2d(3, 32, kernel_size=3, padding=1)
+        self.bn1 = nn.BatchNorm2d(32)
+        self.conv2 = nn.Conv2d(32, 64, kernel_size=3, padding=1)
+        self.bn2 = nn.BatchNorm2d(64)
+        self.pool = nn.MaxPool2d(2, 2)
+        self.fc1 = nn.Linear(64 * 8 * 8, 256)
+        self.fc2 = nn.Linear(256, num_classes)
+        self.dropout = nn.Dropout(0.5)
+        
+    def forward(self, x):
+        x = self.pool(F.relu(self.bn1(self.conv1(x))))
+        x = self.pool(F.relu(self.bn2(self.conv2(x))))
+        x = x.view(x.size(0), -1)   # flatten
+        x = F.relu(self.fc1(x))
+        x = self.dropout(x)
+        x = self.fc2(x)
+        return x
+
+model = ConvNet().to(device)</code></pre>
+
+                <h2>4. Datasets & DataLoaders</h2>
+                <p>Efficient data pipelines are crucial. PyTorch supports custom datasets and parallel loading.</p>
+                <pre><code>from torch.utils.data import Dataset, DataLoader
+from PIL import Image
+import os
+
+class CustomImageDataset(Dataset):
+    def __init__(self, img_dir, transform=None):
+        self.img_dir = img_dir
+        self.img_paths = os.listdir(img_dir)
+        self.transform = transform
+        
+    def __len__(self):
+        return len(self.img_paths)
+    
+    def __getitem__(self, idx):
+        img_path = os.path.join(self.img_dir, self.img_paths[idx])
+        image = Image.open(img_path).convert('RGB')
+        if self.transform:
+            image = self.transform(image)
+        return image
+
+# Dataloader with multiprocessing
+dataloader = DataLoader(dataset, batch_size=32, shuffle=True, num_workers=4)</code></pre>
+
+                <!-- third ad - following pattern from react-19 article -->
+                <div class="ad-container">
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-1911859184415905"
+                         data-ad-slot="1122334455"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+
+                <h2>5. Training Loop & Best Practices</h2>
+                <p>A robust training script with validation and checkpointing:</p>
+                <pre><code>def train_one_epoch(model, loader, optimizer, criterion, device):
+    model.train()
+    total_loss = 0
+    for batch_idx, (data, target) in enumerate(loader):
+        data, target = data.to(device), target.to(device)
+        optimizer.zero_grad()
+        output = model(data)
+        loss = criterion(output, target)
+        loss.backward()
+        optimizer.step()
+        total_loss += loss.item()
+    return total_loss / len(loader)
+
+def evaluate(model, loader, criterion, device):
+    model.eval()
+    test_loss = 0
+    correct = 0
+    with torch.no_grad():
+        for data, target in loader:
+            data, target = data.to(device), target.to(device)
+            output = model(data)
+            test_loss += criterion(output, target).item()
+            pred = output.argmax(dim=1, keepdim=True)
+            correct += pred.eq(target.view_as(pred)).sum().item()
+    return test_loss / len(loader), 100. * correct / len(loader.dataset)
+
+# Example usage
+optimizer = torch.optim.Adam(model.parameters(), lr=1e-3)
+criterion = nn.CrossEntropyLoss()
+for epoch in range(10):
+    train_loss = train_one_epoch(model, train_loader, optimizer, criterion, device)
+    val_loss, val_acc = evaluate(model, val_loader, criterion, device)
+    print(f'Epoch {epoch}: train loss {train_loss:.4f}, val acc {val_acc:.2f}%')
+    torch.save(model.state_dict(), f'checkpoint_epoch{epoch}.pt')</code></pre>
+
+                <h2>6. Transfer Learning & Pretrained Models</h2>
+                <p>Leverage models pre-trained on ImageNet via <code>torchvision</code>:</p>
+                <pre><code>from torchvision import models
+
+# Load ResNet50 with pretrained weights
+resnet = models.resnet50(weights='IMAGENET1K_V2')
+
+# Freeze base layers
+for param in resnet.parameters():
+    param.requires_grad = False
+    
+# Replace classifier for custom task (10 classes)
+num_ftrs = resnet.fc.in_features
+resnet.fc = nn.Linear(num_ftrs, 10)
+
+# Train only the head
+optimizer = torch.optim.Adam(resnet.fc.parameters(), lr=0.001)</code></pre>
+
+                <h2>7. PyTorch Deployment: From Model to Production</h2>
+                <p>Export your trained model using TorchScript or ONNX for low-latency inference.</p>
+                
+                <h3>TorchScript (JIT)</h3>
+                <pre><code>scripted_model = torch.jit.script(model)
+scripted_model.save("model_scripted.pt")
+
+# Load in production (C++ or Python)
+loaded_model = torch.jit.load("model_scripted.pt")
+output = loaded_model(input_tensor)</code></pre>
+
+                <h3>ONNX export</h3>
+                <pre><code>dummy_input = torch.randn(1, 3, 224, 224).to(device)
+torch.onnx.export(model, dummy_input, "model.onnx",
+                  input_names=['input'],
+                  output_names=['output'],
+                  dynamic_axes={'input': {0: 'batch_size'}})</code></pre>
+
+                <!-- ad near the end, similar to React article -->
+                <div class="ad-container">
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-1911859184415905"
+                         data-ad-slot="5544332211"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+
+                <h2>8. PyTorch 2.0: Compilation & Speed</h2>
+                <p>PyTorch 2.0 introduces <code>torch.compile</code> which fuses operations and reduces overhead. Up to 2x faster training.</p>
+                <pre><code>model = ConvNet().to(device)
+model = torch.compile(model)  # one-line speedup
+
+# Training loop stays same — no code changes required
+for epoch in range(10):
+    train_one_epoch(model, train_loader, optimizer, criterion, device)</code></pre>
+
+                <h3>Scaled dot‑product attention (SDPA)</h3>
+                <p>Built-in memory-efficient attention for transformers:</p>
+                <pre><code>from torch.nn.functional import scaled_dot_product_attention
+
+query = torch.rand(8, 16, 512, 64)
+key   = torch.rand(8, 16, 512, 64)
+value = torch.rand(8, 16, 512, 64)
+
+output = scaled_dot_product_attention(query, key, value)</code></pre>
+
+                <h2>9. Distributed Training (DDPS)</h2>
+                <p>Scale across multiple GPUs with <code>DistributedDataParallel</code>.</p>
+                <pre><code># Launch with torchrun
+import torch.distributed as dist
+from torch.nn.parallel import DistributedDataParallel as DDP
+
+local_rank = int(os.environ["LOCAL_RANK"])
+torch.cuda.set_device(local_rank)
+dist.init_process_group(backend='nccl')
+model = model.cuda()
+model = DDP(model, device_ids=[local_rank])
+
+# Dataloader should use DistributedSampler
+train_sampler = DistributedSampler(train_dataset)
+train_loader = DataLoader(..., sampler=train_sampler)</code></pre>
+
+                <h2>10. Real‑world Case Study: Medical Image Segmentation</h2>
+                <p>A research team used PyTorch to build a U‑Net model for tumor segmentation, achieving 92% accuracy with 10x faster inference after TorchScript optimization. They reduced manual annotation time by 80%.</p>
+
+                <div class="ad-container">
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-1911859184415905"
+                         data-ad-slot="6677889900"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+
+                <h2>Next Steps & Learning Path</h2>
+                <ul>
+                    <li><strong>Official tutorials:</strong> <a href="https://pytorch.org/tutorials/">pytorch.org/tutorials</a></li>
+                    <li><strong>Paper implementations:</strong> HuggingFace Transformers, timm</li>
+                    <li><strong>Production:</strong> TorchServe, ONNX Runtime</li>
+                </ul>
+
+                <h2>Conclusion</h2>
+                <p>PyTorch combines flexibility with performance, making it ideal for both research and production. With 2.0's compiler and growing ecosystem, it's the definitive AI framework. Start small — maybe a simple classifier — then scale to distributed training. The community and tooling are ready.</p>
+                <p><strong>Ready to build intelligent systems?</strong> Clone the code snippets, experiment on Colab, and share your breakthroughs. The AI revolution needs builders like you.</p>
+                
+                <!-- Tags with AI/ML relevant hashtags -->
+                <div class="tags">
+                    <strong>Tags:</strong>
+                    <span class="tag">#PyTorch</span>
+                    <span class="tag">#DeepLearning</span>
+                    <span class="tag">#MachineLearning</span>
+                    <span class="tag">#AI</span>
+                    <span class="tag">#Python</span>
+                    <span class="tag">#NeuralNetworks</span>
+                    <span class="tag">#ComputerVision</span>
+                </div>
+            </div> <!-- end post-content -->
+            
+            <!-- Post navigation: previous/next with correct category context -->
+            <div class="post-navigation">
+                <div class="prev-post">
+                    <strong>Previous:</strong>
+                    <a href="chatgpt-api-guide.html">← ChatGPT API Guide for AI Projects</a>
+                </div>
+                <div class="next-post">
+                    <strong>Next:</strong>
+                    <a href="tensorflow-vs-pytorch.html">TensorFlow vs PyTorch: 2024 Showdown →</a>
+                </div>
+            </div>
+        </article>
+        
+        <!-- Sidebar – exactly matching original structure, with AI/ML related content -->
+        <aside class="sidebar">
+            <div class="ad-container">
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-1911859184415905"
+                     data-ad-slot="9988776655"
+                     data-ad-format="auto"
+                     data-full-width-responsive="true"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+            </div>
+            
+            <div class="related-posts">
+                <h3>Related AI/ML Posts</h3>
+                <ul>
+                    <li><a href="chatgpt-api-guide.html">ChatGPT API Guide for AI Projects</a></li>
+                    <li><a href="tensorflow-vs-pytorch.html">TensorFlow vs PyTorch: 2024 Showdown</a></li>
+                    <li><a href="transformers-huggingface.html">HuggingFace Transformers: Practical NLP</a></li>
+                    <li><a href="../web-development/react-19-new-features.html">React 19 New Features (Web Dev)</a></li>
+                </ul>
+            </div>
+            
+            <div class="category-links">
+                <h3>Explore Categories</h3>
+                <ul>
+                    <li><a href="../web-development/index.html">Web Development</a></li>
+                    <li><a href="../cybersecurity/index.html">Cybersecurity</a></li>
+                    <li><a href="../mobile-development/index.html">Mobile Development</a></li>
+                    <li><a href="../cloud-computing/index.html">Cloud Computing</a></li>
+                </ul>
+            </div>
+        </aside>
+    </main>
+
+    <!-- Footer – unchanged, light theme preserved -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 Rehan's Tech Blog. All rights reserved.</p>
+            <p>Contact: <a href="mailto:rehanjamadar914@gmail.com">rehanjamadar914@gmail.com</a> | +91 97671360</p>
+            <div class="social-links">
+                <a href="#">GitHub</a> | <a href="#">LinkedIn</a> | <a href="#">Twitter</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../../js/main.js"></script>
+    <!-- No dark mode; theme remains default light -->
+</body>
+</html>

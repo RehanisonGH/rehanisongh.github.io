@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Complete guide to mobile testing: tools, frameworks, real devices, emulators, and CI integration for Android & iOS">
+    <title>Mobile Testing Guide 2024 – Mobile Development – Rehan's Tech Blog</title>
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/theme.css">
+    <!-- no dark mode, light theme only -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1911859184415905" crossorigin="anonymous"></script>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo">
+                    <h1><a href="../../index.html">Rehan's Tech Blog</a></h1>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="../../index.html">Home</a></li>
+                    <li class="dropdown">
+                        <a href="#">Categories</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="../web-development/index.html">Web Development</a></li>
+                            <li><a href="../ai-machine-learning/index.html">AI & Machine Learning</a></li>
+                            <li><a href="../cybersecurity/index.html">Cybersecurity</a></li>
+                            <li><a href="index.html">Mobile Development</a></li>
+                            <li><a href="../cloud-computing/index.html">Cloud Computing</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="../../about.html">About</a></li>
+                    <li><a href="../../contact.html">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <article class="blog-post">
+            <header class="post-header">
+                <nav class="breadcrumb">
+                    <a href="../../index.html">Home</a> &gt;
+                    <a href="index.html">Mobile Development</a> &gt;
+                    <span>Mobile Testing 2024</span>
+                </nav>
+                <h1>Mobile Testing: Complete guide for Android & iOS (2024)</h1>
+                <div class="post-meta">
+                    <span>By Rehan</span>
+                    <span>February 12, 2024</span>
+                    <span>12 min read</span>
+                </div>
+            </header>
+            
+            <div class="post-content">
+                <h2>Why mobile testing is different</h2>
+                <p>Fragmentation, gestures, interrupts, network switching — mobile apps face unique challenges. With over 24k distinct Android devices and constant iOS updates, testing can’t be an afterthought. This guide walks you through modern mobile testing strategies, from emulators to real-device clouds, and from manual sanity to fully automated CI pipelines. Whether you build with Flutter, React Native, or native Kotlin/Swift, these patterns apply.</p>
+
+                <!-- in-article ad -->
+                <div class="ad-container">
+                    <ins class="adsbygoogle"
+                         style="display:block; text-align:center;"
+                         data-ad-layout="in-article"
+                         data-ad-format="fluid"
+                         data-ad-client="ca-pub-1911859184415905"
+                         data-ad-slot="2345678901"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+
+                <h2>1. Testing pyramid for mobile</h2>
+                <p>Unlike traditional web, mobile testing pyramid emphasizes:</p>
+                <ul>
+                    <li><strong>Unit tests (60%):</strong> business logic, ViewModels, use cases (JUnit, XCTest).</li>
+                    <li><strong>Integration tests (25%):</strong> database, API, shared preferences (Espresso, UI Automator, XCUITest).</li>
+                    <li><strong>UI / end-to-end tests (15%):</strong> critical user journeys on real devices.</li>
+                    <li><strong>Manual & exploratory (supplement):</strong> usability, gestures, unexpected flows.</li>
+                </ul>
+                <p>With React Native / Flutter, you also test the bridge; we’ll cover framework‑specific tools below.</p>
+                
+                <h3>Android testing toolkit</h3>
+                <pre><code>// Example: local unit test with JUnit4 + MockK
+@Test
+fun `login with valid credentials returns success`() {
+    val mockRepo = mockk&lt;AuthRepository&gt;()
+    coEvery { mockRepo.login("alice@example.com", "pass") } returns Result.success(User("alice"))
+    val viewModel = AuthViewModel(mockRepo)
+    viewModel.login("alice@example.com", "pass")
+    assertEquals(viewModel.state.value, UiState.Success)
+}</code></pre>
+                
+                <h3>iOS testing with XCTest</h3>
+                <pre><code>// Unit test example Swift
+func testLoginValidation() throws {
+    let validator = LoginValidator()
+    let isValid = validator.validate(email: "test@example.com", password: "123456")
+    XCTAssertTrue(isValid, "Valid credentials should pass")
+}</code></pre>
+
+                <h2>2. UI automation – cross‑platform vs native</h2>
+                <p>For native: <strong>Espresso</strong> (Android) and <strong>XCUITest</strong> (iOS) are the gold standard. For cross‑platform: <strong>Detox</strong> (React Native) and <strong>integration_test</strong> (Flutter) offer grey‑box testing.</p>
+                
+                <h4>Detox (React Native) – grey‑box, runs on device</h4>
+                <pre><code>describe('Login flow', () => {
+  it('should show home after successful login', async () => {
+    await element(by.id('emailInput')).typeText('user@example.com');
+    await element(by.id('passwordInput')).typeText('Pass123!');
+    await element(by.id('loginButton')).tap();
+    await expect(element(by.id('welcomeMessage'))).toBeVisible();
+  });
+});</code></pre>
+
+                <h4>Flutter integration test</h4>
+                <pre><code>testWidgets('failing login shows error', (tester) async {
+  await tester.pumpWidget(MyApp());
+  await tester.enterText(find.byKey(Key('emailField')), 'wrong');
+  await tester.enterText(find.byKey(Key('passwordField')), 'wrong');
+  await tester.tap(find.byKey(Key('loginBtn')));
+  await tester.pumpAndSettle();
+  expect(find.text('Invalid credentials'), findsOneWidget);
+});</code></pre>
+
+                <!-- mid-content ad -->
+                <div class="ad-container">
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-1911859184415905"
+                         data-ad-slot="8765432109"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+
+                <h2>3. Real devices vs emulators / simulators</h2>
+                <table style="width:100%; border-collapse: collapse; background: #f9f9f9; border:1px solid #ddd;">
+                    <thead style="background:#eee;">
+                        <tr><th style="padding:10px;border:1px solid #ccc;">Type</th><th style="padding:10px;border:1px solid #ccc;">Pros</th><th style="padding:10px;border:1px solid #ccc;">Cons</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td style="padding:8px;border:1px solid #ccc;"><strong>Emulator/Simulator</strong></td><td style="padding:8px;border:1px solid #ccc;">Free, fast, CI-friendly, easy snapshot</td><td style="padding:8px;border:1px solid #ccc;">Missing sensors, performance differences, some OEM bugs</td></tr>
+                        <tr><td style="padding:8px;border:1px solid #ccc;"><strong>Real device farm (AWS, Firebase, BrowserStack)</strong></td><td style="padding:8px;border:1px solid #ccc;">True hardware, network conditions, battery, fragmentation</td><td style="padding:8px;border:1px solid #ccc;">Cost, slower, flaky queues</td></tr>
+                        <tr><td style="padding:8px;border:1px solid #ccc;"><strong>Local real devices</strong></td><td style="padding:8px;border:1px solid #ccc;">Accurate, USB debugging</td><td style="padding:8px;border:1px solid #ccc;">Limited coverage, not scalable</td></tr>
+                    </tbody>
+                </table>
+                <p><strong>Recommendation:</strong> Use simulators for early development and most CI runs; run a subset of critical E2E on real devices nightly.</p>
+                
+                <h2>4. Device & OS fragmentation strategy</h2>
+                <p>You don't need to test every device. Use analytics to know your top 20 models (usually cover >75% users). Prioritize:</p>
+                <ul>
+                    <li>Latest OS + previous 2 major versions (Android 12,13,14; iOS 16,17).</li>
+                    <li>Common screen sizes: small (iPhone SE), medium (Pixel 6), large (Samsung S23 Ultra).</li>
+                    <li>Low‑end devices (RAM & CPU constraints) — crucial for emerging markets.</li>
+                </ul>
+                
+                <h3>Firebase Test Lab – matrix testing</h3>
+                <pre><code>// gcloud command to run Espresso on 10 devices in parallel
+gcloud firebase test android run \
+  --type instrumentation \
+  --app app-debug.apk \
+  --test app-debug-androidTest.apk \
+  --device model=Pixel2,version=30 \
+  --device model=Pixel4,version=33 \
+  --device model=medium_phone,version=29 \
+  --timeout 20m</code></pre>
+                
+                <h2>5. Interrupt & lifecycle testing</h2>
+                <p>Mobile apps must survive calls, notifications, low battery, and app switcher. Automate with:</p>
+                <ul>
+                    <li><strong>Android:</strong> Test rules + <code>ActivityScenario</code>. Simulate configuration change, permission dialogs.</li>
+                    <li><strong>iOS:</strong> XCUIDevice.press(.home); springboard interactions.</li>
+                    <li><strong>React Native / Flutter:</strong> App lifecycle events via testing libraries.</li>
+                </ul>
+                <pre><code>// Android – simulate screen rotation
+@Test
+fun testRotation() {
+    val scenario = ActivityScenario.launch(MainActivity::class.java)
+    scenario.recreate()
+    // verify state restored
+}</code></pre>
+                
+                <h2>6. Performance & memory testing</h2>
+                <p>Slow UI renders, memory leaks, and battery drain are top reasons for uninstalls.</p>
+                <h4>Android: Macrobenchmark (Jetpack)</h4>
+                <pre><code>@RunWith(AndroidJUnit4::class)
+class ScrollBenchmark {
+    @get:Rule
+    val benchmarkRule = MacrobenchmarkRule()
+
+    @Test
+    fun scrollFeed() = benchmarkRule.measureRepeated(
+        packageName = "com.rehan.app",
+        metrics = listOf(FrameTimingMetric()),
+        iterations = 5,
+    ) {
+        pressHome()
+        startActivityAndWait()
+        listRecycler().scrollTo(position = 50)
+    }
+}</code></pre>
+                <h4>iOS: Xcode Instruments (automate with xcodebuild test)</h4>
+                <p>Leaks, Time Profiler, and energy diagnostics. For CI, use <code>xcodebuild test-without-building</code> with performance tests.</p>
+                
+                <h2>7. Cloud testing & CI integration</h2>
+                <p>Modern teams run mobile tests in every PR. Setup examples:</p>
+                <h4>GitHub Actions + Firebase Test Lab</h4>
+                <pre><code># .github/workflows/android_test.yml
+steps:
+  - uses: actions/checkout@v4
+  - name: run tests on Firebase
+    uses: google-github-actions/firebase-test-lab@v2
+    with:
+      credentials: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+      device: 'model=Pixel6,version=33'
+      type: instrumentation
+      app: app/build/outputs/apk/debug/app-debug.apk
+      test: app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk</code></pre>
+                <h4>Bitrise for iOS E2E with XCUITest on real devices</h4>
+                <p>Bitrise offers device testing step; also BrowserStack App Automate.</p>
+                
+                <!-- third ad slot -->
+                <div class="ad-container">
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-1911859184415905"
+                         data-ad-slot="9988776655"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+                
+                <h2>8. Testing edge cases specific to mobile</h2>
+                <ul>
+                    <li><strong>Network:</strong> Switch from 5G to 3G, airplane mode, WiFi dropout. Use tools: <em>Facebook Augmented Traffic Control</em>, <em>Charles Proxy</em>, iOS Network Link Conditioner.</li>
+                    <li><strong>Permissions:</strong> Deny location, camera, then grant later. Test permission rationale dialogs.</li>
+                    <li><strong>Deep links & universal links:</strong> Verify navigation from web or push notification.</li>
+                    <li><strong>Accessibility:</strong> TalkBack, VoiceOver, scaling font sizes.</li>
+                </ul>
+                <pre><code>// Example: deep link test with Espresso
+@Test
+fun testDeepLink() {
+    val intent = Intent(Intent.ACTION_VIEW, Uri.parse("myapp://product/123"))
+    activityRule.launchActivity(intent)
+    onView(withId(R.id.product_detail)).check(matches(isDisplayed()))
+}</code></pre>
+                
+                <h2>9. Visual testing & screenshot diff</h2>
+                <p>Catch unintended UI changes across devices. Use <strong>Applitools</strong>, <strong>Snapshot (Android)</strong>, <strong>SnapshotTesting (iOS)</strong>, or <strong>Loki/Chromatic</strong> for React Native.</p>
+                <pre><code>// iOS SnapshotTesting example
+assertSnapshot(matching: vc, as: .image(on: .iPhoneSe))</code></pre>
+                
+                <h2>10. Migration from manual to automated culture</h2>
+                <p>Start with high‑ROI journeys (login, purchase, onboarding). Involve QA in code reviews. Aim for 70% passing rate on main branches. Pair manual exploratory with automated regression.</p>
+                
+                <hr style="margin: 40px 0;" />
+                
+                <h2>Real‑world case study: fintech app</h2>
+                <p>At a mobile‑first bank, we reduced release testing from 5 days to 6 hours by:</p>
+                <ul>
+                    <li>Unit test coverage >65% (ViewModel, use cases).</li>
+                    <li>20 critical user journeys automated with Detox on CI (Bitrise).</li>
+                    <li>Nightly Firebase Test Lab on 15 physical devices.</li>
+                    <li>Percy screenshot diffs for UI regression.</li>
+                </ul>
+                <p>Result: crash‑free rate 99.8%, weekly releases.</p>
+                
+                <h2>Mobile testing roadmap 2024</h2>
+                <p><strong>Immediate adoption:</strong> Start writing unit tests for new features. Add a smoke test for your main flow on simulator.</p>
+                <p><strong>Next 3 months:</strong> Integrate a device farm for nightly runs. Set up performance benchmarks.</p>
+                <p><strong>Long term:</strong> On‑device AI testing (like using LLMs to generate test cases), flaky test management, and self‑healing locators.</p>
+                
+                <div class="tags">
+                    <strong>Tags:</strong>
+                    <span class="tag">#MobileTesting</span>
+                    <span class="tag">#AndroidTesting</span>
+                    <span class="tag">#iOS</span>
+                    <span class="tag">#Detox</span>
+                    <span class="tag">#Espresso</span>
+                    <span class="tag">#XCUITest</span>
+                    <span class="tag">#FirebaseTestLab</span>
+                    <span class="tag">#CI</span>
+                </div>
+            </div> <!-- /post-content -->
+            
+            <div class="post-navigation">
+                <div class="prev-post">
+                    <strong>Previous:</strong>
+                    <a href="flutter-performance-optimization.html">← Flutter: Advanced performance optimization</a>
+                </div>
+                <div class="next-post">
+                    <strong>Next:</strong>
+                    <a href="react-native-gesture-handler.html">React Native Gesture Handler 2.0 deep dive →</a>
+                </div>
+            </div>
+        </article>
+        
+        <aside class="sidebar">
+            <!-- sidebar ad -->
+            <div class="ad-container">
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-1911859184415905"
+                     data-ad-slot="5566778899"
+                     data-ad-format="auto"
+                     data-full-width-responsive="true"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+            </div>
+            
+            <div class="related-posts">
+                <h3>More from Mobile Dev</h3>
+                <ul>
+                    <li><a href="kotlin-multiplatform-guide.html">Kotlin Multiplatform: Share logic, not UI</a></li>
+                    <li><a href="swift-concurrency-ios16.html">Swift Concurrency: async/await in iOS 16+</a></li>
+                    <li><a href="react-native-performance-monitoring.html">React Native performance monitoring</a></li>
+                    <li><a href="../ai-machine-learning/on-device-ml-coreml.html">On‑device ML: CoreML vs TFLite</a></li>
+                </ul>
+            </div>
+            
+            <div class="category-links">
+                <h3>Explore categories</h3>
+                <ul>
+                    <li><a href="../web-development/index.html">Web Development</a></li>
+                    <li><a href="../ai-machine-learning/index.html">AI & Machine Learning</a></li>
+                    <li><a href="../cybersecurity/index.html">Cybersecurity</a></li>
+                    <li><a href="../cloud-computing/index.html">Cloud Computing</a></li>
+                </ul>
+            </div>
+        </aside>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 Rehan's Tech Blog. All rights reserved.</p>
+            <p>Contact: <a href="mailto:rehanjamadar914@gmail.com">rehanjamadar914@gmail.com</a> | +91 97671360</p>
+            <div class="social-links">
+                <a href="#">GitHub</a> | <a href="#">LinkedIn</a> | <a href="#">Twitter</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../../js/main.js"></script>
+    <!-- no dark mode -->
+</body>
+</html>

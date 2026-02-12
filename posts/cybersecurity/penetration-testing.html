@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Complete guide to penetration testing methodologies, tools, and techniques for cybersecurity professionals and ethical hackers.">
+    <title>Penetration Testing Guide 2024 – Cybersecurity – Rehan's Tech Blog</title>
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/theme.css">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1911859184415905" crossorigin="anonymous"></script>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo">
+                    <h1><a href="../../index.html">Rehan's Tech Blog</a></h1>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="../../index.html">Home</a></li>
+                    <li class="dropdown">
+                        <a href="#">Categories</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="../web-development/index.html">Web Development</a></li>
+                            <li><a href="../ai-machine-learning/index.html">AI & Machine Learning</a></li>
+                            <li><a href="index.html">Cybersecurity</a></li>
+                            <li><a href="../mobile-development/index.html">Mobile Development</a></li>
+                            <li><a href="../cloud-computing/index.html">Cloud Computing</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="../../about.html">About</a></li>
+                    <li><a href="../../contact.html">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <article class="blog-post">
+            <header class="post-header">
+                <nav class="breadcrumb">
+                    <a href="../../index.html">Home</a> &gt;
+                    <a href="index.html">Cybersecurity</a> &gt;
+                    <span>Penetration Testing Guide 2024</span>
+                </nav>
+                <h1>Penetration Testing: Complete Methodologies, Tools & Real-World Tactics</h1>
+                <div class="post-meta">
+                    <span>By Rehan</span>
+                    <span>February 12, 2024</span>
+                    <span>14 min read</span>
+                </div>
+            </header>
+            
+            <div class="post-content">
+                <h2>Introduction</h2>
+                <p>Penetration testing (ethical hacking) is the art of proactively identifying vulnerabilities before adversaries do. As cyber threats evolve, organizations demand structured, stealthy, and comprehensive security assessments. In this 2024 guide, we dive deep into modern pentesting methodologies — from reconnaissance and exploitation to post-exploitation and reporting. Whether you're pursuing OSCP, preparing for red team engagements, or securing your own infrastructure, this guide provides actionable workflows and insider techniques.</p>
+
+                <div class="ad-container">
+                    <ins class="adsbygoogle"
+                         style="display:block; text-align:center;"
+                         data-ad-layout="in-article"
+                         data-ad-format="fluid"
+                         data-ad-client="ca-pub-1911859184415905"
+                         data-ad-slot="1234567890"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+
+                <h2>The Pentesting Execution Standard (PTES) & Modern Kill Chain</h2>
+                
+                <h3>1. Pre-engagement & Intelligence Gathering</h3>
+                <p>Every successful penetration test begins with clear scope and passive reconnaissance. We blend OSINT, certificate transparency logs, and DNS enumeration to build a target map without touching the target.</p>
+                
+                <h4>Essential OSINT toolkit:</h4>
+                <ul>
+                    <li><strong>Shodan / Censys</strong> – Internet-facing asset discovery</li>
+                    <li><strong>theHarvester</strong> – Email & subdomain collection</li>
+                    <li><strong>Amass / Subfinder</strong> – Attack surface mapping</li>
+                    <li><strong>Google dorks & GitHub</strong> – Leaked credentials/configs</li>
+                </ul>
+
+                <pre><code># Passive reconnaissance example (Amass)
+amass enum -passive -d target.com -o domains.txt
+# Combine with httpx to find live hosts
+cat domains.txt | httpx -status-code -title -tech-detect</code></pre>
+
+                <h3>2. Scanning & Enumeration — The Golden Hour</h3>
+                <p>Active scanning requires precision. We avoid noisy scans unless agreed. Modern approach: use version-specific probes and NSE scripts judiciously.</p>
+                <pre><code># Stealth SYN scan + service detection + default NSE scripts
+nmap -sS -sV -sC -p- --min-rate=500 -T4 target.com
+
+# Targeted vulnerability scan (critical only)
+nmap --script vuln --script-args vulns.showCVE -p 80,443,3306 target.com</code></pre>
+
+                <h4>Pro tip: always check for exposed .git/.env, cloud metadata endpoints, and misconfigured S3 buckets.</h4>
+
+                <div class="ad-container">
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-1911859184415905"
+                         data-ad-slot="0987654321"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+
+                <h2>Exploitation: Gaining Foothold</h2>
+                
+                <h3>Web Application Attacks</h3>
+                <p>Modern apps rely on APIs, JWTs, and GraphQL. We adapt classic techniques to new architectures.</p>
+                <pre><code># SQL injection time-based (payload example)
+' OR IF(1=1, SLEEP(5), 0) -- 
+
+# JWT none algorithm attack
+{"alg":"none","typ":"JWT"} // modify header, remove signature</code></pre>
+
+                <h3>Network & Privilege Escalation</h3>
+                <ul>
+                    <li><strong>Kerberoasting</strong> – extract service account hashes from AD</li>
+                    <li><strong>PrintNightmare / ZeroLogon</strong> – still relevant in unpatched environments</li>
+                    <li><strong>Sudo misconfigurations</strong> – Linux privesc classics</li>
+                </ul>
+
+                <pre><code># Impacket: GetUserSPNs for Kerberoasting
+impacket-GetUserSPNs -request -dc-ip 10.10.10.2 domain.local/user
+
+# Linux enumeration script (linpeas)
+curl -L https://github.com/carlospolop/PEASS-ng/releases/latest/download/linpeas.sh | sh</code></pre>
+
+                <h3>3. Actions on Objective & Post-exploitation</h3>
+                <p>We demonstrate business impact without causing damage. Exfiltrate dummy PII, show persistence mechanisms, and map lateral movement paths.</p>
+                <pre><code># C2 framework simulation (Cobalt Strike / Sliver)
+# Beaconing, keylogging, and tunneling
+# Always document: "proof_<target>.txt" in desktop directory</code></pre>
+
+                <div class="ad-container">
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-1911859184415905"
+                         data-ad-slot="1122334455"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+
+                <h2>Mobile & Cloud Pentesting (2024 focus)</h2>
+                
+                <h3>Cloud infrastructure</h3>
+                <p>Misconfigurations dominate cloud breaches. We assess IAM, storage, and container escapes.</p>
+                <pre><code># AWS – enumerate permissions with pacu
+run iam__enum_users_roles_policies
+
+# GCP – bucket privilege check
+gsutil ls gs://target-bucket</code></pre>
+
+                <h3>Android/iOWA (iOS) instrumentation</h3>
+                <p>Frida, objection, and runtime patching for mobile app security testing.</p>
+
+                <h2>Reporting & Remediation</h2>
+                <p>Technical depth is useless without clear business context. We structure reports to help developers fix fast and management understand risk.</p>
+                <ul>
+                    <li><strong>Executive summary</strong> – risk appetite, crown jewels exposed</li>
+                    <li><strong>Technical walkthrough</strong> – step-by-step with request/response dumps</li>
+                    <li><strong>CVSS 3.1 scoring</strong> – environmental adjustments</li>
+                    <li><strong>Remediation blueprint</strong> – code snippets, config changes, WAF rules</li>
+                </ul>
+                <pre><code>// Example insecure JWT validation fix (Node.js)
+const jwt = require('jsonwebtoken');
+// verify signature – never trust 'none' algorithm
+const decoded = jwt.verify(token, SECRET_KEY, { algorithms: ['HS256'] });</code></pre>
+
+                <h2>Red Teaming vs. Pentesting: nuance</h2>
+                <p>While pentests find as many vulnerabilities as possible in a given scope, red team engagements test detection & response. We cover both — stealth, evading EDR, and long-term persistence.</p>
+
+                <h3>EDR evasion basics</h3>
+                <ul>
+                    <li>Reflective DLL injection</li>
+                    <li>Syscall direct (Hell’s Gate / Halo’s Gate)</li>
+                    <li>Living-off-the-land binaries (LOLBAS)</li>
+                </ul>
+
+                <h2>Recommended Certifications & Labs</h2>
+                <ul>
+                    <li><strong>Practical:</strong> HackTheBox, Proving Grounds, PentesterLab</li>
+                    <li><strong>Certifications:</strong> OSCP, PNPT, CRTP, OSWE</li>
+                    <li><strong>Cloud labs:</strong> AWS Security Hub, AttackRange</li>
+                </ul>
+
+                <div class="ad-container">
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-1911859184415905"
+                         data-ad-slot="5566778899"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+
+                <h2>Emerging Attack Surfaces</h2>
+                <ul>
+                    <li><strong>AI/LLM prompt injection</strong> – testing custom chatbots</li>
+                    <li><strong>Supply chain</strong> – dependency confusion, typosquatting</li>
+                    <li><strong>eBPF rootkits</strong> – Linux kernel introspection</li>
+                </ul>
+
+                <h2>Conclusion</h2>
+                <p>Penetration testing remains a cat-and-mouse game. The 2024 landscape demands cloud-savvy, AD-focused, and evasive testers. Master the fundamentals — recon, enumeration, and reporting — while constantly weaponizing new TTPs. This guide gives you a structured, up-to-date methodology. The rest depends on countless hours in labs and real-world engagements.</p>
+                <p><strong>Never stop learning.</strong> Download our pentesting checklist (PDF) and join Rehan's Tech Blog community for monthly CVE deep-dives.</p>
+
+                <div class="tags">
+                    <strong>Tags:</strong>
+                    <span class="tag">#PenetrationTesting</span>
+                    <span class="tag">#EthicalHacking</span>
+                    <span class="tag">#OSCP</span>
+                    <span class="tag">#Cybersecurity2024</span>
+                    <span class="tag">#RedTeam</span>
+                    <span class="tag">#KaliLinux</span>
+                </div>
+            </div>
+            
+            <div class="post-navigation">
+                <div class="prev-post">
+                    <strong>Previous:</strong>
+                    <a href="../web-development/react19-new-features.html">← React 19: A Game-Changer for Modern Web Development</a>
+                </div>
+                <div class="next-post">
+                    <strong>Next:</strong>
+                    <a href="zero-trust-architecture.html">Zero Trust Architecture: Beyond the Hype →</a>
+                </div>
+            </div>
+        </article>
+        
+        <aside class="sidebar">
+            <div class="ad-container">
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-1911859184415905"
+                     data-ad-slot="1122334455"
+                     data-ad-format="auto"
+                     data-full-width-responsive="true"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+            </div>
+            
+            <div class="related-posts">
+                <h3>Related Cybersecurity Posts</h3>
+                <ul>
+                    <li><a href="zero-trust-architecture.html">Zero Trust Architecture: Implementation Guide</a></li>
+                    <li><a href="active-directory-hardening.html">Active Directory Security & Hardening Checklist</a></li>
+                    <li><a href="cloud-security-posture-management.html">CSPM: Tools & Automation</a></li>
+                    <li><a href="../web-development/owasp-top10-2024.html">OWASP Top 10 2024 Explained for Devs</a></li>
+                </ul>
+            </div>
+            
+            <div class="category-links">
+                <h3>Explore Categories</h3>
+                <ul>
+                    <li><a href="../web-development/index.html">Web Development</a></li>
+                    <li><a href="../ai-machine-learning/index.html">AI & Machine Learning</a></li>
+                    <li><a href="../mobile-development/index.html">Mobile Development</a></li>
+                    <li><a href="../cloud-computing/index.html">Cloud Computing</a></li>
+                </ul>
+            </div>
+            
+            <div style="margin-top: 20px;">
+                <h3>Download Resources</h3>
+                <p><a href="../../resources/pentesting-checklist-2024.pdf" style="text-decoration: underline;">📘 Pentesting Methodology Checklist (PDF)</a></p>
+                <p><a href="../../resources/linux-privesc-cheatsheet.pdf" style="text-decoration: underline;">🐧 Linux PrivEsc Cheat Sheet</a></p>
+            </div>
+        </aside>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 Rehan's Tech Blog. All rights reserved.</p>
+            <p>Contact: <a href="mailto:rehanjamadar914@gmail.com">rehanjamadar914@gmail.com</a> | +91 97671360</p>
+            <div class="social-links">
+                <a href="#">GitHub</a> | <a href="#">LinkedIn</a> | <a href="#">Twitter</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../../js/main.js"></script>
+    <!-- ensure no dark mode overrides -->
+</body>
+</html>

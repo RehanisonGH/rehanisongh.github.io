@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Complete guide to Vue 3 Composition API with practical examples and modern application patterns">
+    <title>Vue 3 Composition API - Web Development - Rehan's Tech Blog</title>
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/theme.css">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1911859184415905" crossorigin="anonymous"></script>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo">
+                    <h1><a href="../../index.html">Rehan's Tech Blog</a></h1>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="../../index.html">Home</a></li>
+                    <li class="dropdown">
+                        <a href="#">Categories</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="index.html">Web Development</a></li>
+                            <li><a href="../ai-machine-learning/index.html">AI & Machine Learning</a></li>
+                            <li><a href="../cybersecurity/index.html">Cybersecurity</a></li>
+                            <li><a href="../mobile-development/index.html">Mobile Development</a></li>
+                            <li><a href="../cloud-computing/index.html">Cloud Computing</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="../../about.html">About</a></li>
+                    <li><a href="../../contact.html">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <article class="blog-post">
+            <header class="post-header">
+                <nav class="breadcrumb">
+                    <a href="../../index.html">Home</a> &gt;
+                    <a href="index.html">Web Development</a> &gt;
+                    <span>Vue 3 Composition API</span>
+                </nav>
+                <h1>Building a Modern Blog with Vue 3 Composition API: A Complete Guide</h1>
+                <div class="post-meta">
+                    <span>By Rehan</span>
+                    <span>January 16, 2024</span>
+                    <span>12 min read</span>
+                </div>
+            </header>
+            
+            <div class="post-content">
+                <h2>Project Overview</h2>
+                <p>In this tutorial, we'll create a feature-rich blog application using Vue 3's Composition API. We'll implement a clean, modern design with all the essential blog features.</p>
+                
+                <p>We'll build a blog with:</p>
+                <ul>
+                    <li>A responsive layout with header, sidebar, and main content</li>
+                    <li>Dynamic blog post listing with filtering</li>
+                    <li>Interactive post details with comments</li>
+                    <li>A rich text editor for creating posts</li>
+                    <li>Dark/light theme toggle</li>
+                    <li>State management using Vue 3's reactive system</li>
+                </ul>
+
+                <div class="ad-container">
+                    <ins class="adsbygoogle"
+                         style="display:block; text-align:center;"
+                         data-ad-layout="in-article"
+                         data-ad-format="fluid"
+                         data-ad-client="ca-pub-1911859184415905"
+                         data-ad-slot="1234567890"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+
+                <h2>1. Project Structure</h2>
+                <pre><code>blog-vue3-app/
+├── public/
+├── src/
+│   ├── components/
+│   │   ├── BlogHeader.vue
+│   │   ├── BlogSidebar.vue
+│   │   ├── PostList.vue
+│   │   ├── PostDetail.vue
+│   │   └── RichTextEditor.vue
+│   ├── composables/
+│   │   ├── useBlogPosts.js
+│   │   └── useTheme.js
+│   ├── assets/
+│   ├── App.vue
+│   └── main.js</code></pre>
+
+                <h2>2. Main Application Component</h2>
+                <pre><code>&lt;template&gt;
+  &lt;div :class="['app-container', { 'dark-theme': isDarkTheme }]"&gt;
+    &lt;BlogHeader 
+      @toggle-theme="toggleTheme"
+      @search="handleSearch"
+    /&gt;
+    
+    &lt;div class="main-content"&gt;
+      &lt;BlogSidebar 
+        :categories="categories"
+        :active-category="activeCategory"
+        @filter-category="filterByCategory"
+      /&gt;
+      
+      &lt;div class="content-area"&gt;
+        &lt;router-view /&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+    
+    &lt;footer class="blog-footer"&gt;
+      &lt;p&gt;© 2023 Vue 3 Blog. Built with Composition API&lt;/p&gt;
+    &lt;/footer&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script setup&gt;
+import { ref, computed, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+import BlogHeader from './components/BlogHeader.vue'
+import BlogSidebar from './components/BlogSidebar.vue'
+import { useBlogPosts } from './composables/useBlogPosts'
+import { useTheme } from './composables/useTheme'
+
+const router = useRouter()
+const { posts, categories, fetchPosts, searchPosts } = useBlogPosts()
+const { isDarkTheme, toggleTheme } = useTheme()
+
+const activeCategory = ref('all')
+const searchQuery = ref('')
+
+// Fetch posts on component mount
+onMounted(async () =&gt; {
+  await fetchPosts()
+})
+
+// Filter posts by category
+const filterByCategory = (category) =&gt; {
+  activeCategory.value = category
+  // In a real app, you would filter posts here or navigate to filtered route
+}
+
+// Handle search
+const handleSearch = (query) =&gt; {
+  searchQuery.value = query
+  searchPosts(query)
+}
+
+// Navigate to post creation
+const navigateToCreatePost = () =&gt; {
+  router.push('/create-post')
+}
+&lt;/script&gt;
+
+&lt;style scoped&gt;
+.app-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
+
+.main-content {
+  display: flex;
+  flex: 1;
+  margin-top: 80px; /* Account for fixed header */
+}
+
+.content-area {
+  flex: 1;
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.blog-footer {
+  text-align: center;
+  padding: 1.5rem;
+  background-color: var(--secondary-bg);
+  border-top: 1px solid var(--border-color);
+}
+
+:root {
+  --bg-color: #ffffff;
+  --text-color: #333333;
+  --primary-color: #42b883;
+  --secondary-bg: #f8f9fa;
+  --border-color: #eaeaea;
+}
+
+.dark-theme {
+  --bg-color: #1a1a1a;
+  --text-color: #f0f0f0;
+  --primary-color: #42b883;
+  --secondary-bg: #2d2d2d;
+  --border-color: #404040;
+}
+
+@media (max-width: 768px) {
+  .main-content {
+    flex-direction: column;
+  }
+  
+  .content-area {
+    padding: 1rem;
+  }
+}
+&lt;/style&gt;</code></pre>
+
+                <div class="ad-container">
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-1911859184415905"
+                         data-ad-slot="0987654321"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+
+                <h2>3. Composable: useBlogPosts</h2>
+                <pre><code>import { ref, computed } from 'vue'
+import { useStorage } from '@vueuse/core'
+
+export function useBlogPosts() {
+  // Use localStorage for persistence with @vueuse/core
+  const posts = useStorage('blog-posts', [
+    {
+      id: 1,
+      title: "Getting Started with Vue 3 Composition API",
+      content: "The Composition API is a new way to organize and reuse logic in Vue 3 components...",
+      excerpt: "Learn the basics of Vue 3's Composition API and how it revolutionizes component organization.",
+      author: "Jane Developer",
+      date: "2023-10-15",
+      category: "Vue.js",
+      tags: ["Vue 3", "Composition API", "Frontend"],
+      likes: 42,
+      comments: 12,
+      featured: true
+    },
+    // More posts...
+  ])
+
+  const loading = ref(false)
+  const error = ref(null)
+  
+  // Computed properties
+  const categories = computed(() =&gt; {
+    const allCategories = posts.value.map(post =&gt; post.category)
+    return ['all', ...new Set(allCategories)]
+  })
+  
+  const featuredPosts = computed(() =&gt; {
+    return posts.value.filter(post =&gt; post.featured)
+  })
+  
+  const totalPosts = computed(() =&gt; posts.value.length)
+  
+  // Methods
+  const fetchPosts = async () =&gt; {
+    loading.value = true
+    try {
+      // In a real app, you would fetch from an API
+      // Simulate API call delay
+      await new Promise(resolve =&gt; setTimeout(resolve, 300))
+      loading.value = false
+    } catch (err) {
+      error.value = err.message
+      loading.value = false
+    }
+  }
+  
+  const getPostById = (id) =&gt; {
+    return posts.value.find(post =&gt; post.id === id)
+  }
+  
+  const addPost = (post) =&gt; {
+    const newPost = {
+      ...post,
+      id: posts.value.length + 1,
+      date: new Date().toISOString().split('T')[0],
+      likes: 0,
+      comments: 0
+    }
+    posts.value.unshift(newPost)
+    return newPost
+  }
+  
+  const updatePost = (id, updatedData) =&gt; {
+    const index = posts.value.findIndex(post =&gt; post.id === id)
+    if (index !== -1) {
+      posts.value[index] = { ...posts.value[index], ...updatedData }
+    }
+  }
+  
+  const deletePost = (id) =&gt; {
+    const index = posts.value.findIndex(post =&gt; post.id === id)
+    if (index !== -1) {
+      posts.value.splice(index, 1)
+    }
+  }
+  
+  const searchPosts = (query) =&gt; {
+    if (!query.trim()) return posts.value
+    const lowercaseQuery = query.toLowerCase()
+    return posts.value.filter(post =&gt; 
+      post.title.toLowerCase().includes(lowercaseQuery) ||
+      post.content.toLowerCase().includes(lowercaseQuery) ||
+      post.tags.some(tag =&gt; tag.toLowerCase().includes(lowercaseQuery))
+    )
+  }
+  
+  const likePost = (id) =&gt; {
+    const post = getPostById(id)
+    if (post) {
+      post.likes++
+    }
+  }
+  
+  return {
+    posts,
+    loading,
+    error,
+    categories,
+    featuredPosts,
+    totalPosts,
+    fetchPosts,
+    getPostById,
+    addPost,
+    updatePost,
+    deletePost,
+    searchPosts,
+    likePost
+  }
+}</code></pre>
+
+                <h2>4. Blog Post List Component</h2>
+                <pre><code>&lt;template&gt;
+  &lt;div class="post-list-container"&gt;
+    &lt;div class="posts-header"&gt;
+      &lt;h2&gt;Latest Blog Posts&lt;/h2&gt;
+      &lt;p class="post-count"&gt;{{ totalPosts }} posts published&lt;/p&gt;
+    &lt;/div&gt;
+    
+    &lt;div v-if="loading" class="loading-indicator"&gt;
+      &lt;div class="spinner"&gt;&lt;/div&gt;
+      &lt;p&gt;Loading posts...&lt;/p&gt;
+    &lt;/div&gt;
+    
+    &lt;div v-else-if="error" class="error-message"&gt;
+      &lt;p&gt;Error loading posts: {{ error }}&lt;/p&gt;
+      &lt;button @click="retryLoading" class="retry-button"&gt;Retry&lt;/button&gt;
+    &lt;/div&gt;
+    
+    &lt;div v-else class="posts-grid"&gt;
+      &lt;article 
+        v-for="post in filteredPosts" 
+        :key="post.id" 
+        class="post-card"
+        @click="navigateToPost(post.id)"
+      &gt;
+        &lt;div class="post-card-header"&gt;
+          &lt;span class="post-category"&gt;{{ post.category }}&lt;/span&gt;
+          &lt;span v-if="post.featured" class="featured-badge"&gt;Featured&lt;/span&gt;
+        &lt;/div&gt;
+        
+        &lt;div class="post-card-body"&gt;
+          &lt;h3 class="post-title"&gt;{{ post.title }}&lt;/h3&gt;
+          &lt;p class="post-excerpt"&gt;{{ post.excerpt }}&lt;/p&gt;
+          
+          &lt;div class="post-meta"&gt;
+            &lt;span class="post-author"&gt;
+              &lt;i class="author-icon"&gt;👤&lt;/i&gt; {{ post.author }}
+            &lt;/span&gt;
+            &lt;span class="post-date"&gt;
+              &lt;i class="date-icon"&gt;📅&lt;/i&gt; {{ formatDate(post.date) }}
+            &lt;/span&gt;
+          &lt;/div&gt;
+          
+          &lt;div class="post-tags"&gt;
+            &lt;span 
+              v-for="tag in post.tags" 
+              :key="tag" 
+              class="post-tag"
+            &gt;
+              #{{ tag }}
+            &lt;/span&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+        
+        &lt;div class="post-card-footer"&gt;
+          &lt;div class="post-stats"&gt;
+            &lt;button 
+              class="like-button"
+              @click.stop="likePost(post.id)"
+              :class="{ liked: post.liked }"
+            &gt;
+              &lt;i&gt;❤️&lt;/i&gt; {{ post.likes }}
+            &lt;/button&gt;
+            &lt;span class="comment-count"&gt;
+              &lt;i&gt;💬&lt;/i&gt; {{ post.comments }}
+            &lt;/span&gt;
+          &lt;/div&gt;
+          &lt;button class="read-more"&gt;Read More →&lt;/button&gt;
+        &lt;/div&gt;
+      &lt;/article&gt;
+    &lt;/div&gt;
+    
+    &lt;div v-if="!loading && filteredPosts.length === 0" class="no-posts"&gt;
+      &lt;p&gt;No blog posts found. Be the first to create one!&lt;/p&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script setup&gt;
+import { computed } from 'vue'
+import { useRouter } from 'vue-router'
+import { useBlogPosts } from '../composables/useBlogPosts'
+
+const router = useRouter()
+const { posts, loading, error, totalPosts, likePost, fetchPosts } = useBlogPosts()
+
+const props = defineProps({
+  categoryFilter: {
+    type: String,
+    default: 'all'
+  },
+  searchQuery: {
+    type: String,
+    default: ''
+  }
+})
+
+const filteredPosts = computed(() =&gt; {
+  let filtered = posts.value
+  
+  if (props.categoryFilter !== 'all') {
+    filtered = filtered.filter(post =&gt; post.category === props.categoryFilter)
+  }
+  
+  if (props.searchQuery) {
+    const query = props.searchQuery.toLowerCase()
+    filtered = filtered.filter(post =&gt; 
+      post.title.toLowerCase().includes(query) ||
+      post.content.toLowerCase().includes(query) ||
+      post.tags.some(tag =&gt; tag.toLowerCase().includes(query))
+    )
+  }
+  
+  return filtered
+})
+
+const formatDate = (dateString) =&gt; {
+  const options = { year: 'numeric', month: 'short', day: 'numeric' }
+  return new Date(dateString).toLocaleDateString('en-US', options)
+}
+
+const navigateToPost = (id) =&gt; {
+  router.push(`/post/${id}`)
+}
+
+const retryLoading = () =&gt; {
+  fetchPosts()
+}
+&lt;/script&gt;
+
+&lt;style scoped&gt;
+/* Styles from the Vue 3 article */
+.post-list-container {
+  width: 100%;
+}
+
+.posts-header {
+  margin-bottom: 2rem;
+  border-bottom: 2px solid var(--primary-color);
+  padding-bottom: 1rem;
+}
+
+.posts-header h2 {
+  margin: 0;
+  color: var(--text-color);
+  font-size: 2rem;
+}
+
+.post-count {
+  color: #666;
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.posts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 2rem;
+}
+
+.post-card {
+  background-color: var(--secondary-bg);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  border: 1px solid var(--border-color);
+}
+
+.post-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+/* More styles... */
+&lt;/style&gt;</code></pre>
+
+                <div class="ad-container">
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-1911859184415905"
+                         data-ad-slot="1122334455"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+
+                <h2>5. Composable: useTheme</h2>
+                <pre><code>import { ref, onMounted, watch } from 'vue'
+import { useStorage } from '@vueuse/core'
+
+export function useTheme() {
+  const isDarkTheme = useStorage('dark-theme', false)
+  
+  const toggleTheme = () =&gt; {
+    isDarkTheme.value = !isDarkTheme.value
+    applyTheme()
+  }
+  
+  const applyTheme = () =&gt; {
+    if (isDarkTheme.value) {
+      document.documentElement.classList.add('dark-theme')
+    } else {
+      document.documentElement.classList.remove('dark-theme')
+    }
+  }
+  
+  // Apply theme on mount and when it changes
+  onMounted(applyTheme)
+  watch(isDarkTheme, applyTheme)
+  
+  return {
+    isDarkTheme,
+    toggleTheme
+  }
+}</code></pre>
+
+                <h2>6. Rich Text Editor Component</h2>
+                <pre><code>&lt;template&gt;
+  &lt;div class="editor-container"&gt;
+    &lt;div class="editor-toolbar"&gt;
+      &lt;button @click="formatText('bold')" :class="{ active: formats.bold }"&gt;
+        &lt;strong&gt;B&lt;/strong&gt;
+      &lt;/button&gt;
+      &lt;button @click="formatText('italic')" :class="{ active: formats.italic }"&gt;
+        &lt;em&gt;I&lt;/em&gt;
+      &lt;/button&gt;
+      &lt;button @click="formatText('underline')" :class="{ active: formats.underline }"&gt;
+        &lt;u&gt;U&lt;/u&gt;
+      &lt;/button&gt;
+      &lt;button @click="insertLink"&gt;🔗&lt;/button&gt;
+      &lt;button @click="insertImage"&gt;🖼️&lt;/button&gt;
+      &lt;select v-model="headingLevel" @change="formatHeading"&gt;
+        &lt;option value=""&gt;Normal&lt;/option&gt;
+        &lt;option value="h1"&gt;Heading 1&lt;/option&gt;
+        &lt;option value="h2"&gt;Heading 2&lt;/option&gt;
+        &lt;option value="h3"&gt;Heading 3&lt;/option&gt;
+      &lt;/select&gt;
+    &lt;/div&gt;
+    
+    &lt;div 
+      ref="editorRef"
+      class="editor-content"
+      contenteditable="true"
+      @input="handleInput"
+      @focus="handleFocus"
+      @blur="handleBlur"
+      @mouseup="updateFormats"
+      @keyup="updateFormats"
+      :placeholder="placeholder"
+    &gt;&lt;/div&gt;
+    
+    &lt;div class="editor-footer"&gt;
+      &lt;div class="char-count"&gt;
+        Characters: {{ characterCount }} | Words: {{ wordCount }}
+      &lt;/div&gt;
+      &lt;div class="editor-actions"&gt;
+        &lt;button @click="clearContent" class="secondary-btn"&gt;Clear&lt;/button&gt;
+        &lt;button @click="emitContent" class="primary-btn"&gt;Insert&lt;/button&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script setup&gt;
+import { ref, computed, onMounted } from 'vue'
+
+const props = defineProps({
+  placeholder: {
+    type: String,
+    default: 'Start writing your blog post here...'
+  },
+  initialContent: {
+    type: String,
+    default: ''
+  }
+})
+
+const emit = defineEmits(['content-updated', 'insert'])
+
+const editorRef = ref(null)
+const headingLevel = ref('')
+const formats = ref({
+  bold: false,
+  italic: false,
+  underline: false
+})
+
+const characterCount = computed(() =&gt; {
+  return getContent().length
+})
+
+const wordCount = computed(() =&gt; {
+  const text = getContent().trim()
+  return text.length ? text.split(/\s+/).length : 0
+})
+
+const getContent = () =&gt; {
+  return editorRef.value ? editorRef.value.innerText : ''
+}
+
+const getHTMLContent = () =&gt; {
+  return editorRef.value ? editorRef.value.innerHTML : ''
+}
+
+const handleInput = () =&gt; {
+  emit('content-updated', {
+    text: getContent(),
+    html: getHTMLContent()
+  })
+}
+
+const formatText = (format) =&gt; {
+  document.execCommand(format, false)
+  updateFormats()
+}
+
+const formatHeading = () =&gt; {
+  if (headingLevel.value) {
+    document.execCommand('formatBlock', false, headingLevel.value)
+  } else {
+    document.execCommand('formatBlock', false, '&lt;div&gt;')
+  }
+}
+
+const insertLink = () =&gt; {
+  const url = prompt('Enter URL:')
+  if (url) {
+    document.execCommand('createLink', false, url)
+  }
+}
+
+const insertImage = () =&gt; {
+  const url = prompt('Enter image URL:')
+  if (url) {
+    document.execCommand('insertImage', false, url)
+  }
+}
+
+const updateFormats = () =&gt; {
+  if (!editorRef.value) return
+  
+  formats.value.bold = document.queryCommandState('bold')
+  formats.value.italic = document.queryCommandState('italic')
+  formats.value.underline = document.queryCommandState('underline')
+}
+
+const handleFocus = () =&gt; {
+  editorRef.value.classList.add('focused')
+}
+
+const handleBlur = () =&gt; {
+  editorRef.value.classList.remove('focused')
+}
+
+const clearContent = () =&gt; {
+  if (editorRef.value) {
+    editorRef.value.innerHTML = ''
+    handleInput()
+  }
+}
+
+const emitContent = () =&gt; {
+  emit('insert', {
+    text: getContent(),
+    html: getHTMLContent()
+  })
+}
+
+// Set initial content if provided
+onMounted(() =&gt; {
+  if (props.initialContent && editorRef.value) {
+    editorRef.value.innerHTML = props.initialContent
+  }
+})
+&lt;/script&gt;
+
+&lt;style scoped&gt;
+/* Styles for the editor */
+.editor-container {
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: var(--secondary-bg);
+}
+
+.editor-toolbar {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  background-color: var(--bg-color);
+  border-bottom: 1px solid var(--border-color);
+}
+
+/* More styles... */
+&lt;/style&gt;</code></pre>
+
+                <h2>7. Main.js Setup</h2>
+                <pre><code>import { createApp } from 'vue'
+import { createRouter, createWebHistory } from 'vue-router'
+import App from './App.vue'
+
+// Import components for routes
+import PostList from './components/PostList.vue'
+import PostDetail from './components/PostDetail.vue'
+import CreatePost from './components/CreatePost.vue'
+
+// Create router
+const router = createRouter({
+  history: createWebHistory(),
+  routes: [
+    { path: '/', component: PostList },
+    { path: '/post/:id', component: PostDetail, props: true },
+    { path: '/create-post', component: CreatePost },
+    { path: '/category/:category', component: PostList, props: true }
+  ]
+})
+
+// Create and mount the app
+const app = createApp(App)
+app.use(router)
+app.mount('#app')</code></pre>
+
+                <h2>Key Vue 3 Composition API Features Demonstrated</h2>
+                <ol>
+                    <li><strong><code>&lt;script setup&gt;</code> Syntax</strong>: Cleaner component setup without the need for explicit setup() function</li>
+                    <li><strong>Reactive State</strong>: Using <code>ref()</code> and <code>reactive()</code> for reactive data</li>
+                    <li><strong>Computed Properties</strong>: Using <code>computed()</code> for derived reactive values</li>
+                    <li><strong>Composables</strong>: Reusable logic in <code>useBlogPosts.js</code> and <code>useTheme.js</code></li>
+                    <li><strong>Lifecycle Hooks</strong>: Using <code>onMounted()</code> for side effects</li>
+                    <li><strong>Watchers</strong>: Using <code>watch()</code> to react to theme changes</li>
+                    <li><strong>Template Refs</strong>: Using <code>ref</code> to access DOM elements</li>
+                    <li><strong>Props and Emits</strong>: Component communication with <code>defineProps()</code> and <code>defineEmits()</code></li>
+                </ol>
+
+                <h2>Next Steps for Your Blog</h2>
+                <ol>
+                    <li>Add a backend API (Node.js/Express, Firebase, or Supabase)</li>
+                    <li>Implement user authentication</li>
+                    <li>Add comment system with replies</li>
+                    <li>Implement post scheduling</li>
+                    <li>Add SEO optimization with meta tags</li>
+                    <li>Create an admin dashboard</li>
+                    <li>Add image upload functionality</li>
+                    <li>Implement post categories and tags filtering</li>
+                </ol>
+
+                <h2>Conclusion</h2>
+                <p>This blog application demonstrates how Vue 3's Composition API enables cleaner, more maintainable code organization compared to the Options API. The composable functions allow you to extract and reuse logic across components, making your codebase more modular and testable.</p>
+
+                <div class="tags">
+                    <strong>Tags:</strong>
+                    <span class="tag">#Vue3</span>
+                    <span class="tag">#CompositionAPI</span>
+                    <span class="tag">#WebDevelopment</span>
+                    <span class="tag">#JavaScript</span>
+                    <span class="tag">#Frontend</span>
+                </div>
+            </div>
+            
+            <div class="post-navigation">
+                <div class="prev-post">
+                    <strong>Previous:</strong>
+                    <a href="react-19-new-features.html">← React 19: A Game-Changer for Modern Web Development</a>
+                </div>
+                <div class="next-post">
+                    <strong>Next:</strong>
+                    <a href="nextjs-14-tutorial.html">Next.js 14 Tutorial: Building Modern Blogs →</a>
+                </div>
+            </div>
+        </article>
+        
+        <aside class="sidebar">
+            <div class="ad-container">
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-1911859184415905"
+                     data-ad-slot="1122334455"
+                     data-ad-format="auto"
+                     data-full-width-responsive="true"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+            </div>
+            
+            <div class="related-posts">
+                <h3>Related Posts</h3>
+                <ul>
+                    <li><a href="react-19-new-features.html">React 19: A Game-Changer for Modern Web Development</a></li>
+                    <li><a href="nextjs-14-tutorial.html">Next.js 14 Tutorial: Building Modern Blogs</a></li>
+                    <li><a href="typescript-beginners.html">TypeScript for Beginners: Web Development Guide</a></li>
+                    <li><a href="../ai-machine-learning/chatgpt-api-guide.html">ChatGPT API Guide for AI Projects</a></li>
+                </ul>
+            </div>
+            
+            <div class="category-links">
+                <h3>Explore Categories</h3>
+                <ul>
+                    <li><a href="../ai-machine-learning/index.html">AI & Machine Learning</a></li>
+                    <li><a href="../cybersecurity/index.html">Cybersecurity</a></li>
+                    <li><a href="../mobile-development/index.html">Mobile Development</a></li>
+                    <li><a href="../cloud-computing/index.html">Cloud Computing</a></li>
+                </ul>
+            </div>
+        </aside>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 Rehan's Tech Blog. All rights reserved.</p>
+            <p>Contact: <a href="mailto:rehanjamadar914@gmail.com">rehanjamadar914@gmail.com</a> | +91 97671360</p>
+            <div class="social-links">
+                <a href="#">GitHub</a> | <a href="#">LinkedIn</a> | <a href="#">Twitter</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../../js/main.js"></script>
+</body>
+</html>

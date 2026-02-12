@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Complete guide to microservices architecture in cloud computing: design patterns, deployment strategies, and best practices">
+    <title>Microservices Architecture - Cloud Computing - Rehan's Tech Blog</title>
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/theme.css">
+    <!-- AdSense verification (demo) -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1911859184415905" crossorigin="anonymous"></script>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo">
+                    <h1><a href="../../index.html">Rehan's Tech Blog</a></h1>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="../../index.html">Home</a></li>
+                    <li class="dropdown">
+                        <a href="#">Categories</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="../web-development/index.html">Web Development</a></li>
+                            <li><a href="../ai-machine-learning/index.html">AI & Machine Learning</a></li>
+                            <li><a href="../cybersecurity/index.html">Cybersecurity</a></li>
+                            <li><a href="../mobile-development/index.html">Mobile Development</a></li>
+                            <li><a href="index.html">Cloud Computing</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="../../about.html">About</a></li>
+                    <li><a href="../../contact.html">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <article class="blog-post">
+            <header class="post-header">
+                <nav class="breadcrumb">
+                    <a href="../../index.html">Home</a> &gt;
+                    <a href="index.html">Cloud Computing</a> &gt;
+                    <span>Microservices Architecture</span>
+                </nav>
+                <h1>Microservices in the Cloud: Building Scalable, Resilient Systems</h1>
+                <div class="post-meta">
+                    <span>By Rehan</span>
+                    <span>March 18, 2024</span>
+                    <span>12 min read</span>
+                </div>
+            </header>
+            
+            <div class="post-content">
+                <!-- Intro -->
+                <h2>Introduction</h2>
+                <p>Cloud computing and microservices have become inseparable. As organizations move away from monolithic architectures, microservices have emerged as the dominant pattern for building cloud-native applications. This guide dives deep into microservices architecture within the cloud ecosystem — from fundamental design principles to advanced deployment strategies using containers, orchestration, and serverless platforms. Whether you're a developer, architect, or DevOps engineer, you'll learn how to harness the full potential of microservices on cloud infrastructure.</p>
+
+                <!-- Ad In-Article -->
+                <div class="ad-container">
+                    <ins class="adsbygoogle"
+                         style="display:block; text-align:center;"
+                         data-ad-layout="in-article"
+                         data-ad-format="fluid"
+                         data-ad-client="ca-pub-1911859184415905"
+                         data-ad-slot="6543217890"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+
+                <h2>What Are Cloud-Native Microservices?</h2>
+                <p>Microservices are an architectural style where a single application is composed of many loosely coupled, independently deployable services. In the cloud, each microservice can be developed, scaled, and maintained by separate teams. Cloud providers offer managed services (databases, message queues, container orchestration) that perfectly complement microservices design.</p>
+                
+                <h3>Core Characteristics</h3>
+                <ul>
+                    <li><strong>Single responsibility</strong> – each service focuses on one business capability</li>
+                    <li><strong>Autonomous</strong> – services can be developed and deployed independently</li>
+                    <li><strong>Decentralized governance</strong> – polyglot persistence and diverse tech stacks</li>
+                    <li><strong>Resilience</strong> – failure in one service doesn't cascade</li>
+                    <li><strong>Elastic scalability</strong> – individual services scale based on demand</li>
+                </ul>
+
+                <h2>Key Microservices Design Patterns for Cloud</h2>
+                
+                <h3>1. Service Discovery</h3>
+                <p>In dynamic cloud environments, service instances come and go. Service discovery patterns (client-side discovery, server-side discovery) allow services to find each other without hardcoding network locations. Tools like Consul, etcd, and AWS Cloud Map provide robust service registry.</p>
+                
+                <pre><code>// Example: Spring Cloud Netflix @EnableEurekaClient
+@SpringBootApplication
+@EnableEurekaClient
+public class OrderServiceApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(OrderServiceApplication.class, args);
+    }
+}</code></pre>
+
+                <h3>2. API Gateway Pattern</h3>
+                <p>An API gateway acts as a single entry point for all clients, routing requests to appropriate microservices. It handles cross-cutting concerns: authentication, logging, rate limiting, and response aggregation. Cloud-managed gateways (AWS API Gateway, Azure API Management) reduce operational overhead.</p>
+
+                <pre><code>// Sample gateway route configuration (YAML)
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: product-service
+          uri: lb://PRODUCT-SERVICE
+          predicates:
+            - Path=/api/products/**
+        - id: order-service
+          uri: lb://ORDER-SERVICE
+          predicates:
+            - Path=/api/orders/**</code></pre>
+
+                <h3>3. Database per Service</h3>
+                <p>Each microservice owns its private database, ensuring loose coupling. In the cloud, you can use different database types per service: PostgreSQL for relational data, MongoDB for documents, DynamoDB for key-value. This pattern prevents unintended sharing and improves scalability.</p>
+
+                <!-- Ad -->
+                <div class="ad-container">
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-1911859184415905"
+                         data-ad-slot="8765432109"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+
+                <h3>4. Event-Driven Architecture & CQRS</h3>
+                <p>Instead of synchronous HTTP calls, microservices communicate via events. Cloud-native message brokers (AWS SNS/SQS, Azure Service Bus, Google Pub/Sub) enable reliable, asynchronous communication. Command Query Responsibility Segregation (CQRS) separates read and write models, optimizing performance and scalability.</p>
+
+                <pre><code>// Publishing domain event with Kafka (Java)
+@Service
+public class OrderService {
+    @Autowired
+    private KafkaTemplate&lt;String, Object&gt; kafkaTemplate;
+    
+    public void placeOrder(Order order) {
+        // business logic
+        OrderPlacedEvent event = new OrderPlacedEvent(order.getId(), order.getTotal());
+        kafkaTemplate.send("order-events", event);
+    }
+}</code></pre>
+
+                <h2>Containerization and Orchestration</h2>
+                <p>Containers are the ideal deployment unit for microservices. Docker packages service code and dependencies, while orchestrators like Kubernetes manage placement, scaling, and networking. All major cloud providers offer managed Kubernetes (EKS, AKS, GKE).</p>
+                
+                <h3>Dockerfile example for a Node.js microservice:</h3>
+                <pre><code>FROM node:18-alpine
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --only=production
+COPY . .
+EXPOSE 3000
+CMD ["node", "server.js"]</code></pre>
+
+                <h3>Kubernetes Deployment (minimal):</h3>
+                <pre><code>apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: inventory-service
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: inventory
+  template:
+    metadata:
+      labels:
+        app: inventory
+    spec:
+      containers:
+      - name: inventory
+        image: rehan/inventory:2.1
+        ports:
+        - containerPort: 8080
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"</code></pre>
+
+                <h2>Serverless Microservices</h2>
+                <p>Serverless computing (AWS Lambda, Azure Functions) takes microservices to the extreme — you only deploy functions, not servers. Ideal for event-driven, low-frequency workloads. Combined with API Gateway, you can build completely serverless microservices backends.</p>
+
+                <pre><code>// AWS Lambda function (Python) – serverless microservice
+import boto3
+import json
+
+def payment_handler(event, context):
+    # process payment
+    body = json.loads(event['body'])
+    transaction_id = body['transaction_id']
+    # ... logic ...
+    return {
+        'statusCode': 200,
+        'body': json.dumps({'message': 'Payment processed', 'id': transaction_id})
+    }</code></pre>
+
+                <!-- Ad -->
+                <div class="ad-container">
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-1911859184415905"
+                         data-ad-slot="3456789012"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+
+                <h2>Observability in Distributed Systems</h2>
+                <p>With dozens of microservices, monitoring becomes critical. The three pillars of observability:</p>
+                <ul>
+                    <li><strong>Logging:</strong> Centralized log aggregation (ELK stack, Loki, CloudWatch)</li>
+                    <li><strong>Metrics:</strong> Prometheus + Grafana, cloud provider monitoring</li>
+                    <li><strong>Tracing:</strong> Distributed tracing (Jaeger, Zipkin, AWS X-Ray) to follow requests across services</li>
+                </ul>
+                
+                <pre><code>// OpenTelemetry instrumentation (Node.js)
+const { NodeTracerProvider } = require('@opentelemetry/node');
+const { SimpleSpanProcessor } = require('@opentelemetry/tracing');
+const { JaegerExporter } = require('@opentelemetry/exporter-jaeger');
+
+const provider = new NodeTracerProvider();
+provider.addSpanProcessor(
+  new SimpleSpanProcessor(new JaegerExporter({ serviceName: 'payment-service' }))
+);
+provider.register();</code></pre>
+
+                <h2>Resilience and Fault Tolerance</h2>
+                <p>In cloud, failures are not an exception; they are a given. Implement patterns like:</p>
+                <ul>
+                    <li><strong>Circuit breaker</strong> – stops calls to failing service</li>
+                    <li><strong>Retry with exponential backoff</strong> – handles transient errors</li>
+                    <li><strong>Bulkhead</strong> – isolates resources per service</li>
+                    <li><strong>Timeout</strong> – prevents hanging requests</li>
+                </ul>
+                
+                <pre><code>// Resilience4j Circuit Breaker (Spring Boot)
+@CircuitBreaker(name = "inventory", fallbackMethod = "fallback")
+public ProductInventory getInventory(String productId) {
+    // call inventory service
+}
+
+public ProductInventory fallback(String productId, Throwable t) {
+    return new ProductInventory(productId, 0, "unavailable");
+}</code></pre>
+
+                <h2>Microservices Security in the Cloud</h2>
+                <p>Security must be embedded at every layer:</p>
+                <ul>
+                    <li><strong>Zero-trust networking:</strong> service meshes (Istio, Linkerd) provide mTLS and fine-grained policies</li>
+                    <li><strong>API security:</strong> OAuth2/JWT validation at gateway</li>
+                    <li><strong>Secrets management:</strong> HashiCorp Vault, AWS Secrets Manager, Azure Key Vault</li>
+                    <li><strong>Compliance:</strong> cloud-native tools for audit trails</li>
+                </ul>
+
+                <pre><code># Kubernetes NetworkPolicy – restrict access
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: api-allow
+spec:
+  podSelector:
+    matchLabels:
+      app: api-gateway
+  ingress:
+  - from:
+    - namespaceSelector: {}
+    ports:
+    - port: 8080</code></pre>
+
+                <h2>Real-World Migration: From Monolith to Microservices</h2>
+                <p><strong>Case Study:</strong> FinTech company migrated monolithic core banking system to microservices on AWS over 18 months.</p>
+                <h4>Strategy:</h4>
+                <ol>
+                    <li>Strangler Fig pattern – gradually replace monolith pieces</li>
+                    <li>Start with low-risk, bounded contexts (user notifications, reporting)</li>
+                    <li>Establish shared infrastructure: EKS, RDS, MSK (Kafka)</li>
+                    <li>Implement CI/CD pipelines for each service</li>
+                </ol>
+                <h4>Results:</h4>
+                <ul>
+                    <li>Deployment frequency increased 8x</li>
+                    <li>Recovery time improved 70%</li>
+                    <li>Cost reduced by 35% through auto-scaling</li>
+                </ul>
+
+                <!-- Ad -->
+                <div class="ad-container">
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-1911859184415905"
+                         data-ad-slot="9988776655"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+
+                <h2>Best Practices for Cloud Microservices</h2>
+                <ol>
+                    <li><strong>Design for failure:</strong> assume everything fails</li>
+                    <li><strong>Automate everything:</strong> CI/CD, infrastructure as code (Terraform, CloudFormation)</li>
+                    <li><strong>Keep services loosely coupled:</strong> prefer asynchronous communication</li>
+                    <li><strong>Enforce API contracts:</strong> OpenAPI/Swagger, gRPC/protobuf</li>
+                    <li><strong>Use managed services</strong> when possible – they reduce operational burden</li>
+                    <li><strong>Implement observability from day one</strong></li>
+                    <li><strong>Set cost budgets and use cloud cost analysis</strong></li>
+                </ol>
+
+                <h2>Future of Microservices in Cloud</h2>
+                <p>Emerging trends include eBPF for deep observability, WebAssembly (Wasm) for lightweight sandboxed microservices, and AI/ML for auto-tuning. The line between serverless and containers continues to blur with projects like Knative and AWS App Runner. Kubernetes is becoming the universal control plane across hybrid cloud.</p>
+
+                <h2>Conclusion</h2>
+                <p>Microservices are not a silver bullet, but when combined with cloud infrastructure, they offer unprecedented agility and scale. Start small, focus on business domains, and gradually adopt proven patterns. Remember that microservices architecture is as much about organization culture and DevOps maturity as it is about technology. The cloud provides the ideal foundation — use it wisely.</p>
+                <p><strong>Ready to build your first cloud microservice?</strong> Begin by containerizing a simple API, deploy it to a Kubernetes cluster or a serverless platform, and add service discovery and monitoring. The journey is challenging but rewarding.</p>
+
+                <div class="tags">
+                    <strong>Tags:</strong>
+                    <span class="tag">#Microservices</span>
+                    <span class="tag">#CloudComputing</span>
+                    <span class="tag">#Kubernetes</span>
+                    <span class="tag">#Docker</span>
+                    <span class="tag">#DevOps</span>
+                    <span class="tag">#Serverless</span>
+                </div>
+            </div>
+            
+            <!-- Post navigation: consistent with Rehan's blog style -->
+            <div class="post-navigation">
+                <div class="prev-post">
+                    <strong>Previous:</strong>
+                    <a href="serverless-architectures.html">← Serverless Architectures: FaaS and Beyond</a>
+                </div>
+                <div class="next-post">
+                    <strong>Next:</strong>
+                    <a href="../web-development/react-19-features.html">React 19: A Game-Changer for Modern Web Development →</a>
+                </div>
+            </div>
+        </article>
+        
+        <aside class="sidebar">
+            <!-- Ad side -->
+            <div class="ad-container">
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-1911859184415905"
+                     data-ad-slot="5544332211"
+                     data-ad-format="auto"
+                     data-full-width-responsive="true"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+            </div>
+            
+            <div class="related-posts">
+                <h3>Related Cloud Posts</h3>
+                <ul>
+                    <li><a href="kubernetes-practical-guide.html">Kubernetes: Practical Guide for Developers</a></li>
+                    <li><a href="serverless-architectures.html">Serverless Architectures: FaaS and Beyond</a></li>
+                    <li><a href="containers-guide.html">Containers Guide: App's Perfect Packaging</a></li>
+                    <li><a href="devops-ci-cd-pipelines.html">CI/CD Pipelines on AWS/Azure/GCP</a></li>
+                    <li><a href="../cybersecurity/cloud-security-best-practices.html">Cloud Security Best Practices</a></li>
+                </ul>
+            </div>
+            
+            <div class="category-links">
+                <h3>Other Categories</h3>
+                <ul>
+                    <li><a href="../web-development/index.html">Web Development</a></li>
+                    <li><a href="../ai-machine-learning/index.html">AI & Machine Learning</a></li>
+                    <li><a href="../mobile-development/index.html">Mobile Development</a></li>
+                    <li><a href="../cybersecurity/index.html">Cybersecurity</a></li>
+                </ul>
+            </div>
+        </aside>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 Rehan's Tech Blog. All rights reserved.</p>
+            <p>Contact: <a href="mailto:rehanjamadar914@gmail.com">rehanjamadar914@gmail.com</a> | +91 97671360</p>
+            <div class="social-links">
+                <a href="#">GitHub</a> | <a href="#">LinkedIn</a> | <a href="#">Twitter</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../../js/main.js"></script>
+    <!-- No dark mode: clean, light theme as requested -->
+</body>
+</html>

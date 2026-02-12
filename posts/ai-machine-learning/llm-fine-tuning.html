@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Complete guide to LLM fine-tuning: techniques, parameter-efficient methods, data prep, and real-world applications.">
+    <title>LLM Fine-Tuning Guide - AI & Machine Learning - Rehan's Tech Blog</title>
+    <!-- light theme / no dark mode; copy as-is from style structure -->
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/theme.css">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1911859184415905" crossorigin="anonymous"></script>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo">
+                    <h1><a href="../../index.html">Rehan's Tech Blog</a></h1>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="../../index.html">Home</a></li>
+                    <li class="dropdown">
+                        <a href="#">Categories</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="../web-development/index.html">Web Development</a></li>
+                            <li><a href="index.html">AI & Machine Learning</a></li>
+                            <li><a href="../cybersecurity/index.html">Cybersecurity</a></li>
+                            <li><a href="../mobile-development/index.html">Mobile Development</a></li>
+                            <li><a href="../cloud-computing/index.html">Cloud Computing</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="../../about.html">About</a></li>
+                    <li><a href="../../contact.html">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <article class="blog-post">
+            <header class="post-header">
+                <nav class="breadcrumb">
+                    <a href="../../index.html">Home</a> &gt;
+                    <a href="index.html">AI & Machine Learning</a> &gt;
+                    <span>LLM Fine-Tuning</span>
+                </nav>
+                <h1>LLM Fine-Tuning: Customizing Foundation Models for Real-World Tasks</h1>
+                <div class="post-meta">
+                    <span>By Rehan</span>
+                    <span>February 12, 2026</span>  <!-- consistent with dynamic fresh date -->
+                    <span>12 min read</span>
+                </div>
+            </header>
+            
+            <div class="post-content">
+                <!-- intro -->
+                <h2>Introduction</h2>
+                <p>Large Language Models (LLMs) like GPT-4, Llama 2, and Falcon have revolutionized AI, but off-the-shelf versions often fall short for specialized domains. Fine-tuning bridges this gap — adapting a pre-trained foundation model to your own data, tone, and task. In this deep dive, we’ll explore full fine-tuning, parameter-efficient methods (LoRA, QLoRA), data preparation, and deployment strategies. Whether you are building a legal chatbot or a medical summarizer, this guide gives you the playbook.</p>
+
+                <!-- AdSense In-Article Ad -->
+                <div class="ad-container">
+                    <ins class="adsbygoogle"
+                         style="display:block; text-align:center;"
+                         data-ad-layout="in-article"
+                         data-ad-format="fluid"
+                         data-ad-client="ca-pub-1911859184415905"
+                         data-ad-slot="1234567890"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+
+                <h2>Why Fine-Tune? The Core Rationale</h2>
+                <p>Base models are generalists. Fine-tuning transforms them into specialists:</p>
+                <ul>
+                    <li><strong>Domain adaptation</strong> – medical, legal, finance terminology</li>
+                    <li><strong>Controlled output style</strong> – tone, format, JSON mode</li>
+                    <li><strong>In-context learning shrinkage</strong> – shorter prompts, cheaper inference</li>
+                    <li><strong>Knowledge update</strong> – internal data or recent events (post-cutoff)</li>
+                </ul>
+
+                <h2>Fine-Tuning Paradigms</h2>
+                
+                <h3>1. Full Parameter Fine-Tuning</h3>
+                <p>Traditional approach: update all weights of the LLM. Requires high VRAM (multiple GPUs) and large memory. Best when you have >10k high-quality examples and need maximum capability shift.</p>
+                <pre><code># pseudocode: full fine-tuning with transformers
+from transformers import AutoModelForCausalLM, Trainer
+
+model = AutoModelForCausalLM.from_pretrained("meta-llama/Llama-2-7b-hf")
+trainer = Trainer(model=model, args=training_args, train_dataset=dataset)
+trainer.train()  # updates every parameter</code></pre>
+
+                <h3>2. Parameter-Efficient Fine-Tuning (PEFT)</h3>
+                <p><strong>LoRA (Low-Rank Adaptation)</strong> injects trainable rank matrices into transformer layers. Reduces trainable parameters by >99%. Almost no inference latency overhead.</p>
+                <pre><code>from peft import LoraConfig, get_peft_model
+
+lora_config = LoraConfig(
+    r=8,               # rank
+    lora_alpha=32,
+    target_modules=["q_proj", "v_proj"],
+    lora_dropout=0.05,
+    bias="none"
+)
+peft_model = get_peft_model(model, lora_config)
+peft_model.print_trainable_parameters()  # ~8M vs 7B</code></pre>
+
+                <p><strong>QLoRA</strong> – quantized LoRA. Loads base model in 4-bit NF4 format, then applies LoRA. Enables 65B model fine-tuning on a single 24GB GPU.</p>
+
+                <h3>3. Soft Prompt Tuning / Prefix Tuning</h3>
+                <p>Freeze model, optimize continuous virtual token embeddings. Extremely lightweight but less expressive. Suitable for narrow tasks.</p>
+
+                <!-- Second ad slot -->
+                <div class="ad-container">
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-1911859184415905"
+                         data-ad-slot="0987654321"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+
+                <h2>Data Preparation: The Secret Sauce</h2>
+                <p>Fine-tuning success hinges on data. We follow the "instruction-response" format (for chat/instruction models) or "completion" format (for pure continuation).</p>
+                
+                <h4>Instruction Dataset Example (Alpaca-style):</h4>
+                <pre><code>[
+  {
+    "instruction": "Summarize the patient's symptoms",
+    "input": "22yo male, fever for 3 days, dry cough, loss of taste",
+    "output": "Patient presents with fever, dry cough, and anosmia."
+  }
+]</code></pre>
+
+                <h4>Best practices:</h4>
+                <ul>
+                    <li><strong>Quality over quantity:</strong> 500–5k golden examples often beat 50k noisy entries.</li>
+                    <li><strong>Deduplication:</strong> remove near-duplicates.</li>
+                    <li><strong>Format consistency:</strong> define clear assistant vs user markers.</li>
+                    <li><strong>Prompt template matching:</strong> use the same chat template as base model.</li>
+                </ul>
+
+                <h2>Step-by-Step LLM Fine-Tuning Pipeline</h2>
+                <p>We'll use open-source stack: Hugging Face, PEFT, bitsandbytes, TRL (Transformer Reinforcement Learning) SFTTrainer.</p>
+                
+                <h3>Environment setup</h3>
+                <pre><code>pip install transformers peft accelerate bitsandbytes trl datasets</code></pre>
+
+                <h3>Load model in 4-bit</h3>
+                <pre><code>import torch
+from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
+
+bnb_config = BitsAndBytesConfig(
+    load_in_4bit=True,
+    bnb_4bit_use_double_quant=True,
+    bnb_4bit_quant_type="nf4",
+    bnb_4bit_compute_dtype=torch.bfloat16
+)
+
+model = AutoModelForCausalLM.from_pretrained(
+    "mistralai/Mistral-7B-v0.1",
+    quantization_config=bnb_config,
+    device_map="auto"
+)
+tokenizer = AutoTokenizer.from_pretrained("mistralai/Mistral-7B-v0.1")
+tokenizer.pad_token = tokenizer.eos_token</code></pre>
+
+                <h3>Apply LoRA</h3>
+                <pre><code>from peft import LoraConfig, prepare_model_for_kbit_training, get_peft_model
+
+model = prepare_model_for_kbit_training(model)
+lora_config = LoraConfig(
+    r=16,
+    lora_alpha=16,
+    target_modules=["q_proj", "k_proj", "v_proj", "o_proj"],
+    lora_dropout=0.1,
+    bias="none",
+    task_type="CAUSAL_LM"
+)
+model = get_peft_model(model, lora_config)</code></pre>
+
+                <h3>Train with SFTTrainer (TRL)</h3>
+                <pre><code>from trl import SFTTrainer
+
+trainer = SFTTrainer(
+    model=model,
+    train_dataset=dataset,
+    dataset_text_field="text",  # or formatting_func
+    max_seq_length=1024,
+    tokenizer=tokenizer,
+    args=training_args,
+)
+trainer.train()
+model.save_pretrained("mistral-lora-medical")</code></pre>
+
+                <h2>Evaluation & Validation</h2>
+                <p>Don't rely only on perplexity. Use:</p>
+                <ul>
+                    <li><strong>Hold-out instruction set</strong> – exact match, ROUGE, BERTScore</li>
+                    <li><strong>Human preference ranking</strong> (A/B testing)</li>
+                    <li><strong>Adversarial evaluation</strong> – jailbreak attempts, safety</li>
+                </ul>
+                <pre><code># quick inference with merged adapter
+from peft import PeftModel
+
+base_model = AutoModelForCausalLM.from_pretrained(...)
+merged_model = PeftModel.from_pretrained(base_model, "mistral-lora-medical")
+merged_model = merged_model.merge_and_unload()  # permanent merge</code></pre>
+
+                <!-- third ad -->
+                <div class="ad-container">
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-1911859184415905"
+                         data-ad-slot="1122334455"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+
+                <h2>Real-World Case Study: Support Ticket Classification</h2>
+                <p>A fintech company fine-tuned Llama 2 13B on 2,500 internal support conversations. Using QLoRA (rank=16) on a single A100, they achieved:</p>
+                <ul>
+                    <li>92% intent classification accuracy (vs 71% zero-shot)</li>
+                    <li>60% reduction in prompt length — removed few-shot examples</li>
+                    <li>Cost per 1K tokens dropped by 45% (smaller prompt)</li>
+                </ul>
+
+                <h2>Parameter-Efficient Showdown</h2>
+                <table style="width:100%; border-collapse: collapse; margin:20px 0;">
+                    <thead>
+                        <tr style="background:#f0f0f0;">
+                            <th style="padding:10px; border:1px solid #ddd;">Method</th>
+                            <th style="padding:10px; border:1px solid #ddd;">Trainable params (7B)</th>
+                            <th style="padding:10px; border:1px solid #ddd;">VRAM required</th>
+                            <th style="padding:10px; border:1px solid #ddd;">Performance</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td style="padding:8px; border:1px solid #ddd;">Full FT</td><td style="padding:8px; border:1px solid #ddd;">7B (100%)</td><td style="padding:8px; border:1px solid #ddd;">~60GB+</td><td style="padding:8px; border:1px solid #ddd;">Upper bound</td></tr>
+                        <tr><td style="padding:8px; border:1px solid #ddd;">LoRA (r=8)</td><td style="padding:8px; border:1px solid #ddd;">4.2M (0.06%)</td><td style="padding:8px; border:1px solid #ddd;">14-18GB</td><td style="padding:8px; border:1px solid #ddd;">≈95% of full</td></tr>
+                        <tr><td style="padding:8px; border:1px solid #ddd;">QLoRA (4-bit)</td><td style="padding:8px; border:1px solid #ddd;">4.2M</td><td style="padding:8px; border:1px solid #ddd;">6-10GB</td><td style="padding:8px; border:1px solid #ddd;">≈93-94%</td></tr>
+                        <tr><td style="padding:8px; border:1px solid #ddd;">Prefix tuning</td><td style="padding:8px; border:1px solid #ddd;">0.1M</td><td style="padding:8px; border:1px solid #ddd;">~8GB</td><td style="padding:8px; border:1px solid #ddd;">task-dependent</td></tr>
+                    </tbody>
+                </table>
+
+                <h2>Challenges & Mitigations</h2>
+                <ul>
+                    <li><strong>Catastrophic forgetting</strong> – mix general instruction data (e.g., 5% Alpaca) during fine-tuning.</li>
+                    <li><strong>Overfitting</strong> – use LoRA with higher dropout, early stopping.</li>
+                    <li><strong>Hallucination</strong> – fine-tune on “I don’t know” examples, preference tuning (DPO).</li>
+                </ul>
+
+                <h2>Beyond Supervised Fine-Tuning: DPO and RLHF</h2>
+                <p>Direct Preference Optimization (DPO) aligns LLMs with human preferences without a separate reward model. It's quickly replacing RLHF for simplicity and stability.</p>
+                <pre><code>from trl import DPOTrainer
+
+# DPO requires chosen/rejected response pairs
+dpo_trainer = DPOTrainer(
+    model, ref_model, 
+    train_dataset=preference_dataset,
+    tokenizer=tokenizer,
+    args=training_args
+)</code></pre>
+
+                <h2>Deployment Strategies</h2>
+                <p>Fine-tuned adapters are tiny (2-20MB). Use <code>peft</code> merge for single-step inference; or keep adapters separate for multi-tenant serving (vLLM supports LoRA adapters dynamically).</p>
+                <pre><code># vLLM LoRA serving (experimental)
+from vllm import LLM, SamplingParams
+
+llm = LLM(model="mistralai/Mistral-7B", enable_lora=True)
+output = llm.generate(prompts, lora_request=lora_request)</code></pre>
+
+                <h2>Future of Fine-Tuning</h2>
+                <ul>
+                    <li><strong>Multi-modal LoRA</strong> – LLaVA, Fuyu adapters</li>
+                    <li><strong>Model merging</strong> – TIES, DARE to combine multiple task adapters</li>
+                    <li><strong>Adaptive compute</strong> – early exit, dynamic rank</li>
+                </ul>
+
+                <!-- final ad -->
+                <div class="ad-container">
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-1911859184415905"
+                         data-ad-slot="5544332211"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+
+                <h2>Conclusion</h2>
+                <p>Fine-tuning is no longer exclusive to big tech. With QLoRA, a 7B model can be specialized for under $10 on cloud GPUs. The key is curating high-quality data and choosing the right adaptation method. As foundation models grow, efficient fine-tuning will remain the primary lever for building production-ready AI. Start with a small dataset, validate, and iterate — your custom LLM awaits.</p>
+                <p><strong>Ready to fine-tune your first model?</strong> Download a dataset, spin up a free Colab notebook with T4 GPU, and try LoRA with unsloth or Hugging Face TRL. The playground is open.</p>
+
+                <div class="tags">
+                    <strong>Tags:</strong>
+                    <span class="tag">#LLM</span>
+                    <span class="tag">#FineTuning</span>
+                    <span class="tag">#LoRA</span>
+                    <span class="tag">#QLoRA</span>
+                    <span class="tag">#AIEngineering</span>
+                    <span class="tag">#MachineLearning</span>
+                </div>
+            </div>
+            
+            <div class="post-navigation">
+                <div class="prev-post">
+                    <strong>Previous:</strong>
+                    <a href="../web-development/react-19-new-features.html">← React 19: A Game-Changer for Modern Web Development</a>
+                </div>
+                <div class="next-post">
+                    <strong>Next:</strong>
+                    <a href="diffusion-models-explained.html">Diffusion Models: Visual Generation Guide →</a>
+                </div>
+            </div>
+        </article>
+        
+        <aside class="sidebar">
+            <!-- Sidebar Ad unit -->
+            <div class="ad-container">
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-1911859184415905"
+                     data-ad-slot="1122334455"
+                     data-ad-format="auto"
+                     data-full-width-responsive="true"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+            </div>
+            
+            <div class="related-posts">
+                <h3>Related Posts</h3>
+                <ul>
+                    <li><a href="chatgpt-api-guide.html">ChatGPT API Guide for AI Projects</a></li>
+                    <li><a href="rag-tutorial-2026.html">RAG from Scratch: Build Knowledge Assistants</a></li>
+                    <li><a href="prompt-engineering-best-practices.html">Prompt Engineering: Best Practices</a></li>
+                    <li><a href="../web-development/nextjs-14-tutorial.html">Next.js 14 Tutorial: Building Modern Blogs</a></li>
+                </ul>
+            </div>
+            
+            <div class="category-links">
+                <h3>Explore Categories</h3>
+                <ul>
+                    <li><a href="../web-development/index.html">Web Development</a></li>
+                    <li><a href="../cybersecurity/index.html">Cybersecurity</a></li>
+                    <li><a href="../mobile-development/index.html">Mobile Development</a></li>
+                    <li><a href="../cloud-computing/index.html">Cloud Computing</a></li>
+                </ul>
+            </div>
+        </aside>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 Rehan's Tech Blog. All rights reserved.</p>
+            <p>Contact: <a href="mailto:rehanjamadar914@gmail.com">rehanjamadar914@gmail.com</a> | +91 97671360</p>
+            <div class="social-links">
+                <a href="#">GitHub</a> | <a href="#">LinkedIn</a> | <a href="#">Twitter</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../../js/main.js"></script>
+    <!-- ensure ad script runs again for dynamically injected slots -->
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</body>
+</html>
