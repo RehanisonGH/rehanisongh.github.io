@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChatGPT API · integration guide · AI & ML</title>
+    <!-- Font & icons (clean, modern) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Syntax highlighting for code snippets (simple) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f9fafc;
+            color: #1e293b;
+            line-height: 1.6;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 32px;
+            box-shadow: 0 20px 35px -8px rgba(0,0,0,0.05), 0 5px 15px rgba(0,0,0,0.02);
+            overflow: hidden;
+            border: 1px solid #eef2f6;
+        }
+
+        /* header / category marker */
+        .category-bar {
+            background: linear-gradient(105deg, #0b2b3d 0%, #133c4c 100%);
+            padding: 0.9rem 2.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            border-bottom: 1px solid #1f4e5e;
+        }
+
+        .category-bar i {
+            color: #7dd3fc;
+            font-size: 1.2rem;
+        }
+
+        .category-bar span {
+            color: #e0f2fe;
+            font-weight: 600;
+            font-size: 0.95rem;
+            letter-spacing: 0.3px;
+            text-transform: uppercase;
+        }
+
+        .category-bar strong {
+            color: white;
+            font-weight: 700;
+            margin-left: 4px;
+            background: rgba(255,255,255,0.1);
+            padding: 0.2rem 0.8rem;
+            border-radius: 24px;
+            font-size: 0.85rem;
+        }
+
+        /* main layout */
+        .guide-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 280px;
+            gap: 0;
+            background: white;
+        }
+
+        @media (max-width: 900px) {
+            .guide-wrapper {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* main content – guide */
+        .guide-content {
+            padding: 2.5rem 2.5rem 2.8rem 2.5rem;
+            border-right: 1px solid #ecf1f5;
+        }
+
+        .guide-header {
+            margin-bottom: 2.5rem;
+        }
+
+        .badge {
+            display: inline-block;
+            background: #dbeafe;
+            color: #1e40af;
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 0.3rem 0.9rem;
+            border-radius: 30px;
+            letter-spacing: 0.4px;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+            border: 1px solid #bfdbfe;
+        }
+
+        h1 {
+            font-size: 2.4rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+            color: #0f172a;
+            margin-bottom: 1rem;
+        }
+
+        .subhead {
+            font-size: 1.2rem;
+            color: #475569;
+            font-weight: 400;
+            border-left: 5px solid #10a37f;
+            padding-left: 1.5rem;
+            margin-top: 0.5rem;
+            background: #f8fafc;
+            padding: 1.2rem 1.8rem;
+            border-radius: 20px;
+            background: #f1f5f9;
+            border-left: 6px solid #10a37f;
+        }
+
+        .subhead i {
+            color: #0b6e4f;
+            margin-right: 6px;
+        }
+
+        h2 {
+            font-size: 1.6rem;
+            font-weight: 650;
+            margin-top: 2.5rem;
+            margin-bottom: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 0.65rem;
+            color: #0f172a;
+        }
+
+        h2 i {
+            color: #10a37f;
+            font-size: 1.6rem;
+        }
+
+        h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-top: 1.8rem;
+            margin-bottom: 0.6rem;
+            color: #1e293b;
+        }
+
+        p {
+            color: #334155;
+            margin-bottom: 1.2rem;
+        }
+
+        ul, ol {
+            margin-left: 1.5rem;
+            margin-bottom: 1.8rem;
+        }
+
+        li {
+            margin-bottom: 0.45rem;
+            color: #2d3a4a;
+        }
+
+        li i {
+            color: #10a37f;
+            width: 1.4rem;
+        }
+
+        .code-block {
+            background: #0d1b1e;
+            border-radius: 18px;
+            margin: 1.8rem 0;
+            padding: 1.3rem 1.5rem;
+            overflow-x: auto;
+            border: 1px solid #2d3f44;
+            box-shadow: 0 6px 12px -6px rgba(0,0,0,0.2);
+        }
+
+        .code-block code {
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+            font-size: 0.9rem;
+            color: #e2e8f0;
+        }
+
+        .api-card {
+            background: linear-gradient(145deg, #ffffff, #f6f9fc);
+            border-radius: 24px;
+            padding: 1.6rem 2rem;
+            border: 1px solid #e9edf2;
+            margin: 2rem 0 1.5rem 0;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+        }
+
+        .api-card i {
+            color: #2563eb;
+        }
+
+        .pill-endpoint {
+            background: #e6edf3;
+            display: inline-block;
+            border-radius: 50px;
+            padding: 0.4rem 1.2rem;
+            font-family: monospace;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #0c4a6e;
+            border: 1px solid #b9d3e8;
+            background: #f1f9ff;
+            margin-bottom: 0.8rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0 1.5rem;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+        }
+
+        th {
+            background-color: #f1f6f9;
+            font-weight: 600;
+            color: #1e3a5f;
+            padding: 0.9rem 1.2rem;
+            text-align: left;
+            border-bottom: 2px solid #cbd5e1;
+        }
+
+        td {
+            padding: 1rem 1.2rem;
+            border-bottom: 1px solid #e6edf4;
+            background-color: white;
+            vertical-align: top;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .note {
+            background: #fffbeb;
+            border-radius: 16px;
+            padding: 1.5rem 1.8rem;
+            border-left: 8px solid #f59e0b;
+            margin: 2rem 0;
+            color: #4b3d1a;
+            font-size: 0.98rem;
+        }
+
+        /* right sidebar — resources & meta */
+        .guide-sidebar {
+            background-color: #fafcfe;
+            padding: 2.5rem 2rem;
+            border-left: 1px solid #ecf1f5;
+        }
+
+        .sidebar-section {
+            margin-bottom: 2.8rem;
+        }
+
+        .sidebar-title {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: #64748b;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px dashed #d1d9e0;
+            padding-bottom: 0.7rem;
+        }
+
+        .resource-list {
+            list-style: none;
+            margin-left: 0;
+        }
+
+        .resource-list li {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin-bottom: 1.1rem;
+            font-size: 0.98rem;
+        }
+
+        .resource-list i {
+            width: 1.6rem;
+            color: #10a37f;
+            font-size: 1.2rem;
+            text-align: center;
+        }
+
+        .resource-list a {
+            text-decoration: none;
+            color: #2563eb;
+            font-weight: 500;
+        }
+
+        .resource-list a:hover {
+            text-decoration: underline;
+        }
+
+        .divider {
+            height: 1px;
+            background: radial-gradient(circle, #b1c6d4 30%, transparent 100%);
+            margin: 2rem 0;
+            opacity: 0.4;
+        }
+
+        .model-tag {
+            background: white;
+            border-radius: 30px;
+            padding: 0.5rem 1.2rem;
+            border: 1px solid #d1dbe6;
+            display: inline-block;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #1e293b;
+            margin-right: 0.6rem;
+            margin-bottom: 0.6rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+        }
+
+        .model-tag i {
+            margin-right: 6px;
+            color: #10a37f;
+        }
+
+        .footer-note {
+            margin-top: 2.5rem;
+            font-size: 0.88rem;
+            color: #5f6c80;
+            background: #edf2f7;
+            padding: 1.4rem 2rem;
+            border-radius: 20px;
+            border: 1px solid #dfe7ef;
+            grid-column: 1 / -1;
+        }
+
+        .footer-note i {
+            color: #2563eb;
+            margin-right: 8px;
+        }
+
+        /* small adjustments */
+        .fa-solid, .fa-regular {
+            margin-right: 4px;
+        }
+
+        .highlight {
+            background: #e6f7ec;
+            padding: 0.1rem 0.3rem;
+            border-radius: 6px;
+            font-weight: 500;
+            color: #0b6e4f;
+        }
+    </style>
+    <!-- Prism for code highlighting -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js" defer></script>
+</head>
+<body>
+    <div class="container">
+        <!-- category label: AI & MACHINE LEARNING  -->
+        <div class="category-bar">
+            <i class="fas fa-microchip"></i>
+            <span>category / ai & machine learning</span>
+            <strong>ChatGPT API guide</strong>
+        </div>
+
+        <div class="guide-wrapper">
+            <!-- MAIN GUIDE CONTENT (LEFT) -->
+            <div class="guide-content">
+                <div class="guide-header">
+                    <span class="badge"><i class="fas fa-robot"></i> openai official · v1</span>
+                    <h1>ChatGPT API<br>integration handbook</h1>
+                    <div class="subhead">
+                        <i class="fas fa-bolt"></i> From zero to production: use GPT-4, GPT-3.5 Turbo & function calling. Practical, secure and scalable.
+                    </div>
+                </div>
+
+                <!-- QUICK INTRO -->
+                <p style="font-size: 1.08rem;"><span class="highlight"><i class="fas fa-check-circle"></i> Updated 2025</span> — The ChatGPT API gives you access to OpenAI's most advanced language models. This guide covers authentication, chat completions, streaming, function calling, and best practices. <strong>All examples use the latest SDK and gpt-4o/gpt-3.5-turbo.</strong></p>
+                
+                <!-- 1. SETUP & AUTH -->
+                <h2><i class="fas fa-key"></i> 1. Authentication & setup</h2>
+                <p>Install the official OpenAI Python SDK (or use REST). Generate an API key from the <a href="#" style="color: #2563eb; text-decoration: none; border-bottom: 1px dashed #9bb8e0;">OpenAI dashboard</a>.</p>
+                <div class="code-block">
+                    <pre style="margin:0; background: transparent;"><code class="language-bash"># Install the library
+pip install --upgrade openai</code></pre>
+                </div>
+                <div class="code-block">
+                    <pre style="margin:0; background: transparent;"><code class="language-python"># Minimal setup (OpenAI v1+)
+import os
+from openai import OpenAI
+
+client = OpenAI(
+    api_key=os.environ.get("OPENAI_API_KEY")   # always use env variable
+)
+
+# Quick test: list models
+models = client.models.list()
+print(models.data[0].id)</code></pre>
+                </div>
+                <p><i class="fas fa-shield-alt" style="color:#1e40af;"></i> Never hard‑code keys. Use environment variables or secret managers.</p>
+                
+                <!-- 2. CHAT COMPLETIONS -->
+                <h2><i class="fas fa-comment-dots"></i> 2. Chat completions (core)</h2>
+                <p>The chat completion endpoint is the primary interface. Send a list of messages with <code class="language-plaintext" style="background: #e2e8f0; padding: 0.2rem 0.5rem;">role</code> (system, user, assistant).</p>
+                <div class="api-card">
+                    <span class="pill-endpoint"><i class="fas fa-link"></i> POST https://api.openai.com/v1/chat/completions</span>
+                    <div class="code-block" style="margin-top: 0.6rem; margin-bottom: 0.2rem;">
+                        <pre style="margin:0;"><code class="language-python">response = client.chat.completions.create(
+    model="gpt-4o",  # or "gpt-3.5-turbo"
+    messages=[
+        {"role": "system", "content": "You are a helpful AI assistant, expert in AI & ML."},
+        {"role": "user", "content": "Explain function calling in ChatGPT API."}
+    ],
+    temperature=0.3,
+    max_tokens=500
+)
+
+print(response.choices[0].message.content)</code></pre>
+                    </div>
+                </div>
+                <h3>Key parameters</h3>
+                <table>
+                    <thead><tr><th>Parameter</th><th>Type</th><th>Description</th></tr></thead>
+                    <tbody>
+                        <tr><td><code>model</code></td><td>string</td><td><strong>Required.</strong> e.g. gpt-4o, gpt-3.5-turbo</td></tr>
+                        <tr><td><code>messages</code></td><td>array</td><td>list of message objects (system/user/assistant/tool)</td></tr>
+                        <tr><td><code>temperature</code></td><td>float</td><td>0–2. Lower = deterministic, higher = random.</td></tr>
+                        <tr><td><code>stream</code></td><td>boolean</td><td>if true, send token-by-token stream (SSE).</td></tr>
+                        <tr><td><code>tools</code></td><td>array</td><td>function calling schemas.</td></tr>
+                    </tbody>
+                </table>
+
+                <!-- 3. STREAMING EXAMPLE -->
+                <h2><i class="fas fa-water"></i> 3. Streaming responses</h2>
+                <p>Stream tokens incrementally for a chat‑like experience. Perfect for UI interactivity.</p>
+                <div class="code-block">
+                    <pre style="margin:0;"><code class="language-python">stream = client.chat.completions.create(
+    model="gpt-3.5-turbo",
+    messages=[{"role": "user", "content": "Count from 1 to 5."}],
+    stream=True,
+)
+
+for chunk in stream:
+    if chunk.choices[0].delta.content is not None:
+        print(chunk.choices[0].delta.content, end="")</code></pre>
+                </div>
+
+                <!-- 4. FUNCTION CALLING (ADVANCED) -->
+                <h2><i class="fas fa-tools"></i> 4. Function calling (tools)</h2>
+                <p>Connect the model to external APIs or logic. Define tools, let the model decide when to call them.</p>
+                <div class="code-block">
+                    <pre style="margin:0;"><code class="language-python">tools = [
+    {
+        "type": "function",
+        "function": {
+            "name": "get_weather",
+            "description": "Get current temperature for a location",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "location": {"type": "string"},
+                    "unit": {"enum": ["celsius", "fahrenheit"]}
+                },
+                "required": ["location"]
+            }
+        }
+    }
+]
+
+response = client.chat.completions.create(
+    model="gpt-4o",
+    messages=[{"role": "user", "content": "What's the weather in Oslo?"}],
+    tools=tools,
+    tool_choice="auto"
+)
+
+# the response includes tool calls 
+tool_call = response.choices[0].message.tool_calls[0]
+print(f"Call function: {tool_call.function.name} with args {tool_call.function.arguments}")</code></pre>
+                </div>
+                <p>After executing your function, send back the result with <code>role: "tool"</code>.</p>
+                
+                <!-- 5. SYSTEM PROMPT & SAFETY -->
+                <h2><i class="fas fa-shield-hal"></i> 5. System prompts & safety</h2>
+                <p>Set behavior via <strong>system message</strong>. Keep it clear and directive. Guard against prompt injection.</p>
+                <ul>
+                    <li><i class="fas fa-check-circle"></i> <span class="highlight">System:</span> "You are a financial advisor for educational purposes only."</li>
+                    <li><i class="fas fa-check-circle"></i> Use <code>temperature=0</code> for factual tasks.</li>
+                    <li><i class="fas fa-check-circle"></i> Validate and sanitize user inputs when using function calling.</li>
+                </ul>
+                <div class="note">
+                    <i class="fas fa-triangle-exclamation" style="margin-right: 12px; font-size: 1.3rem;"></i> 
+                    <strong>Rate limits & costs:</strong> ChatGPT API is billed per token (input + output). Monitor usage in the OpenAI dashboard. Implement exponential backoff for 429 errors.
+                </div>
+                
+                <!-- 6. structured output JSON mode -->
+                <h2><i class="fas fa-file-code"></i> 6. JSON mode & structured data</h2>
+                <p>Set <code>response_format={ "type": "json_object" }</code> to enforce valid JSON. Don't forget to instruct the model to produce JSON.</p>
+                <div class="code-block">
+                    <pre style="margin:0;"><code class="language-python">response = client.chat.completions.create(
+    model="gpt-4o",
+    messages=[
+        {"role": "system", "content": "Extract name, age, and city. Output JSON."},
+        {"role": "user", "content": "John is 28 and lives in Berlin."}
+    ],
+    response_format={ "type": "json_object" }
+)
+data = response.choices[0].message.content
+# {"name": "John", "age": 28, "city": "Berlin"}</code></pre>
+                </div>
+                
+                <!-- 7. ERROR HANDLING MINI -->
+                <h2><i class="fas fa-exclamation-triangle"></i> 7. Error handling basics</h2>
+                <p>Always wrap calls in try/except. OpenAI raises specific exceptions.</p>
+                <div class="code-block">
+                    <pre style="margin:0;"><code class="language-python">from openai import APIError, RateLimitError, APIConnectionError
+
+try:
+    response = client.chat.completions.create(...)
+except RateLimitError:
+    print("💤 Rate limited – implement backoff.")
+except APIConnectionError:
+    print("🔌 Network issue.")
+except APIError as e:
+    print(f"🔥 API error: {e}")</code></pre>
+                </div>
+                <div class="divider" style="margin: 2rem 0 0.5rem 0;"></div>
+                <p style="display: flex; gap: 0.8rem; align-items: center;"><i class="fas fa-code-branch" style="color: #2563eb;"></i> For production: use async clients, cache completions, and monitor token usage.</p>
+            </div> <!-- end guide-content -->
+
+            <!-- RIGHT SIDEBAR — resources, models, links -->
+            <div class="guide-sidebar">
+                <div class="sidebar-section">
+                    <div class="sidebar-title"><i class="fas fa-cubes"></i> MODELS & CAPABILITIES</div>
+                    <div style="display: flex; flex-wrap: wrap; gap: 0.4rem;">
+                        <span class="model-tag"><i class="fas fa-star"></i> GPT-4o</span>
+                        <span class="model-tag"><i class="fas fa-bolt"></i> GPT-4 Turbo</span>
+                        <span class="model-tag"><i class="fas fa-cloud"></i> GPT-3.5 Turbo</span>
+                        <span class="model-tag"><i class="fas fa-microchip"></i> fine-tuning</span>
+                        <span class="model-tag"><i class="fas fa-vector-square"></i> embeddings</span>
+                        <span class="model-tag"><i class="fas fa-cog"></i> vision</span>
+                        <span class="model-tag"><i class="fas fa-assistive-listening-systems"></i> text-to-speech</span>
+                    </div>
+                </div>
+                <div class="sidebar-section">
+                    <div class="sidebar-title"><i class="fas fa-map-pin"></i> QUICK REFERENCE</div>
+                    <ul class="resource-list" style="list-style: none;">
+                        <li><i class="fas fa-arrow-right"></i> <a href="#">API key security</a></li>
+                        <li><i class="fas fa-arrow-right"></i> <a href="#">Pricing per 1M tokens</a></li>
+                        <li><i class="fas fa-arrow-right"></i> <a href="#">Function calling guide</a></li>
+                        <li><i class="fas fa-arrow-right"></i> <a href="#">Streaming playground</a></li>
+                        <li><i class="fas fa-arrow-right"></i> <a href="#">Prompt engineering</a></li>
+                        <li><i class="fas fa-arrow-right"></i> <a href="#">Fallback strategies</a></li>
+                    </ul>
+                </div>
+                <div class="sidebar-section">
+                    <div class="sidebar-title"><i class="fas fa-scroll"></i> COMMON PAYLOAD</div>
+                    <div style="background: #f0f5fa; padding: 1.2rem; border-radius: 18px;">
+                        <pre style="font-size: 0.75rem; background: transparent; margin:0; color: #0b3b4f; font-family: monospace;">{
+  "model": "gpt-4o",
+  "messages": [
+    {"role": "system", "content": "..."},
+    {"role": "user", "content": "..."}
+  ],
+  "temperature": 0.7,
+  "max_tokens": 150,
+  "stream": false
+}</pre>
+                    </div>
+                </div>
+                <div class="sidebar-section">
+                    <div class="sidebar-title"><i class="fas fa-database"></i> AI/ML RELEVANCE</div>
+                    <p style="font-size: 0.92rem; color: #2c3e50;">ChatGPT API is a cornerstone of applied LLM engineering. Used for agents, RAG, semantic search, code generation, and conversational AI. <strong>Under AI & Machine Learning</strong> category.</p>
+                </div>
+                <div style="margin-top: 2rem; background: linear-gradient(120deg, #ecfdf5, #e0f2fe); border-radius: 20px; padding: 1.6rem 1.3rem;">
+                    <i class="fas fa-regular fa-message" style="color: #0f6e4a; font-size: 1.5rem; margin-bottom: 8px; display: inline-block;"></i>
+                    <h4 style="font-size: 1.1rem; margin-bottom: 8px; color: #0b4f3a;">API stability</h4>
+                    <p style="font-size: 0.9rem; color: #1e4a4a;">OpenAI maintains long deprecation windows. v1 SDK is backwards compatible.</p>
+                </div>
+                <div class="divider"></div>
+                <div style="display: flex; gap: 12px; align-items: center; color: #2563eb;">
+                    <i class="fas fa-file-alt fa-xl"></i>
+                    <span style="font-weight: 500;">Full spec: 50+ pages</span>
+                </div>
+            </div> <!-- end sidebar -->
+        </div> <!-- end guide-wrapper -->
+        
+        <!-- FOOTER area with additional notes -->
+        <div class="footer-note">
+            <i class="fas fa-graduation-cap"></i> AI & Machine Learning — ChatGPT API quick reference. All examples tested with openai>=1.35. 
+            <span style="float: right; display: flex; gap: 1.5rem;">
+                <span><i class="fa-regular fa-clock"></i> last update: feb 2025</span>
+                <span><i class="fa-regular fa-keyboard"></i> production-ready patterns</span>
+            </span>
+        </div>
+    </div> <!-- end container -->
+    <!-- small script to ensure Prism highlights (no extra dependencies) -->
+    <script>
+        // invoke Prism if loaded
+        if (typeof Prism !== 'undefined') {
+            Prism.highlightAll();
+        }
+    </script>
+</body>
+</html>
