@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Button Mania – Click Here!</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: linear-gradient(145deg, #2b2b2b 0%, #1a1a1a 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .header {
+            padding: 20px;
+            text-align: center;
+            color: #ffd966;
+            text-shadow: 2px 2px 4px #00000066;
+            border-bottom: 2px solid #ffaa00;
+            background: #2d2d2d;
+        }
+        .header h1 {
+            font-size: 2.5rem;
+            letter-spacing: 3px;
+            margin-bottom: 8px;
+        }
+        .header p {
+            color: #aaa;
+            font-style: italic;
+        }
+        .button-grid {
+            flex: 1;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 16px;
+            padding: 30px;
+            align-content: start;
+        }
+        .click-btn {
+            background: #f0b90b;
+            background: linear-gradient(to bottom, #fcd34d, #fbbf24);
+            border: none;
+            border-radius: 40px;
+            padding: 16px 8px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #1e293b;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 8px 0 #b45309, 0 10px 15px -5px rgba(0,0,0,0.5);
+            cursor: pointer;
+            transition: all 0.08s ease-in;
+            transform: translateY(-2px);
+            border: 1px solid #fffbeb;
+            min-width: 0;
+            word-break: keep-all;
+        }
+        .click-btn:hover {
+            background: #fbbf24;
+            background: linear-gradient(to bottom, #fde68a, #fbbf24);
+            transform: translateY(-4px);
+            box-shadow: 0 10px 0 #b45309, 0 12px 20px -5px black;
+        }
+        .click-btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 4px 0 #b45309, 0 5px 10px -3px black;
+        }
+        .footer {
+            padding: 15px;
+            text-align: center;
+            background: #202020;
+            color: #888;
+            border-top: 1px solid #3d3d3d;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🔘 CLICK HERE! 🔘</h1>
+        <p>Every single button does absolutely nothing. Go ahead, try them all.</p>
+    </div>
+
+    <div class="button-grid" id="buttonContainer"></div>
+
+    <div class="footer">
+        ⚡ That's <span id="countDisplay"></span> buttons of pure uselessness ⚡
+    </div>
+
+    <script>
+        (function() {
+            const container = document.getElementById('buttonContainer');
+            const totalButtons = 300; // plenty to fill the page
+
+            for (let i = 0; i < totalButtons; i++) {
+                const btn = document.createElement('button');
+                btn.className = 'click-btn';
+                btn.textContent = 'click here!';
+                // make them truly inert – no action, no href, just a button
+                // but we'll add a tiny console message for fun (optional)
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    console.log('🟡 You clicked a button that leads nowhere. Satisfied?');
+                });
+                container.appendChild(btn);
+            }
+
+            document.getElementById('countDisplay').textContent = totalButtons;
+        })();
+    </script>
+</body>
+</html>
