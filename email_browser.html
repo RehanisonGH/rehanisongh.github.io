@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📧 Email Browser - Latest Only</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+            height: calc(100vh - 40px);
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .stats {
+            background: rgba(255,255,255,0.2);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+
+        /* Account Bar */
+        .account-bar {
+            background: #f8f9fa;
+            padding: 15px 20px;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 250px;
+            padding: 10px 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .search-box:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102,126,234,0.4);
+        }
+
+        .btn-secondary {
+            background: #e9ecef;
+            color: #495057;
+        }
+
+        .btn-secondary:hover {
+            background: #dee2e6;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+        /* Main Content */
+        .main-content {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* Account List */
+        .account-list {
+            width: 350px;
+            background: #f8f9fa;
+            border-right: 1px solid #e9ecef;
+            overflow-y: auto;
+        }
+
+        .account-item {
+            padding: 15px;
+            border-bottom: 1px solid #e9ecef;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .account-item:hover {
+            background: #e9ecef;
+        }
+
+        .account-item.selected {
+            background: linear-gradient(135deg, #f3f4ff 0%, #f0f2ff 100%);
+            border-left: 4px solid #667eea;
+        }
+
+        .account-service {
+            font-size: 12px;
+            color: #667eea;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .account-email {
+            font-weight: 600;
+            color: #212529;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .blue-dot {
+            width: 10px;
+            height: 10px;
+            background: #4299e1;
+            border-radius: 50%;
+            display: inline-block;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(66, 153, 225, 0.7);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(66, 153, 225, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(66, 153, 225, 0);
+            }
+        }
+
+        .account-last {
+            font-size: 12px;
+            color: #868e96;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .new-badge {
+            background: #4299e1;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        /* Email View */
+        .email-view {
+            flex: 1;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .email-header {
+            padding: 20px;
+            border-bottom: 1px solid #e9ecef;
+            background: white;
+        }
+
+        .email-subject {
+            font-size: 20px;
+            font-weight: 600;
+            color: #212529;
+            margin-bottom: 10px;
+        }
+
+        .email-meta {
+            display: flex;
+            justify-content: space-between;
+            color: #868e96;
+            font-size: 14px;
+        }
+
+        .email-from {
+            font-weight: 600;
+            color: #212529;
+        }
+
+        .email-content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            line-height: 1.6;
+            color: #495057;
+        }
+
+        .no-email {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: #adb5bd;
+            font-size: 16px;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        /* Add Account Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            width: 400px;
+            max-width: 90%;
+        }
+
+        .modal-content h2 {
+            margin-bottom: 20px;
+            color: #212529;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #495057;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        /* Auto-refresh indicator */
+        .refresh-indicator {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: white;
+            padding: 10px 20px;
+            border-radius: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            font-size: 12px;
+            color: #667eea;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 100;
+        }
+
+        .spinner {
+            width: 16px;
+            height: 16px;
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Block redirect message */
+        .block-message {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #dc3545;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-size: 14px;
+            z-index: 1000;
+            display: none;
+            box-shadow: 0 5px 20px rgba(220,53,69,0.3);
+        }
+
+        .block-message.show {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translate(-50%, -100%);
+                opacity: 0;
+            }
+            to {
+                transform: translate(-50%, 0);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>
+                📧 Email Browser
+                <span style="font-size: 14px; background: rgba(255,255,255,0.2); padding: 4px 10px; border-radius: 20px;">
+                    Latest Email Only
+                </span>
+            </h1>
+            <div class="stats" id="accountStats">0 accounts</div>
+        </div>
+
+        <!-- Account Bar -->
+        <div class="account-bar">
+            <input type="text" class="search-box" id="searchInput" placeholder="🔍 Search accounts..." onkeyup="filterAccounts()">
+            <button class="btn btn-primary" onclick="showAddModal()">
+                ➕ Add Account
+            </button>
+            <button class="btn btn-secondary" onclick="refreshAllEmails()">
+                🔄 Check All
+            </button>
+            <button class="btn btn-danger" onclick="clearOldEmails()">
+                🗑️ Clear Old Emails
+            </button>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Account List -->
+            <div class="account-list" id="accountList"></div>
+
+            <!-- Email View -->
+            <div class="email-view" id="emailView">
+                <div class="no-email">
+                    📭 Select an account to view latest email
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Account Modal -->
+    <div class="modal" id="addModal">
+        <div class="modal-content">
+            <h2>Add New Account</h2>
+            <div class="form-group">
+                <label>Email Service</label>
+                <select id="serviceSelect">
+                    <option value="gmail">Gmail</option>
+                    <option value="outlook">Outlook</option>
+                    <option value="yahoo">Yahoo Mail</option>
+                    <option value="proton">ProtonMail</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Email Address</label>
+                <input type="email" id="emailInput" placeholder="your@email.com">
+            </div>
+            <div class="form-group">
+                <label>Password/App Password</label>
+                <input type="password" id="passwordInput" placeholder="••••••••">
+            </div>
+            <div class="modal-buttons">
+                <button class="btn btn-primary" onclick="addAccount()">Add Account</button>
+                <button class="btn btn-secondary" onclick="hideAddModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Block Redirect Message -->
+    <div class="block-message" id="blockMessage">
+        ⚠️ External redirect blocked - staying in email browser
+    </div>
+
+    <!-- Auto-refresh Indicator -->
+    <div class="refresh-indicator" id="refreshIndicator" style="display: none;">
+        <div class="spinner"></div>
+        <span>Checking for new emails...</span>
+    </div>
+
+    <script>
+        // Email Browser Core
+        class EmailBrowser {
+            constructor() {
+                this.accounts = JSON.parse(localStorage.getItem('emailAccounts') || '[]');
+                this.emails = JSON.parse(localStorage.getItem('latestEmails') || '{}');
+                this.selectedAccount = null;
+                this.refreshInterval = null;
+                
+                // Email service configurations
+                this.emailServices = {
+                    gmail: {
+                        name: 'Gmail',
+                        loginUrl: 'https://accounts.google.com',
+                        imap: 'imap.gmail.com',
+                        icon: '📧'
+                    },
+                    outlook: {
+                        name: 'Outlook',
+                        loginUrl: 'https://login.live.com',
+                        imap: 'outlook.office365.com',
+                        icon: '📨'
+                    },
+                    yahoo: {
+                        name: 'Yahoo',
+                        loginUrl: 'https://login.yahoo.com',
+                        imap: 'imap.mail.yahoo.com',
+                        icon: '📬'
+                    },
+                    proton: {
+                        name: 'ProtonMail',
+                        loginUrl: 'https://mail.protonmail.com',
+                        imap: 'protonmail.com',
+                        icon: '🔒'
+                    }
+                };
+
+                this.init();
+            }
+
+            init() {
+                // Load accounts
+                this.renderAccounts();
+                
+                // Start auto-refresh every 30 seconds
+                this.startAutoRefresh();
+                
+                // Block external redirects
+                this.blockExternalRedirects();
+            }
+
+            renderAccounts() {
+                const list = document.getElementById('accountList');
+                const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+                
+                const filtered = this.accounts.filter(acc => 
+                    acc.email.toLowerCase().includes(searchTerm) || 
+                    acc.service.toLowerCase().includes(searchTerm)
+                );
+
+                list.innerHTML = filtered.map((acc, index) => {
+                    const latestEmail = this.emails[acc.id];
+                    const hasNew = latestEmail && latestEmail.isNew;
+                    const lastChecked = latestEmail ? new Date(latestEmail.timestamp).toLocaleTimeString() : 'Never';
+                    
+                    return `
+                        <div class="account-item ${this.selectedAccount === acc.id ? 'selected' : ''}" 
+                             onclick="browser.selectAccount('${acc.id}')">
+                            <div class="account-service">
+                                ${this.emailServices[acc.service]?.icon || '📧'} ${this.emailServices[acc.service]?.name || acc.service}
+                            </div>
+                            <div class="account-email">
+                                ${acc.email}
+                                ${hasNew ? '<span class="blue-dot"></span>' : ''}
+                            </div>
+                            <div class="account-last">
+                                <span>Last: ${lastChecked}</span>
+                                ${hasNew ? '<span class="new-badge">NEW</span>' : ''}
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+                document.getElementById('accountStats').textContent = `${this.accounts.length} accounts`;
+            }
+
+            selectAccount(accountId) {
+                this.selectedAccount = accountId;
+                this.renderAccounts();
+                this.showLatestEmail(accountId);
+            }
+
+            showLatestEmail(accountId) {
+                const account = this.accounts.find(a => a.id === accountId);
+                const latestEmail = this.emails[accountId];
+                const view = document.getElementById('emailView');
+
+                if (!latestEmail) {
+                    view.innerHTML = `
+                        <div class="no-email">
+                            📭 No emails yet
+                            <small style="color: #868e96; margin-top: 10px;">
+                                Click refresh to check for new emails
+                            </small>
+                            <button class="btn btn-primary" onclick="browser.checkEmail('${accountId}')" style="margin-top: 20px;">
+                                🔄 Check Now
+                            </button>
+                        </div>
+                    `;
+                    return;
+                }
+
+                // Mark as read when viewed
+                if (latestEmail.isNew) {
+                    latestEmail.isNew = false;
+                    this.emails[accountId] = latestEmail;
+                    this.saveEmails();
+                    this.renderAccounts();
+                }
+
+                view.innerHTML = `
+                    <div class="email-header">
+                        <div class="email-subject">${latestEmail.subject || '(No Subject)'}</div>
+                        <div class="email-meta">
+                            <span><span class="email-from">From:</span> ${latestEmail.from || 'Unknown'}</span>
+                            <span>${new Date(latestEmail.timestamp).toLocaleString()}</span>
+                        </div>
+                    </div>
+                    <div class="email-content">
+                        ${this.formatEmailContent(latestEmail.content || 'No content available')}
+                    </div>
+                    <div style="padding: 10px 20px; border-top: 1px solid #e9ecef; background: #f8f9fa; display: flex; gap: 10px;">
+                        <button class="btn btn-secondary" onclick="browser.openInBrowser('${accountId}')" style="flex: 1;">
+                            🌐 Open in Email Browser
+                        </button>
+                        <button class="btn btn-secondary" onclick="browser.checkEmail('${accountId}')" style="flex: 1;">
+                            🔄 Check for New
+                        </button>
+                        <button class="btn btn-danger" onclick="browser.clearAccountEmails('${accountId}')" style="flex: 0 0 auto;">
+                            🗑️ Clear
+                        </button>
+                    </div>
+                `;
+            }
+
+            formatEmailContent(content) {
+                // Simple HTML formatting for email content
+                return content.replace(/\n/g, '<br>').replace(/(https?:\/\/[^\s]+)/g, '<a href="#" onclick="browser.handleLink(\'$1\'); return false;">$1</a>');
+            }
+
+            handleLink(url) {
+                this.showBlockMessage();
+                // Open in our internal browser instead
+                this.openInternalBrowser(url);
+            }
+
+            openInternalBrowser(url) {
+                const view = document.getElementById('emailView');
+                view.innerHTML = `
+                    <div style="padding: 20px; height: 100%; display: flex; flex-direction: column;">
+                        <div style="background: #f8f9fa; padding: 10px; border-radius: 10px; margin-bottom: 20px; display: flex; gap: 10px;">
+                            <button class="btn btn-secondary" onclick="browser.showLatestEmail('${this.selectedAccount}')">
+                                ← Back to Email
+                            </button>
+                            <span style="flex: 1; padding: 8px; background: white; border-radius: 5px; font-size: 12px; color: #666;">
+                                ${url}
+                            </span>
+                        </div>
+                        <iframe src="${url}" style="flex: 1; border: none; border-radius: 10px;"></iframe>
+                    </div>
+                `;
+            }
+
+            checkEmail(accountId) {
+                this.showRefreshing();
+                
+                const account = this.accounts.find(a => a.id === accountId);
+                
+                // Simulate fetching latest email
+                setTimeout(() => {
+                    const mockEmails = [
+                        {
+                            subject: 'Important Update',
+                            from: 'notifications@service.com',
+                            content: 'Your latest email content would appear here...'
+                        },
+                        {
+                            subject: 'New Message',
+                            from: 'contact@example.com',
+                            content: 'This is a simulated email for demonstration.'
+                        },
+                        {
+                            subject: 'Weekly Summary',
+                            from: 'summary@service.com',
+                            content: 'Here is your weekly activity summary...'
+                        }
+                    ];
+
+                    const randomEmail = mockEmails[Math.floor(Math.random() * mockEmails.length)];
+                    
+                    this.emails[accountId] = {
+                        ...randomEmail,
+                        isNew: true,
+                        timestamp: new Date().toISOString()
+                    };
+
+                    this.saveEmails();
+                    this.hideRefreshing();
+                    
+                    if (this.selectedAccount === accountId) {
+                        this.showLatestEmail(accountId);
+                    }
+                    this.renderAccounts();
+                }, 1500);
+            }
+
+            refreshAllEmails() {
+                this.showRefreshing();
+                
+                let completed = 0;
+                this.accounts.forEach(account => {
+                    setTimeout(() => {
+                        this.checkEmail(account.id);
+                        completed++;
+                        if (completed === this.accounts.length) {
+                            this.hideRefreshing();
+                        }
+                    }, Math.random() * 2000);
+                });
+            }
+
+            clearOldEmails() {
+                // Keep only latest email per account, delete old ones
+                this.emails = {};
+                this.saveEmails();
+                if (this.selectedAccount) {
+                    this.showLatestEmail(this.selectedAccount);
+                }
+                this.renderAccounts();
+                this.showBlockMessage('Old emails cleared - only latest kept');
+            }
+
+            clearAccountEmails(accountId) {
+                delete this.emails[accountId];
+                this.saveEmails();
+                this.showLatestEmail(accountId);
+                this.renderAccounts();
+            }
+
+            openInBrowser(accountId) {
+                const account = this.accounts.find(a => a.id === accountId);
+                const service = this.emailServices[account.service];
+                
+                // Open in our internal browser instead of new window
+                this.openInternalBrowser(service.loginUrl);
+            }
+
+            addAccount() {
+                const service = document.getElementById('serviceSelect').value;
+                const email = document.getElementById('emailInput').value;
+                const password = document.getElementById('passwordInput').value;
+
+                if (!email || !password) {
+                    alert('Please fill all fields');
+                    return;
+                }
+
+                const newAccount = {
+                    id: Date.now().toString(),
+                    service: service,
+                    email: email,
+                    password: btoa(password), // Simple encoding, not secure for production
+                    added: new Date().toISOString()
+                };
+
+                this.accounts.push(newAccount);
+                this.saveAccounts();
+                
+                // Check email for new account
+                setTimeout(() => this.checkEmail(newAccount.id), 1000);
+                
+                this.hideAddModal();
+                this.renderAccounts();
+                
+                // Clear form
+                document.getElementById('emailInput').value = '';
+                document.getElementById('passwordInput').value = '';
+            }
+
+            deleteAccount(accountId) {
+                if (confirm('Delete this account?')) {
+                    this.accounts = this.accounts.filter(a => a.id !== accountId);
+                    delete this.emails[accountId];
+                    this.saveAccounts();
+                    this.saveEmails();
+                    
+                    if (this.selectedAccount === accountId) {
+                        this.selectedAccount = null;
+                        document.getElementById('emailView').innerHTML = `
+                            <div class="no-email">
+                                📭 Select an account to view latest email
+                            </div>
+                        `;
+                    }
+                    
+                    this.renderAccounts();
+                }
+            }
+
+            filterAccounts() {
+                this.renderAccounts();
+            }
+
+            startAutoRefresh() {
+                // Check for new emails every 30 seconds
+                setInterval(() => {
+                    this.accounts.forEach(account => {
+                        // 30% chance of new email for demo
+                        if (Math.random() < 0.3) {
+                            this.checkEmail(account.id);
+                        }
+                    });
+                }, 30000);
+            }
+
+            blockExternalRedirects() {
+                // Intercept all link clicks
+                document.addEventListener('click', (e) => {
+                    const link = e.target.closest('a');
+                    if (link && link.href && !link.href.includes('about:blank')) {
+                        e.preventDefault();
+                        this.handleLink(link.href);
+                    }
+                });
+
+                // Block new windows
+                window.open = (function(originalOpen) {
+                    return function(url, name, features) {
+                        if (url && !url.startsWith('about:')) {
+                            browser.showBlockMessage();
+                            browser.openInternalBrowser(url);
+                            return null;
+                        }
+                        return originalOpen.call(window, url, name, features);
+                    };
+                })(window.open);
+            }
+
+            showBlockMessage(msg = 'External redirect blocked - staying in email browser') {
+                const blockMsg = document.getElementById('blockMessage');
+                blockMsg.textContent = '⚠️ ' + msg;
+                blockMsg.classList.add('show');
+                setTimeout(() => blockMsg.classList.remove('show'), 3000);
+            }
+
+            showRefreshing() {
+                document.getElementById('refreshIndicator').style.display = 'flex';
+            }
+
+            hideRefreshing() {
+                document.getElementById('refreshIndicator').style.display = 'none';
+            }
+
+            showAddModal() {
+                document.getElementById('addModal').classList.add('active');
+            }
+
+            hideAddModal() {
+                document.getElementById('addModal').classList.remove('active');
+            }
+
+            saveAccounts() {
+                localStorage.setItem('emailAccounts', JSON.stringify(this.accounts));
+            }
+
+            saveEmails() {
+                localStorage.setItem('latestEmails', JSON.stringify(this.emails));
+            }
+        }
+
+        // Initialize browser
+        const browser = new EmailBrowser();
+
+        // Global functions for HTML onclick
+        window.browser = browser;
+        window.filterAccounts = () => browser.filterAccounts();
+        window.showAddModal = () => browser.showAddModal();
+        window.hideAddModal = () => browser.hideAddModal();
+        window.addAccount = () => browser.addAccount();
+        window.refreshAllEmails = () => browser.refreshAllEmails();
+        window.clearOldEmails = () => browser.clearOldEmails();
+
+        // Load sample data for demonstration
+        if (browser.accounts.length === 0) {
+            // Add sample accounts
+            const sampleAccounts = [
+                { service: 'gmail', email: 'john.doe@gmail.com', password: btoa('samplepass') },
+                { service: 'outlook', email: 'jane.smith@outlook.com', password: btoa('samplepass') },
+                { service: 'yahoo', email: 'bob.wilson@yahoo.com', password: btoa('samplepass') }
+            ];
+
+            sampleAccounts.forEach(acc => {
+                const id = Date.now() + Math.random();
+                browser.accounts.push({
+                    id: id.toString(),
+                    ...acc,
+                    added: new Date().toISOString()
+                });
+            });
+
+            // Add sample emails
+            browser.accounts.forEach((acc, index) => {
+                browser.emails[acc.id] = {
+                    subject: ['Project Update', 'Meeting Tomorrow', 'Important Notice'][index],
+                    from: ['team@company.com', 'manager@work.com', 'support@service.com'][index],
+                    content: 'This is your latest email content. It would contain the full message body here...',
+                    isNew: index === 0,
+                    timestamp: new Date(Date.now() - index * 3600000).toISOString()
+                };
+            });
+
+            browser.saveAccounts();
+            browser.saveEmails();
+        }
+    </script>
+</body>
+</html>
