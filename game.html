@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Endless Runner · Telegram Mini App</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        body {
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            font-family: system-ui, -apple-system, sans-serif;
+            touch-action: none;
+        }
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100vh;
+            background: var(--tg-theme-bg-color, #1e2a3a);
+        }
+    </style>
+    <!-- Telegram Web App SDK -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+    <canvas id="gameCanvas"></canvas>
+
+    <script>
+        (function() {
+            // ----- TELEGRAM INIT -----
+            const tg = window.Telegram.WebApp;
+            tg.ready();
+            tg.expand();  // use full screen
+            const theme = tg.themeParams;
+
+            // ----- CANVAS SETUP -----
+            const canvas = document.getElementById('gameCanvas');
+            const ctx = canvas.getContext('2d');
+
+            function resizeCanvas() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            window.addEventListener('resize', resizeCanvas);
+            resizeCanvas();
+
+            // ----- GAME CONSTANTS -----
+            const GROUND_HEIGHT = 20;          // ground line thickness
+            const PLAYER_WIDTH = 30;
+            const PLAYER_HEIGHT = 40;
+            const PLAYER_X = 100;               // fixed horizontal position
+            const GRAVITY = 0.5;
+            const JUMP_FORCE = -10;
+
+            // ----- GAME VARIABLES -----
+            let gameState = 'start';             // 'start', 'playing', 'gameOver'
+            let player = {
+                x: PLAYER_X,
+                y: 0,
+                width: PLAYER_WIDTH,
+                height: PLAYER_HEIGHT,
+                vy: 0
+            };
+            let obstacles = [];
+            let coins = [];
+            let score = 0;
+            let highScore = 0;
+            let frame = 0;
+            let speed = 5;                       // base speed (increases with score)
+            let spawnRate = 80;                   // frames between obstacle spawns (decreases)
+
+            // Ground Y (depends on canvas height)
+            let groundY;
+
+            // Load high score from localStorage
+            try {
+                const saved = localStorage.getItem('runnerHighScore');
+                if (saved) highScore = parseInt(saved, 10) || 0;
+            } catch (e) { /* ignore */ }
+
+            // ----- HELPER FUNCTIONS -----
+            function updateGroundY() {
+                groundY = canvas.height - 100;    // 100px from bottom
+            }
+            updateGroundY();
+            window.addEventListener('resize', updateGroundY);
+
+            // Reset game (keep high score)
+            function resetGame() {
+                player.y = groundY - PLAYER_HEIGHT;
+                player.vy = 0;
+                obstacles = [];
+                coins = [];
+                score = 0;
+                speed = 5;
+                spawnRate = 80;
+                frame = 0;
+                gameState = 'playing';
+                tg.MainButton.hide();  // hide any leftover button
+            }
+
+            // Start game from menu
+            function startGame() {
+                resetGame();
+            }
+
+            // Game over logic
+            function gameOver() {
+                gameState = 'gameOver';
+                if (score > highScore) {
+                    highScore = score;
+                    try {
+                        localStorage.setItem('runnerHighScore', highScore);
+                    } catch (e) {}
+                }
+
+                // Show Telegram popup with two buttons
+                tg.showPopup({
+                    title: 'Game Over',
+                    message: `Your score: ${score}\nHigh score: ${highScore}`,
+                    buttons: [
+                        { id: 'restart', type: 'default', text: 'Restart' },
+                        { id: 'share', type: 'default', text: 'Share Score' }
+                    ]
+                }, (buttonId) => {
+                    if (buttonId === 'restart') {
+                        resetGame();
+                    } else if (buttonId === 'share') {
+                        // Send score back to bot
+                        tg.sendData(JSON.stringify({ score: score }));
+                        // Optionally restart after share
+                        resetGame();
+                    }
+                });
+            }
+
+            // ----- INPUT HANDLING (jump) -----
+            function handleJump(e) {
+                e.preventDefault();   // prevent scrolling / zoom
+                if (gameState === 'start') {
+                    startGame();
+                } else if (gameState === 'playing') {
+                    // Jump only if on ground
+                    if (player.y >= groundY - PLAYER_HEIGHT - 0.1) {
+                        player.vy = JUMP_FORCE;
+                    }
+                }
+                // if gameOver, ignore (handled by popup)
+            }
+
+            canvas.addEventListener('touchstart', handleJump, { passive: false });
+            canvas.addEventListener('mousedown', handleJump);
+
+            // ----- GAME UPDATE -----
+            function update() {
+                if (gameState !== 'playing') return;
+
+                // 1. Player physics
+                player.vy += GRAVITY;
+                player.y += player.vy;
+
+                // Ground collision
+                if (player.y > groundY - PLAYER_HEIGHT) {
+                    player.y = groundY - PLAYER_HEIGHT;
+                    player.vy = 0;
+                }
+
+                // 2. Move obstacles and coins (left)
+                // Obstacles
+                for (let i = obstacles.length - 1; i >= 0; i--) {
+                    const obs = obstacles[i];
+                    obs.x -= speed;
+                    if (obs.x + obs.width < 0) {
+                        obstacles.splice(i, 1);
+                        // Small score for passing obstacle (optional)
+                        score += 5;
+                        continue;
+                    }
+
+                    // Collision with player
+                    if (player.x < obs.x + obs.width &&
+                        player.x + player.width > obs.x &&
+                        player.y < obs.y + obs.height &&
+                        player.y + player.height > obs.y) {
+                        gameOver();
+                        return;
+                    }
+                }
+
+                // Coins
+                for (let i = coins.length - 1; i >= 0; i--) {
+                    const coin = coins[i];
+                    coin.x -= speed;
+                    if (coin.x + coin.width < 0) {
+                        coins.splice(i, 1);
+                        continue;
+                    }
+
+                    // Collection
+                    if (player.x < coin.x + coin.width &&
+                        player.x + player.width > coin.x &&
+                        player.y < coin.y + coin.height &&
+                        player.y + player.height > coin.y) {
+                        coins.splice(i, 1);
+                        score += 20;
+                    }
+                }
+
+                // 3. Increase difficulty over time
+                if (frame % 300 === 0) {   // every ~5 seconds at 60fps
+                    speed = Math.min(speed + 1, 15);
+                    spawnRate = Math.max(spawnRate - 5, 30);
+                }
+
+                // 4. Spawn new objects
+                // Obstacles
+                if (frame % Math.floor(spawnRate) === 0) {
+                    // Random height (low or high obstacle)
+                    const height = Math.random() > 0.5 ? 30 : 60;  // low or high
+                    obstacles.push({
+                        x: canvas.width,
+                        y: groundY - height,
+                        width: 20,
+                        height: height
+                    });
+                }
+
+                // Coins (spawn less frequently)
+                if (frame % 40 === 0) {
+                    coins.push({
+                        x: canvas.width,
+                        y: groundY - 40 - Math.random() * 40,  // vary height
+                        width: 15,
+                        height: 15
+                    });
+                }
+
+                // Score increases naturally over time
+                score += 0.1;
+
+                frame++;
+            }
+
+            // ----- DRAWING -----
+            function draw() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                // Set background from Telegram theme (or fallback)
+                ctx.fillStyle = theme.bg_color || '#1e2a3a';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                // Draw ground
+                ctx.fillStyle = theme.hint_color || '#5a6b7c';
+                ctx.fillRect(0, groundY, canvas.width, GROUND_HEIGHT);
+                // Ground line
+                ctx.fillStyle = theme.button_color || '#40a7e3';
+                ctx.fillRect(0, groundY, canvas.width, 2);
+
+                // Draw coins (yellow circles)
+                ctx.fillStyle = '#ffd966';
+                coins.forEach(coin => {
+                    ctx.beginPath();
+                    ctx.arc(coin.x + coin.width/2, coin.y + coin.height/2, coin.width/2, 0, Math.PI*2);
+                    ctx.fill();
+                    // Add little shine
+                    ctx.fillStyle = '#fff3b0';
+                    ctx.beginPath();
+                    ctx.arc(coin.x + coin.width/2 - 2, coin.y + coin.height/2 - 2, 3, 0, Math.PI*2);
+                    ctx.fill();
+                    ctx.fillStyle = '#ffd966'; // reset for next
+                });
+
+                // Draw obstacles
+                ctx.fillStyle = theme.destructive_text_color || '#e55';
+                obstacles.forEach(obs => {
+                    ctx.fillRect(obs.x, obs.y, obs.width, obs.height);
+                });
+
+                // Draw player (running character)
+                // Simple square for now, but you can replace with sprite later
+                ctx.fillStyle = theme.button_color || '#40a7e3';
+                ctx.fillRect(player.x, player.y, player.width, player.height);
+                // Eye
+                ctx.fillStyle = '#fff';
+                ctx.fillRect(player.x + 20, player.y + 10, 5, 5);
+                // Red shoe
+                ctx.fillStyle = '#c44';
+                ctx.fillRect(player.x + 5, player.y + player.height-5, 8, 5);
+                ctx.fillRect(player.x + 17, player.y + player.height-5, 8, 5);
+
+                // Draw UI (score and high score)
+                ctx.fillStyle = theme.text_color || '#ffffff';
+                ctx.font = 'bold 20px system-ui, sans-serif';
+                ctx.fillText(`💰 ${Math.floor(score)}`, 10, 40);
+                ctx.font = '16px system-ui, sans-serif';
+                ctx.fillText(`🏆 ${highScore}`, 10, 70);
+
+                // Start menu overlay
+                if (gameState === 'start') {
+                    ctx.fillStyle = 'rgba(0,0,0,0.5)';
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    ctx.fillStyle = '#fff';
+                    ctx.font = 'bold 28px system-ui, sans-serif';
+                    ctx.textAlign = 'center';
+                    ctx.fillText('🏃‍♂️ Endless Runner', canvas.width/2, canvas.height/2 - 40);
+                    ctx.font = '18px system-ui, sans-serif';
+                    ctx.fillText('Tap anywhere to start', canvas.width/2, canvas.height/2 + 20);
+                    ctx.textAlign = 'left';
+                }
+
+                // Game over overlay (just in case popup doesn't cover, but popup is better)
+                if (gameState === 'gameOver') {
+                    // Already handled by popup, but we can dim
+                    ctx.fillStyle = 'rgba(0,0,0,0.3)';
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                }
+
+                requestAnimationFrame(draw);
+            }
+
+            // Start the draw loop
+            draw();
+
+            // Update loop (60 fps)
+            function gameLoop() {
+                update();
+                requestAnimationFrame(gameLoop);
+            }
+            gameLoop();
+
+            // Ensure player starts at correct Y after resize
+            window.addEventListener('resize', () => {
+                if (gameState === 'start') {
+                    // nothing
+                } else {
+                    // Keep player above ground after resize
+                    player.y = groundY - PLAYER_HEIGHT;
+                }
+            });
+
+        })();
+    </script>
+</body>
+</html>
