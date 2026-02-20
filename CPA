@@ -1,0 +1,69 @@
+<div class="container" style="margin-top:3%;">	<div class="header">
+		<h3 class="text-muted" style="color:#3f4c6b;">Direct Downloads</h3>
+	</div>
+
+	<div class="head-container">
+		<div>
+			{%header_text%}
+		</div>
+		<p>
+			{%offers%}
+		</p>
+		<p id="smallTitle" class="lead">
+			{%anchor_text%}
+		</p>
+	</div>
+
+	<div class="row marketing">
+		<h4 style="color:#3f4c6b;">Comments by other users:</h4>
+		<hr>
+		<div class="col-lg-6">
+			<h4 style="color:#3f4c6b;">CrossShotz1337</h4>
+			<p style="color:#3f4c6b;">
+				Thanks mate, I really looked for this for ages!
+			</p>
+			<hr>
+
+			<h4 style="color:#3f4c6b;">JohnTheShark</h4>
+			<p style="color:#3f4c6b;">
+				COOL! Super fast download, took me only a few secs. to download it
+			</p>
+			<hr>
+
+			<h4 style="color:#3f4c6b;">JackSparrow</h4>
+			<p style="color:#3f4c6b;">
+				I'm Impressed, as always nice HQ file!
+			</p>
+			<hr>
+		</div>
+
+		<div class="col-lg-6">
+			<h4 style="color:#3f4c6b;">Muki2007</h4>
+			<p style="color:#3f4c6b;">
+				Thanks for sharing, I must really say I'm so impressed, the download was soo fast and I was looking for this file for ages and finally found it here woah!
+			</p>
+			<hr>
+
+			<h4 style="color:#3f4c6b;">TimRobbins</h4>
+			<p style="color:#3f4c6b;">
+				Heya hosers!  just wanted to say thanks eh!
+			</p>
+			<hr>
+
+			<h4 style="color:#3f4c6b;">MiserableCow69</h4>
+			<p style="color:#3f4c6b;">
+				NICE! Thanks for uploading, I've been looking for this for YEARS seriously I'm so happy, the offer took a while but now baaam I got it!! AWESOME!
+			</p>
+			<hr>
+		</div>
+	</div>
+
+	<div class="footer">
+		<center>
+			<p >
+				You need to finish an offer to post a comment
+			</p>
+		</center>
+	</div>
+
+</div><div style="margin-bottom:10%;"></div>
