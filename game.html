@@ -30,6 +30,8 @@
     </style>
     <!-- Telegram Web App SDK -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <!-- Ad SDK (libtl.com) -->
+    <script src='//libtl.com/sdk.js' data-zone='10631255' data-sdk='show_10631255'></script>
 </head>
 <body>
     <canvas id="gameCanvas"></canvas>
@@ -41,6 +43,37 @@
             tg.ready();
             tg.expand();  // use full screen
             const theme = tg.themeParams;
+
+            // ----- AD INIT (in-app interstitial) -----
+            if (typeof show_10631255 === 'function') {
+                show_10631255({
+                    type: 'inApp',
+                    inAppSettings: {
+                        frequency: 2,
+                        capping: 0.1,
+                        interval: 30,
+                        timeout: 5,
+                        everyPage: false
+                    }
+                });
+            } else {
+                console.warn('Ad SDK not loaded yet – retrying...');
+                // Retry after a short delay (in case of slow network)
+                setTimeout(() => {
+                    if (typeof show_10631255 === 'function') {
+                        show_10631255({
+                            type: 'inApp',
+                            inAppSettings: {
+                                frequency: 2,
+                                capping: 0.1,
+                                interval: 30,
+                                timeout: 5,
+                                everyPage: false
+                            }
+                        });
+                    }
+                }, 1000);
+            }
 
             // ----- CANVAS SETUP -----
             const canvas = document.getElementById('gameCanvas');
@@ -126,7 +159,7 @@
                 // Show Telegram popup with two buttons
                 tg.showPopup({
                     title: 'Game Over',
-                    message: `Your score: ${score}\nHigh score: ${highScore}`,
+                    message: `Your score: ${Math.floor(score)}\nHigh score: ${highScore}`,
                     buttons: [
                         { id: 'restart', type: 'default', text: 'Restart' },
                         { id: 'share', type: 'default', text: 'Share Score' }
@@ -136,7 +169,7 @@
                         resetGame();
                     } else if (buttonId === 'share') {
                         // Send score back to bot
-                        tg.sendData(JSON.stringify({ score: score }));
+                        tg.sendData(JSON.stringify({ score: Math.floor(score) }));
                         // Optionally restart after share
                         resetGame();
                     }
@@ -286,7 +319,6 @@
                 });
 
                 // Draw player (running character)
-                // Simple square for now, but you can replace with sprite later
                 ctx.fillStyle = theme.button_color || '#40a7e3';
                 ctx.fillRect(player.x, player.y, player.width, player.height);
                 // Eye
